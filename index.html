@@ -1,1 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgroControl Desktop v2.2</title>
 
+<link rel="stylesheet" href="styles.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="login-left">
+    <img src="imagens/logo.png" class="logo">
+
+    <h2>Entrar no sistema</h2>
+
+    <input id="email" placeholder="Email">
+    <input id="senha" type="password" placeholder="Senha">
+
+    <button onclick="login()">Entrar</button>
+
+    <div class="login-options">
+      <label><input type="checkbox"> Lembrar login</label>
+      <span>Recuperar senha</span>
+    </div>
+  </div>
+
+  <div class="login-right"></div>
+</div>
+
+<!-- APP -->
+<div id="app">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <img src="imagens/logo.png" class="logo-small">
+    <small>Desktop v2.2</small>
+
+    <button onclick="abrir('dashboard')">Central</button>
+    <button onclick="abrir('financeiro')">Financeiro</button>
+    <button onclick="abrir('mercado')">Mercado</button>
+    <button onclick="abrir('clima')">Clima</button>
+    <button onclick="abrir('config')">Configurações</button>
+  </div>
+
+  <!-- CONTEÚDO -->
+  <div class="main">
+
+    <!-- DASHBOARD -->
+    <div id="dashboard" class="view">
+
+      <h1>Central de Comando</h1>
+
+      <div class="banner"></div>
+
+      <div class="cards">
+
+        <div class="card">
+          <h3>Clima</h3>
+          <p id="temp">--°</p>
+          <span>Pode aplicar</span>
+        </div>
+
+        <div class="card">
+          <h3>Mercado</h3>
+          <p>Soja ↑</p>
+          <p>Milho ↓</p>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- FINANCEIRO -->
+    <div id="financeiro" class="view hidden">
+      <h1>Financeiro</h1>
+    </div>
+
+    <!-- MERCADO -->
+    <div id="mercado" class="view hidden">
+      <h1>Mercado completo</h1>
+    </div>
+
+    <!-- CLIMA -->
+    <div id="clima" class="view hidden">
+      <h1>Clima detalhado</h1>
+    </div>
+
+    <!-- CONFIG -->
+    <div id="config" class="view hidden">
+      <h1>Configurações</h1>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>
