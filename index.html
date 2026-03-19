@@ -1,104 +1,792 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AgroControl Desktop v2.2</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AgroControl Desktop v2.2</title>
 
-<link rel="stylesheet" href="styles.css">
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-
 <body>
 
-<!-- LOGIN -->
-<div id="login">
-  <div class="login-left">
-    <img src="imagens/logo.png" class="logo">
+  <!-- LOGIN -->
+  <section id="login" class="login-screen">
+    <div class="login-left">
+      <div class="login-left-inner">
+        <div class="brand-wrap">
+          <img src="imagens/logo.png" alt="AgroControl" class="brand-logo" />
+        </div>
 
-    <h2>Entrar no sistema</h2>
+        <div class="login-copy">
+          <span class="eyebrow">AgroControl Desktop v2.2</span>
+          <h1>Centro de comando da fazenda</h1>
+          <p>
+            Gestão rural premium com clima, mercado, operações, financeiro,
+            equipe e inteligência da fazenda em um único painel.
+          </p>
+        </div>
 
-    <input id="email" placeholder="Email">
-    <input id="senha" type="password" placeholder="Senha">
+        <form id="loginForm" class="login-form">
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" type="email" placeholder="dono@agrocontrol" />
+          </div>
 
-    <button onclick="login()">Entrar</button>
+          <div class="field">
+            <label for="senha">Senha</label>
+            <input id="senha" type="password" placeholder="Digite sua senha" />
+          </div>
 
-    <div class="login-options">
-      <label><input type="checkbox"> Lembrar login</label>
-      <span>Recuperar senha</span>
+          <div class="login-options">
+            <label class="checkbox-row">
+              <input type="checkbox" id="rememberLogin" />
+              <span>Lembrar login</span>
+            </label>
+
+            <button type="button" class="text-link" id="recoverPasswordBtn">
+              Recuperar senha
+            </button>
+          </div>
+
+          <label class="checkbox-row continue-session">
+            <input type="checkbox" id="continueSession" checked />
+            <span>Continuar sessão</span>
+          </label>
+
+          <button type="submit" class="btn btn-primary">Entrar</button>
+        </form>
+
+        <div class="login-note">
+          <strong>AgroControl</strong><br />
+          Operação rural organizada, moderna e visualmente profissional.
+        </div>
+      </div>
     </div>
-  </div>
 
-  <div class="login-right"></div>
-</div>
+    <div class="login-right">
+      <div class="login-overlay"></div>
+    </div>
+  </section>
 
-<!-- APP -->
-<div id="app">
+  <!-- APP -->
+  <section id="app" class="app-shell hidden">
 
-  <!-- SIDEBAR -->
-  <div class="sidebar">
-    <img src="imagens/logo.png" class="logo-small">
-    <small>Desktop v2.2</small>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <img src="imagens/logo.png" alt="AgroControl" class="sidebar-logo" />
 
-    <button onclick="abrir('dashboard')">Central</button>
-    <button onclick="abrir('financeiro')">Financeiro</button>
-    <button onclick="abrir('mercado')">Mercado</button>
-    <button onclick="abrir('clima')">Clima</button>
-    <button onclick="abrir('config')">Configurações</button>
-  </div>
-
-  <!-- CONTEÚDO -->
-  <div class="main">
-
-    <!-- DASHBOARD -->
-    <div id="dashboard" class="view">
-
-      <h1>Central de Comando</h1>
-
-      <div class="banner"></div>
-
-      <div class="cards">
-
-        <div class="card">
-          <h3>Clima</h3>
-          <p id="temp">--°</p>
-          <span>Pode aplicar</span>
+        <div class="sidebar-user-card">
+          <div class="user-avatar" id="userInitials">AG</div>
+          <div class="user-meta">
+            <strong id="sidebarUserName">Usuário</strong>
+            <span id="sidebarUserRole">Dono</span>
+          </div>
         </div>
-
-        <div class="card">
-          <h3>Mercado</h3>
-          <p>Soja ↑</p>
-          <p>Milho ↓</p>
-        </div>
-
       </div>
 
-    </div>
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-view="dashboard">
+          <span>Central de Comando</span>
+        </button>
 
-    <!-- FINANCEIRO -->
-    <div id="financeiro" class="view hidden">
-      <h1>Financeiro</h1>
-    </div>
+        <button class="nav-item" data-view="operations">
+          <span>Operações</span>
+        </button>
 
-    <!-- MERCADO -->
-    <div id="mercado" class="view hidden">
-      <h1>Mercado completo</h1>
-    </div>
+        <button class="nav-item" data-view="employees">
+          <span>Funcionários</span>
+        </button>
 
-    <!-- CLIMA -->
-    <div id="clima" class="view hidden">
-      <h1>Clima detalhado</h1>
-    </div>
+        <button class="nav-item" data-view="financial">
+          <span>Financeiro</span>
+        </button>
 
-    <!-- CONFIG -->
-    <div id="config" class="view hidden">
-      <h1>Configurações</h1>
-    </div>
+        <button class="nav-item" data-view="market">
+          <span>Mercado</span>
+        </button>
 
-  </div>
+        <button class="nav-item" data-view="climate">
+          <span>Clima</span>
+        </button>
 
-</div>
+        <button class="nav-item" data-view="plots">
+          <span>Talhões</span>
+        </button>
 
+        <button class="nav-item" data-view="inventory">
+          <span>Estoque</span>
+        </button>
+
+        <button class="nav-item" data-view="ai">
+          <span>IA da Fazenda</span>
+        </button>
+
+        <button class="nav-item" data-view="settings">
+          <span>Configurações</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <button id="refreshAllBtn" class="btn btn-secondary btn-full">Atualizar dados</button>
+        <button id="logoutBtn" class="btn btn-danger btn-full">Sair</button>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <span class="eyebrow" id="pageEyebrow">AgroControl</span>
+          <h2 id="pageTitle">Central de Comando</h2>
+          <p id="pageSubtitle">
+            Visão geral da operação, clima, mercado e desempenho da fazenda.
+          </p>
+        </div>
+
+        <div class="topbar-right">
+          <div class="topbar-user">
+            <div class="user-avatar small" id="topbarInitials">AG</div>
+            <div class="user-meta">
+              <strong id="topUserName">Usuário</strong>
+              <span id="topUserMeta">Dono · Fazenda</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="main-scroll">
+
+        <!-- DASHBOARD -->
+        <section id="dashboard" class="view active">
+
+          <div class="farm-banner">
+            <div class="farm-banner-overlay"></div>
+
+            <div class="farm-banner-content">
+              <div class="farm-banner-left">
+                <span class="chip">Central de Comando</span>
+                <h1 id="farmNameBanner">Fazenda AgroControl</h1>
+                <p id="farmTagline">
+                  Operação rural centralizada, mercado monitorado, clima em leitura constante
+                  e gestão premium da fazenda.
+                </p>
+              </div>
+
+              <div class="farm-banner-stats">
+                <div class="mini-stat">
+                  <span>Funcionários</span>
+                  <strong id="bannerEmployeesCount">0</strong>
+                </div>
+
+                <div class="mini-stat">
+                  <span>Operações</span>
+                  <strong id="bannerOperationsCount">0</strong>
+                </div>
+
+                <div class="mini-stat">
+                  <span>Lançamentos</span>
+                  <strong id="bannerTransactionsCount">0</strong>
+                </div>
+
+                <div class="mini-stat">
+                  <span>Função</span>
+                  <strong id="bannerRole">Dono</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-grid">
+            <div class="dashboard-left">
+
+              <div class="panel">
+                <div class="panel-head">
+                  <div>
+                    <h3>Visão operacional</h3>
+                    <p>Tarefas, frentes ativas e leitura rápida da operação.</p>
+                  </div>
+                </div>
+
+                <div class="kpi-grid">
+                  <div class="kpi-card">
+                    <span>Tarefas em andamento</span>
+                    <strong id="kpiInProgress">0</strong>
+                  </div>
+
+                  <div class="kpi-card">
+                    <span>Tarefas pendentes</span>
+                    <strong id="kpiPending">0</strong>
+                  </div>
+
+                  <div class="kpi-card">
+                    <span>Máquinas operando</span>
+                    <strong id="kpiMachines">4</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel">
+                <div class="panel-head">
+                  <div>
+                    <h3>Operações em andamento</h3>
+                    <p>Principais frentes da fazenda neste momento.</p>
+                  </div>
+                </div>
+
+                <div id="dashboardOperationsList" class="stack-list"></div>
+              </div>
+
+              <div class="panel">
+                <div class="panel-head">
+                  <div>
+                    <h3>Mercado</h3>
+                    <p>Resumo rápido dos itens monitorados.</p>
+                  </div>
+
+                  <button class="btn btn-secondary" data-open-view="market">
+                    Abrir mercado
+                  </button>
+                </div>
+
+                <div id="dashboardMarketTicker" class="market-summary-grid"></div>
+              </div>
+
+              <div class="panel">
+                <div class="panel-head">
+                  <div>
+                    <h3>Produtividade e talhões</h3>
+                    <p>Visão resumida do desempenho por área.</p>
+                  </div>
+                </div>
+
+                <div id="plotSummaryCards" class="plot-grid"></div>
+              </div>
+
+            </div>
+
+            <div class="dashboard-right">
+
+              <div class="panel climate-panel">
+                <div class="climate-bg-overlay"></div>
+
+                <div class="climate-content">
+                  <div class="panel-head">
+                    <div>
+                      <h3>Clima</h3>
+                      <p id="climateLocationLabel">Dom Pedrito, RS</p>
+                    </div>
+
+                    <button class="btn btn-secondary" data-open-view="climate">
+                      Abrir clima
+                    </button>
+                  </div>
+
+                  <div class="climate-main">
+                    <div>
+                      <strong class="climate-temp" id="climateTemp">24°</strong>
+                      <p id="climateCondition">Tempo estável</p>
+                    </div>
+
+                    <span class="chip" id="applyStatusChip">Pode aplicar</span>
+                  </div>
+
+                  <div class="climate-metrics">
+                    <div class="metric-card">
+                      <span>Vento</span>
+                      <strong id="climateWind">12 km/h</strong>
+                    </div>
+
+                    <div class="metric-card">
+                      <span>Umidade</span>
+                      <strong id="climateHumidity">64%</strong>
+                    </div>
+
+                    <div class="metric-card">
+                      <span>Atualização</span>
+                      <strong id="climateUpdatedAt">Manual</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel">
+                <div class="panel-head">
+                  <div>
+                    <h3>IA da Fazenda</h3>
+                    <p>Leituras rápidas para apoiar decisão.</p>
+                  </div>
+                </div>
+
+                <div id="aiInsightsList" class="stack-list"></div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        <!-- OPERAÇÕES -->
+        <section id="operations" class="view">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h3>Operações</h3>
+                <p>Cadastro, acompanhamento e status operacional.</p>
+              </div>
+
+              <button id="seedOperationsBtn" class="btn btn-primary">
+                Gerar exemplo
+              </button>
+            </div>
+
+            <div id="operationsFullList" class="stack-list"></div>
+          </div>
+        </section>
+
+        <!-- FUNCIONÁRIOS -->
+        <section id="employees" class="view">
+          <div class="split-grid">
+
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>Funcionários</h3>
+                  <p>Gestão interna de usuários e equipe.</p>
+                </div>
+              </div>
+
+              <div id="employeesList" class="stack-list"></div>
+            </div>
+
+            <div class="panel" id="employeeFormCard">
+              <div class="panel-head">
+                <div>
+                  <h3>Novo funcionário</h3>
+                  <p>O Dono define o acesso e o sistema gera o email interno.</p>
+                </div>
+              </div>
+
+              <form id="employeeForm" class="form-grid">
+                <div class="field">
+                  <label for="employeeUsername">Usuário</label>
+                  <input id="employeeUsername" class="input" placeholder="beto" />
+                </div>
+
+                <div class="field">
+                  <label for="employeeFullName">Nome completo</label>
+                  <input id="employeeFullName" class="input" placeholder="Beto Ferreira" />
+                </div>
+
+                <div class="field">
+                  <label for="employeeRole">Função</label>
+                  <select id="employeeRole" class="select">
+                    <option>Dono</option>
+                    <option>Gerente</option>
+                    <option>Funcionário</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="employeeTempPassword">Senha inicial</label>
+                  <input id="employeeTempPassword" class="input" type="password" placeholder="Defina uma senha inicial" />
+                </div>
+
+                <button type="submit" class="btn btn-primary">Cadastrar internamente</button>
+              </form>
+
+              <div class="panel-note">
+                O cadastro interno fica pronto. Criação real de usuário do Supabase com senha definida pelo Dono exige backend seguro.
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- FINANCEIRO -->
+        <section id="financial" class="view">
+          <div class="split-grid">
+
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>Financeiro</h3>
+                  <p>Entradas, saídas e saldo consolidado.</p>
+                </div>
+
+                <button class="btn btn-secondary analysis-toggle" data-target="financialAnalysis">
+                  Ver análise
+                </button>
+              </div>
+
+              <div class="kpi-grid">
+                <div class="kpi-card">
+                  <span>Entradas</span>
+                  <strong id="financeIncome">R$ 0,00</strong>
+                </div>
+
+                <div class="kpi-card">
+                  <span>Saídas</span>
+                  <strong id="financeExpense">R$ 0,00</strong>
+                </div>
+
+                <div class="kpi-card">
+                  <span>Saldo</span>
+                  <strong id="financeBalance">R$ 0,00</strong>
+                </div>
+              </div>
+
+              <div id="financeList" class="stack-list mt-20"></div>
+              <div id="financialAnalysis" class="analysis-box hidden"></div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>Novo lançamento</h3>
+                  <p>Cadastre entradas e saídas da operação.</p>
+                </div>
+              </div>
+
+              <form id="financeForm" class="form-grid">
+                <div class="field">
+                  <label for="financeDescription">Descrição</label>
+                  <input id="financeDescription" class="input" placeholder="Diesel, venda de soja, manutenção..." />
+                </div>
+
+                <div class="field">
+                  <label for="financeType">Tipo</label>
+                  <select id="financeType" class="select">
+                    <option value="income">Entrada</option>
+                    <option value="expense">Saída</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="financeAmount">Valor</label>
+                  <input id="financeAmount" class="input" type="number" step="0.01" placeholder="0.00" />
+                </div>
+
+                <button type="submit" class="btn btn-primary">Salvar lançamento</button>
+              </form>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- MERCADO -->
+        <section id="market" class="view">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h3>Mercado</h3>
+                <p>Leitura tipo bolsa com valor, unidade e direção do movimento.</p>
+              </div>
+
+              <button class="btn btn-secondary analysis-toggle" data-target="marketAnalysis">
+                Ver análise
+              </button>
+            </div>
+
+            <div id="marketList" class="stack-list"></div>
+            <div id="marketAnalysis" class="analysis-box hidden"></div>
+          </div>
+        </section>
+
+        <!-- CLIMA -->
+        <section id="climate" class="view">
+          <div class="split-grid">
+
+            <div class="panel climate-panel large">
+              <div class="climate-bg-overlay"></div>
+
+              <div class="climate-content">
+                <div class="panel-head">
+                  <div>
+                    <h3>Clima detalhado</h3>
+                    <p>Resumo principal e leitura operacional.</p>
+                  </div>
+                </div>
+
+                <div class="climate-main">
+                  <div>
+                    <strong class="climate-temp" id="climateTempLarge">24°</strong>
+                    <p id="climateConditionLarge">Tempo estável</p>
+                  </div>
+
+                  <span class="chip" id="applyStatusChipLarge">Pode aplicar</span>
+                </div>
+
+                <div class="climate-metrics">
+                  <div class="metric-card">
+                    <span>Vento</span>
+                    <strong id="climateWindLarge">12 km/h</strong>
+                  </div>
+
+                  <div class="metric-card">
+                    <span>Umidade</span>
+                    <strong id="climateHumidityLarge">64%</strong>
+                  </div>
+
+                  <div class="metric-card">
+                    <span>Origem</span>
+                    <strong id="climateSourceLarge">Manual</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>Regras de aplicação</h3>
+                  <p>Como o sistema define se pode aplicar.</p>
+                </div>
+              </div>
+
+              <div id="climateRulesList" class="stack-list"></div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- TALHÕES -->
+        <section id="plots" class="view">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h3>Talhões</h3>
+                <p>Visão rápida de área, cultura e produtividade esperada.</p>
+              </div>
+            </div>
+
+            <div id="plotsGrid" class="plot-grid"></div>
+          </div>
+        </section>
+
+        <!-- ESTOQUE -->
+        <section id="inventory" class="view">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h3>Estoque</h3>
+                <p>Resumo operacional de insumos e materiais.</p>
+              </div>
+
+              <button class="btn btn-secondary analysis-toggle" data-target="inventoryAnalysis">
+                Ver análise
+              </button>
+            </div>
+
+            <div id="inventoryList" class="stack-list"></div>
+            <div id="inventoryAnalysis" class="analysis-box hidden"></div>
+          </div>
+        </section>
+
+        <!-- IA -->
+        <section id="ai" class="view">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h3>IA da Fazenda</h3>
+                <p>Assistente de leitura operacional com base nos dados carregados.</p>
+              </div>
+            </div>
+
+            <div id="aiFullList" class="stack-list"></div>
+          </div>
+        </section>
+
+        <!-- CONFIGURAÇÕES -->
+        <section id="settings" class="view">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h3>Configurações</h3>
+                <p>Perfil, fazenda, mercado e clima em uma área separada.</p>
+              </div>
+            </div>
+
+            <div class="tabs">
+              <button class="tab-btn active" data-tab="settings-profile">Perfil</button>
+              <button class="tab-btn" data-tab="settings-farm">Fazenda</button>
+              <button class="tab-btn" data-tab="settings-market">Mercado</button>
+              <button class="tab-btn" data-tab="settings-climate">Clima</button>
+            </div>
+
+            <div id="settings-profile" class="tab-pane active">
+              <div class="split-grid">
+                <div class="panel soft">
+                  <div class="field">
+                    <label for="profileNameInput">Nome</label>
+                    <input id="profileNameInput" class="input" />
+                  </div>
+
+                  <div class="field">
+                    <label for="profileEmailInput">Email</label>
+                    <input id="profileEmailInput" class="input" disabled />
+                  </div>
+
+                  <div class="field">
+                    <label for="profileRoleInput">Função</label>
+                    <input id="profileRoleInput" class="input" disabled />
+                  </div>
+
+                  <button id="saveProfileBtn" class="btn btn-primary">Salvar perfil</button>
+                </div>
+
+                <div class="panel soft">
+                  <div class="field">
+                    <label for="newPasswordInput">Nova senha</label>
+                    <input id="newPasswordInput" class="input" type="password" placeholder="Atualizar senha da conta" />
+                  </div>
+
+                  <button id="changePasswordBtn" class="btn btn-secondary">Atualizar senha</button>
+                </div>
+              </div>
+            </div>
+
+            <div id="settings-farm" class="tab-pane">
+              <div class="split-grid">
+                <div class="panel soft">
+                  <form id="farmSettingsForm" class="form-grid">
+                    <div class="field">
+                      <label for="farmNameInput">Nome da fazenda</label>
+                      <input id="farmNameInput" class="input" />
+                    </div>
+
+                    <div class="field">
+                      <label for="farmDescInput">Descrição</label>
+                      <textarea id="farmDescInput" class="textarea"></textarea>
+                    </div>
+
+                    <div class="field">
+                      <label for="farmBannerInput">Banner da fazenda</label>
+                      <input id="farmBannerInput" class="input" value="imagens/dashboard_bg.jpg" />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Salvar fazenda</button>
+                  </form>
+                </div>
+
+                <div class="panel soft">
+                  <p class="panel-note">
+                    Nesta versão, o caminho do banner é configurável. Se quiser upload real de imagem, depois ligamos ao Supabase Storage.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div id="settings-market" class="tab-pane">
+              <div class="split-grid">
+                <div class="panel soft">
+                  <div class="panel-head">
+                    <div>
+                      <h3>Itens do mercado</h3>
+                      <p>Controle total do que aparece no dashboard.</p>
+                    </div>
+                  </div>
+
+                  <div id="marketSettingsList" class="stack-list"></div>
+                </div>
+
+                <div class="panel soft">
+                  <form id="marketForm" class="form-grid">
+                    <div class="field">
+                      <label for="marketNameInput">Nome do item</label>
+                      <input id="marketNameInput" class="input" placeholder="Soja" />
+                    </div>
+
+                    <div class="field">
+                      <label for="marketValueInput">Valor</label>
+                      <input id="marketValueInput" class="input" type="number" step="0.01" />
+                    </div>
+
+                    <div class="field">
+                      <label for="marketUnitInput">Unidade</label>
+                      <input id="marketUnitInput" class="input" placeholder="R$/saca" />
+                    </div>
+
+                    <div class="field">
+                      <label for="marketChangeInput">Variação (%)</label>
+                      <input id="marketChangeInput" class="input" type="number" step="0.01" />
+                    </div>
+
+                    <div class="field">
+                      <label for="marketModeInput">Modo</label>
+                      <select id="marketModeInput" class="select">
+                        <option value="manual">Manual</option>
+                        <option value="auto">Automático</option>
+                        <option value="hybrid">Automático com ajuste manual</option>
+                      </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Adicionar item</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <div id="settings-climate" class="tab-pane">
+              <div class="split-grid">
+                <div class="panel soft">
+                  <form id="climateSettingsForm" class="form-grid">
+                    <div class="field">
+                      <label for="climateCityInput">Cidade</label>
+                      <input id="climateCityInput" class="input" placeholder="Dom Pedrito, RS" />
+                    </div>
+
+                    <div class="field">
+                      <label for="climateLatInput">Latitude</label>
+                      <input id="climateLatInput" class="input" placeholder="-30.98" />
+                    </div>
+
+                    <div class="field">
+                      <label for="climateLonInput">Longitude</label>
+                      <input id="climateLonInput" class="input" placeholder="-54.67" />
+                    </div>
+
+                    <div class="field">
+                      <label for="climateModeInput">Modo</label>
+                      <select id="climateModeInput" class="select">
+                        <option value="manual">Manual</option>
+                        <option value="online">Online</option>
+                        <option value="hybrid">Online com fallback manual</option>
+                      </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Salvar clima</button>
+                  </form>
+                </div>
+
+                <div class="panel soft">
+                  <div class="field">
+                    <label for="climateWindRuleInput">Limite máximo de vento</label>
+                    <input id="climateWindRuleInput" class="input" type="number" step="1" />
+                  </div>
+
+                  <div class="field">
+                    <label for="climateHumidityRuleInput">Limite mínimo de umidade</label>
+                    <input id="climateHumidityRuleInput" class="input" type="number" step="1" />
+                  </div>
+
+                  <div class="field">
+                    <label for="climateStatusRuleInput">Status manual</label>
+                    <input id="climateStatusRuleInput" class="input" />
+                  </div>
+
+                  <button id="saveClimateRulesBtn" class="btn btn-secondary">Salvar regras</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </section>
+
+  <script src="script.js"></script>
 </body>
 </html>
