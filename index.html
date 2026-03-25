@@ -1637,21 +1637,22 @@
 }
     
     async function login(email,password){
-      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-      if(error){
-        showToast(error.message || "Falha no login.", "error");
-        return false;
-      }
+  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
-      state.session = data.session;
-      state.user = data.user;
+  if(error){
+    showToast(error.message || "Falha no login.", "error");
+    return false;
+  }
 
-      if(el.rememberLogin.checked) localStorage.setItem("agrocontrol_remembered_email", email);
-      else localStorage.removeItem("agrocontrol_remembered_email");
+  state.session = data.session;
+  state.user = data.user;
 
-      await afterAuthenticated();
-      return true;
-    }
+  if(el.rememberLogin.checked) localStorage.setItem("agrocontrol_remembered_email", email);
+  else localStorage.removeItem("agrocontrol_remembered_email");
+
+  await afterAuthenticated();
+  return true;
+}
 
     async function continueSession(){
       const { data, error } = await supabaseClient.auth.getSession();
@@ -1664,15 +1665,15 @@
       await afterAuthenticated();
     }
 
-    async function logout(){
-      await supabaseClient.auth.signOut();
-      state.session = null;
-      state.user = null;
-      state.profile = null;
-      showLogin();
-      await checkExistingSession();
-      showToast("Sessão encerrada.", "info");
-    }
+   async function afterAuthenticated(){
+  await ensureProfile();
+  renderProfile();
+  applyPermissions();
+  setHeroBanner(state.banner);
+  await refreshAllData();
+  await refreshWeather(false);
+  showApp();
+}
 
     async function forgotPassword(){
       const email = el.loginEmail.value.trim();
@@ -1688,15 +1689,15 @@
       showToast("E-mail de recuperação enviado.", "success");
     }
 
-    function showLogin(){
-      el.loginScreen.style.display = "flex";
-      el.appShell.style.display = "none";
-    }
+   function showLogin(){
+  el.loginScreen.style.display = "flex";
+  el.appShell.style.display = "none";
+}
 
     function showApp(){
-      el.loginScreen.style.display = "none";
-      el.appShell.style.display = "grid";
-    }
+  el.loginScreen.style.display = "none";
+  el.appShell.style.display = "grid";
+}
 
     async function ensureProfile(){
       if(!state.user?.id) return;
@@ -2566,16 +2567,18 @@
         btn.addEventListener("click", () => setActiveSection(btn.dataset.section));
       });
 
-      el.loginForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const email = el.loginEmail.value.trim();
-        const password = el.loginPassword.value;
-        if(!email || !password){
-          showToast("Preencha e-mail e senha.", "error");
-          return;
-        }
-        await login(email, password);
-      });
+     el.loginForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const email = el.loginEmail.value.trim();
+  const password = el.loginPassword.value;
+
+  if(!email || !password){
+    showToast("Preencha e-mail e senha.", "error");
+    return;
+  }
+
+  await login(email, password);
+});
 
       el.continueSessionBtn.addEventListener("click", continueSession);
       el.clearSavedSessionBtn.addEventListener("click", async () => {
@@ -2757,7 +2760,7 @@
       });
     }
 
-    async function init(){
+   async function init(){
   buildAvatarPresets();
   bindEvents();
   await checkExistingSession();
