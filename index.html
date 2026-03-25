@@ -1582,31 +1582,31 @@
       }
     }
 
-    function updateSavedSessionVisibility(){
+   function updateSavedSessionVisibility(){
   el.savedSessionBox.classList.add("hidden");
 }
       if(state.hasSupabaseSession) el.savedSessionBox.classList.remove("hidden");
       else el.savedSessionBox.classList.add("hidden");
     }
 
-    function buildAvatarPresets(){
-      el.avatarPresetGrid.innerHTML = "";
-      AVATARS.forEach(url => {
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = "avatar-preset";
-        button.innerHTML = `<img src="${url}" alt="Avatar">`;
-        button.addEventListener("click", () => {
-          state.selectedPresetAvatar = url;
-          state.tempAvatarDataUrl = null;
-          el.profileAvatarPreview.src = url;
-          el.profileAvatarUrl.value = url;
-          [...el.avatarPresetGrid.querySelectorAll(".avatar-preset")].forEach(x => x.classList.remove("active"));
-          button.classList.add("active");
-        });
-        el.avatarPresetGrid.appendChild(button);
-      });
-    }
+   function buildAvatarPresets(){
+  el.avatarPresetGrid.innerHTML = "";
+  AVATARS.forEach(url => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "avatar-preset";
+    button.innerHTML = `<img src="${url}" alt="Avatar">`;
+    button.addEventListener("click", () => {
+      state.selectedPresetAvatar = url;
+      state.tempAvatarDataUrl = null;
+      el.profileAvatarPreview.src = url;
+      el.profileAvatarUrl.value = url;
+      [...el.avatarPresetGrid.querySelectorAll(".avatar-preset")].forEach(x => x.classList.remove("active"));
+      button.classList.add("active");
+    });
+    el.avatarPresetGrid.appendChild(button);
+  });
+}
 
     function readImageFile(file, cb){
       if(!file) return;
@@ -1782,43 +1782,40 @@
     }
 
     async function saveProfile(){
-      if(!state.user?.id) return;
+  if(!state.user?.id) return;
 
-      let avatar_url = el.profileAvatarUrl.value.trim();
-      if(state.tempAvatarDataUrl) avatar_url = state.tempAvatarDataUrl;
-      if(state.selectedPresetAvatar) avatar_url = state.selectedPresetAvatar;
+  let avatar_url = el.profileAvatarUrl.value.trim();
+  if(state.tempAvatarDataUrl) avatar_url = state.tempAvatarDataUrl;
+  if(state.selectedPresetAvatar) avatar_url = state.selectedPresetAvatar;
 
-      const payload = {
-  username,
-  name: fullName,
-  internal_email: internalEmail,
-  role: selectedRole,
-  active: true,
-  temp_password_defined: Boolean(el("employeeTempPassword").value)
-};
+  const payload = {
+    full_name: el.profileFullName.value.trim(),
+    farm_name: el.profileFarmName.value.trim(),
+    avatar_url
+  };
 
-      const newRoleUi = el.profileRoleLabel.value;
-      if(newRoleUi) payload.role = dbRoleFromUi(newRoleUi);
+  const newRoleUi = el.profileRoleLabel.value;
+  if(newRoleUi) payload.role = dbRoleFromUi(newRoleUi);
 
-      const { data, error } = await supabaseClient
-        .from("profiles")
-        .update(payload)
-        .eq("id", state.user.id)
-        .select()
-        .single();
+  const { data, error } = await supabaseClient
+    .from("profiles")
+    .update(payload)
+    .eq("id", state.user.id)
+    .select()
+    .single();
 
-      if(error){
-        console.error(error);
-        showToast("Erro ao salvar perfil.", "error");
-        return;
-      }
+  if(error){
+    console.error(error);
+    showToast("Erro ao salvar perfil.", "error");
+    return;
+  }
 
-      state.profile = { ...state.profile, ...data };
-      renderProfile();
-      applyPermissions();
-      closeProfileDrawer();
-      showToast("Perfil salvo.", "success");
-    }
+  state.profile = { ...state.profile, ...data };
+  renderProfile();
+  applyPermissions();
+  closeProfileDrawer();
+  showToast("Perfil salvo.", "success");
+}
 
     function openProfileDrawer(){
       renderProfile();
