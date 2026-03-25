@@ -1774,10 +1774,13 @@
       if(state.selectedPresetAvatar) avatar_url = state.selectedPresetAvatar;
 
       const payload = {
-        full_name: el.profileFullName.value.trim(),
-        farm_name: el.profileFarmName.value.trim(),
-        avatar_url
-      };
+  username,
+  name: fullName,
+  internal_email: internalEmail,
+  role: selectedRole,
+  active: true,
+  temp_password_defined: Boolean(el("employeeTempPassword").value)
+};
 
       const newRoleUi = el.profileRoleLabel.value;
       if(newRoleUi) payload.role = dbRoleFromUi(newRoleUi);
