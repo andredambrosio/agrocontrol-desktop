@@ -11,7 +11,6 @@
       --bg:#07100b;
       --bg-2:#0b1510;
       --panel:#101b14;
-      --panel-2:#142119;
       --line:rgba(255,255,255,.09);
       --text:#eef6ef;
       --muted:#9bb09f;
@@ -21,10 +20,6 @@
       --yellow:#e2c65e;
       --blue:#81bfff;
       --shadow:0 18px 40px rgba(0,0,0,.28);
-      --radius-xl:26px;
-      --radius-lg:20px;
-      --radius-md:14px;
-      --radius-sm:10px;
       --sidebar-width:290px;
       --topbar-height:86px;
     }
@@ -41,7 +36,6 @@
     img{display:block;max-width:100%}
     button,input,select,textarea{font:inherit}
     button{cursor:pointer;border:none;outline:none}
-    a{text-decoration:none;color:inherit}
     .hidden{display:none !important}
     .muted{color:var(--muted)}
     .w-full{width:100%}
@@ -53,13 +47,9 @@
       transition:.18s ease;
     }
     .primary-btn{background:linear-gradient(135deg,var(--green),var(--green-2));color:#07140a}
-    .primary-btn:hover{filter:brightness(1.04)}
     .soft-btn{background:rgba(255,255,255,.07);color:var(--text);border:1px solid var(--line)}
-    .soft-btn:hover{background:rgba(255,255,255,.11)}
     .ghost-btn{background:transparent;color:var(--text);border:1px solid var(--line)}
-    .ghost-btn:hover{background:rgba(255,255,255,.05)}
     .danger-btn{background:rgba(255,115,115,.12);color:#ffd0d0;border:1px solid rgba(255,115,115,.2)}
-    .danger-btn:hover{background:rgba(255,115,115,.18)}
     .tiny-btn{
       padding:8px 10px;
       font-size:12px;
@@ -67,7 +57,6 @@
       color:var(--text);
       border:1px solid var(--line);
     }
-    .tiny-btn:hover{background:rgba(255,255,255,.11)}
 
     .tag{
       display:inline-flex;
@@ -113,34 +102,21 @@
       border:1px solid var(--line);
       background:linear-gradient(135deg,rgba(114,208,123,.14),rgba(255,255,255,.03));
     }
-    .brand-logo-img{
-  width:180px;
-  height:auto;
-  object-fit:contain;
-  display:block;
-  background:none;
-  padding:0;
-  border-radius:0;
-}
-    .brand{
-  display:flex;
-  flex-direction:column;
-  align-items:flex-start;
-  gap:10px;
-  padding:16px 14px;
-  border-radius:24px;
-  border:1px solid var(--line);
-  background:linear-gradient(135deg,rgba(114,208,123,.14),rgba(255,255,255,.03));
-}
-
-.brand-text strong{
-  display:none;
-}
-
-.brand-text span{
-  color:var(--muted);
-  font-size:13px;
-}
+    .brand img{
+      width:42px;
+      height:42px;
+      object-fit:contain;
+    }
+    .brand-text strong{
+      display:block;
+      font-size:20px;
+      line-height:1;
+      margin-bottom:5px;
+    }
+    .brand-text span{
+      color:var(--muted);
+      font-size:13px;
+    }
 
     .nav-title{
       padding:0 10px;
@@ -235,7 +211,6 @@
       height:42px;
       border-radius:50%;
       object-fit:cover;
-      border:1px solid rgba(255,255,255,.08);
       background:#203126;
     }
     .profile-chip-info{
@@ -278,13 +253,6 @@
       background-size:cover;
       background-repeat:no-repeat;
       z-index:1;
-    }
-    .hero::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.24));
-      z-index:2;
     }
     .hero-content{
       position:relative;
@@ -446,7 +414,6 @@
       flex-wrap:wrap;
     }
     .searchbar input,
-    .searchbar select,
     .form-group input,
     .form-group select,
     .form-group textarea{
@@ -563,12 +530,6 @@
       text-align:center;
       background:rgba(255,255,255,.03);
       color:var(--muted);
-      transition:.18s ease;
-    }
-    .dropzone.dragover{
-      border-color:rgba(114,208,123,.45);
-      background:rgba(114,208,123,.08);
-      color:#d8f3db;
     }
 
     .avatar-preset-grid{
@@ -583,7 +544,6 @@
       overflow:hidden;
       border:2px solid transparent;
       background:rgba(255,255,255,.04);
-      transition:.18s ease;
     }
     .avatar-preset.active{border-color:var(--green)}
     .avatar-preset img{
@@ -689,7 +649,7 @@
       z-index:100;
       display:flex;
       align-items:center;
-      justify-content:center;
+      justify-content:flex-start;
       overflow:hidden;
       background:#060d09;
     }
@@ -701,52 +661,50 @@
     .login-overlay{
       position:absolute;
       inset:0;
-      background:linear-gradient(90deg,rgba(0,0,0,.62),rgba(0,0,0,.16));
+      background:linear-gradient(90deg,rgba(0,0,0,.56),rgba(0,0,0,.12));
     }
-   .login-logo{
-  position:absolute;
-  top:34px;
-  left:46px;
-  z-index:5;
-}
-
-.login-logo-img{
-  width:220px;
-  height:auto;
-  object-fit:contain;
-  display:block;
-  filter:drop-shadow(0 3px 14px rgba(0,0,0,.30));
-}
+    .login-logo{
+      position:absolute;
+      top:42px;
+      left:54px;
+      z-index:5;
+    }
+    .login-logo img{
+      width:220px;
+      height:auto;
+      object-fit:contain;
+    }
     .login-card{
       position:relative;
       z-index:5;
-      width:min(360px,92vw);
-      padding:28px;
-      border-radius:18px;
-      background:rgba(10,15,11,.72);
-      border:1px solid rgba(255,255,255,.1);
+      width:320px;
+      margin-left:54px;
+      margin-top:70px;
+      padding:24px 22px;
+      border-radius:14px;
+      background:rgba(10,15,11,.68);
+      border:1px solid rgba(255,255,255,.09);
       backdrop-filter:blur(10px);
       box-shadow:var(--shadow);
-      margin-left:-55vw;
-      align-self:center;
     }
     .login-card h3{
-      font-size:30px;
-      margin-bottom:10px;
+      font-size:28px;
+      margin-bottom:8px;
     }
     .login-card p{
       color:#c7d5c9;
-      margin-bottom:18px;
+      margin-bottom:16px;
+      font-size:15px;
     }
     .login-form{
       display:flex;
       flex-direction:column;
-      gap:14px;
+      gap:12px;
     }
     .login-form input{
       width:100%;
-      padding:12px 14px;
-      border-radius:10px;
+      padding:11px 13px;
+      border-radius:8px;
       background:rgba(255,255,255,.05);
       color:#fff;
       border:1px solid rgba(255,255,255,.1);
@@ -756,9 +714,9 @@
       display:flex;
       justify-content:space-between;
       align-items:center;
-      gap:12px;
+      gap:10px;
       flex-wrap:wrap;
-      font-size:13px;
+      font-size:12px;
       color:#ccd9ce;
     }
     .check-line{
@@ -767,8 +725,8 @@
       gap:8px;
     }
     .login-saved{
-      margin-top:16px;
-      padding-top:16px;
+      margin-top:14px;
+      padding-top:14px;
       border-top:1px solid rgba(255,255,255,.08);
       display:flex;
       flex-direction:column;
@@ -803,16 +761,25 @@
       .market-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
       .split{grid-template-columns:1fr}
       .analysis-grid{grid-template-columns:1fr}
-      .login-card{margin-left:-35vw}
     }
     @media (max-width:980px){
       .app-shell{grid-template-columns:1fr}
       .sidebar{display:none}
       .market-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
       .grid-3,.grid-2{grid-template-columns:1fr}
-      .login-card{margin-left:0}
-      .login-logo{top:20px;left:20px;font-size:22px}
-      .login-overlay{background:linear-gradient(180deg,rgba(0,0,0,.65),rgba(0,0,0,.45))}
+      .login-logo{
+        top:20px;
+        left:20px;
+      }
+      .login-card{
+        margin-left:20px;
+        margin-right:20px;
+        margin-top:90px;
+        width:min(340px,calc(100vw - 40px));
+      }
+      .login-overlay{
+        background:linear-gradient(180deg,rgba(0,0,0,.62),rgba(0,0,0,.36));
+      }
     }
     @media (max-width:640px){
       .market-grid,.grid-4{grid-template-columns:1fr}
@@ -829,8 +796,8 @@
     <div class="login-overlay"></div>
 
     <div class="login-logo">
-  <img src="imagens/logo.png" alt="AgroControl" class="login-logo-img">
-</div>
+      <img src="imagens/logo.png" alt="AgroControl">
+    </div>
 
     <div class="login-card">
       <h3>Entrar</h3>
@@ -860,12 +827,13 @@
 
   <div id="appShell" class="app-shell">
     <aside class="sidebar">
-     <div class="brand">
-  <img src="imagens/logo.png" alt="AgroControl" class="brand-logo-img">
-  <div class="brand-text">
-    <span id="brandFarmName">Minha Fazenda</span>
-  </div>
-</div>
+      <div class="brand">
+        <img src="imagens/logo.png" alt="AgroControl">
+        <div class="brand-text">
+          <strong>AgroControl</strong>
+          <span id="brandFarmName">Minha Fazenda</span>
+        </div>
+      </div>
 
       <div class="nav-title">Menu</div>
       <nav class="nav">
@@ -980,7 +948,6 @@
           <div class="section-head">
             <h3>Mercado</h3>
           </div>
-
           <div id="marketGrid" class="market-grid"></div>
         </section>
 
@@ -1508,11 +1475,7 @@
       toast.className = `toast ${type}`;
       toast.textContent = message;
       el.toastWrap.appendChild(toast);
-      setTimeout(() => {
-        toast.style.opacity = "0";
-        toast.style.transform = "translateY(-6px)";
-      }, 2500);
-      setTimeout(() => toast.remove(), 3200);
+      setTimeout(() => toast.remove(), 3000);
     }
 
     function escapeHtml(v){
@@ -1556,18 +1519,6 @@
       return currentRoleLabel() === "Dono";
     }
 
-    function isGerente(){
-      return currentRoleLabel() === "Gerente";
-    }
-
-    function canManageUsers(){
-      return isDono();
-    }
-
-    function canUseAnalysis(){
-      return isDono();
-    }
-
     function canSeeConfig(){
       return isDono();
     }
@@ -1582,34 +1533,31 @@
       }
     }
 
-   function updateSavedSessionVisibility(){
-  el.savedSessionBox.classList.add("hidden");
-}
-      if(state.hasSupabaseSession) el.savedSessionBox.classList.remove("hidden");
-      else el.savedSessionBox.classList.add("hidden");
+    function updateSavedSessionVisibility(){
+      el.savedSessionBox.classList.add("hidden");
     }
 
-   function buildAvatarPresets(){
-  el.avatarPresetGrid.innerHTML = "";
-  AVATARS.forEach(url => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "avatar-preset";
-    button.innerHTML = `<img src="${url}" alt="Avatar">`;
-    button.addEventListener("click", () => {
-      state.selectedPresetAvatar = url;
-      state.tempAvatarDataUrl = null;
-      el.profileAvatarPreview.src = url;
-      el.profileAvatarUrl.value = url;
-      [...el.avatarPresetGrid.querySelectorAll(".avatar-preset")].forEach(x => x.classList.remove("active"));
-      button.classList.add("active");
-    });
-    el.avatarPresetGrid.appendChild(button);
-  });
-}
+    function buildAvatarPresets(){
+      el.avatarPresetGrid.innerHTML = "";
+      AVATARS.forEach(url => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "avatar-preset";
+        button.innerHTML = `<img src="${url}" alt="Avatar">`;
+        button.addEventListener("click", () => {
+          state.selectedPresetAvatar = url;
+          state.tempAvatarDataUrl = null;
+          el.profileAvatarPreview.src = url;
+          el.profileAvatarUrl.value = url;
+          [...el.avatarPresetGrid.querySelectorAll(".avatar-preset")].forEach(x => x.classList.remove("active"));
+          button.classList.add("active");
+        });
+        el.avatarPresetGrid.appendChild(button);
+      });
+    }
+
     function readImageFile(file, cb){
-      if(!file) return;
-      if(!file.type.startsWith("image/")){
+      if(!file || !file.type.startsWith("image/")){
         showToast("Selecione uma imagem válida.", "error");
         return;
       }
@@ -1619,67 +1567,44 @@
     }
 
     async function checkExistingSession(){
-  const { data, error } = await supabaseClient.auth.getSession();
-
-  if(error){
-    state.hasSupabaseSession = false;
-  } else {
-    state.hasSupabaseSession = !!data?.session;
-  }
-
-  if(state.rememberedEmail){
-    el.loginEmail.value = state.rememberedEmail;
-    el.rememberLogin.checked = true;
-  }
-
-  updateSavedSessionVisibility();
-}
-    
-    async function login(email,password){
-  console.log("1. tentando login", email);
-
-  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-
-  if(error){
-    console.error("2. erro no login", error);
-    showToast(error.message || "Falha no login.", "error");
-    return false;
-  }
-
-  console.log("3. login OK", data);
-
-  state.session = data.session;
-  state.user = data.user;
-
-  if(el.rememberLogin.checked) localStorage.setItem("agrocontrol_remembered_email", email);
-  else localStorage.removeItem("agrocontrol_remembered_email");
-
-  console.log("4. chamando afterAuthenticated");
-  await afterAuthenticated();
-  console.log("5. entrou na central");
-  return true;
-}
-
-    async function continueSession(){
       const { data, error } = await supabaseClient.auth.getSession();
-      if(error || !data?.session){
-        showToast("Não foi possível continuar a sessão.", "error");
-        return;
+      state.hasSupabaseSession = !error && !!data?.session;
+
+      if(state.rememberedEmail){
+        el.loginEmail.value = state.rememberedEmail;
+        el.rememberLogin.checked = true;
       }
-      state.session = data.session;
-      state.user = data.session.user;
-      await afterAuthenticated();
+
+      updateSavedSessionVisibility();
     }
 
-   async function afterAuthenticated(){
-  await ensureProfile();
-  renderProfile();
-  applyPermissions();
-  setHeroBanner(state.banner);
-  await refreshAllData();
-  await refreshWeather(false);
-  showApp();
-}
+    async function login(email,password){
+      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+      if(error){
+        console.error(error);
+        showToast(error.message || "Falha no login.", "error");
+        return false;
+      }
+
+      state.session = data.session;
+      state.user = data.user;
+
+      if(el.rememberLogin.checked) localStorage.setItem("agrocontrol_remembered_email", email);
+      else localStorage.removeItem("agrocontrol_remembered_email");
+
+      await afterAuthenticated();
+      return true;
+    }
+
+    async function logout(){
+      await supabaseClient.auth.signOut();
+      state.session = null;
+      state.user = null;
+      state.profile = null;
+      showLogin();
+      showToast("Sessão encerrada.", "info");
+    }
 
     async function forgotPassword(){
       const email = el.loginEmail.value.trim();
@@ -1695,15 +1620,15 @@
       showToast("E-mail de recuperação enviado.", "success");
     }
 
-   function showLogin(){
-  el.loginScreen.style.display = "flex";
-  el.appShell.style.display = "none";
-}
+    function showLogin(){
+      el.loginScreen.style.display = "flex";
+      el.appShell.style.display = "none";
+    }
 
     function showApp(){
-  el.loginScreen.style.display = "none";
-  el.appShell.style.display = "grid";
-}
+      el.loginScreen.style.display = "none";
+      el.appShell.style.display = "grid";
+    }
 
     async function ensureProfile(){
       if(!state.user?.id) return;
@@ -1716,7 +1641,6 @@
 
       if(error){
         console.error(error);
-        showToast("Erro ao carregar perfil.", "error");
         return;
       }
 
@@ -1734,18 +1658,13 @@
         role: "owner"
       };
 
-      const { data: inserted, error: insertError } = await supabaseClient
+      const inserted = await supabaseClient
         .from("profiles")
         .upsert(fallbackProfile)
         .select()
         .single();
 
-      if(insertError){
-        console.error(insertError);
-        state.profile = fallbackProfile;
-        return;
-      }
-      state.profile = inserted;
+      state.profile = inserted.data || fallbackProfile;
     }
 
     function renderProfile(){
@@ -1781,48 +1700,40 @@
     }
 
     async function saveProfile(){
-  if(!state.user?.id) return;
+      if(!state.user?.id) return;
 
-  let avatar_url = el.profileAvatarUrl.value.trim();
-  if(state.tempAvatarDataUrl) avatar_url = state.tempAvatarDataUrl;
-  if(state.selectedPresetAvatar) avatar_url = state.selectedPresetAvatar;
+      let avatar_url = el.profileAvatarUrl.value.trim();
+      if(state.tempAvatarDataUrl) avatar_url = state.tempAvatarDataUrl;
+      if(state.selectedPresetAvatar) avatar_url = state.selectedPresetAvatar;
 
-  const payload = {
-    full_name: el.profileFullName.value.trim(),
-    farm_name: el.profileFarmName.value.trim(),
-    avatar_url
-  };
+      const payload = {
+        full_name: el.profileFullName.value.trim(),
+        farm_name: el.profileFarmName.value.trim(),
+        avatar_url,
+        role: dbRoleFromUi(el.profileRoleLabel.value)
+      };
 
-  const newRoleUi = el.profileRoleLabel.value;
-  if(newRoleUi) payload.role = dbRoleFromUi(newRoleUi);
+      const { data, error } = await supabaseClient
+        .from("profiles")
+        .update(payload)
+        .eq("id", state.user.id)
+        .select()
+        .single();
 
-  const { data, error } = await supabaseClient
-    .from("profiles")
-    .update(payload)
-    .eq("id", state.user.id)
-    .select()
-    .single();
+      if(error){
+        console.error(error);
+        showToast("Erro ao salvar perfil.", "error");
+        return;
+      }
 
-  if(error){
-    console.error(error);
-    showToast("Erro ao salvar perfil.", "error");
-    return;
-  }
-
-  state.profile = { ...state.profile, ...data };
-  renderProfile();
-  applyPermissions();
-  closeProfileDrawer();
-  showToast("Perfil salvo.", "success");
-}
+      state.profile = { ...state.profile, ...data };
+      renderProfile();
+      closeProfileDrawer();
+      showToast("Perfil salvo.", "success");
+    }
 
     function openProfileDrawer(){
       renderProfile();
-      if(!isDono() && !isGerente()){
-        el.profileRoleLabel.disabled = true;
-      }else{
-        el.profileRoleLabel.disabled = false;
-      }
       el.drawerBackdrop.classList.add("show");
       el.profileDrawer.classList.add("show");
     }
@@ -1834,7 +1745,6 @@
 
     function applyPermissions(){
       const dono = isDono();
-      const gerente = isGerente();
 
       el.financialAnalysisBtn.classList.toggle("hidden", !dono);
       el.stockAnalysisBtn.classList.toggle("hidden", !dono);
@@ -1844,23 +1754,9 @@
       el.exportFinancialBtn.classList.toggle("hidden", !dono);
       el.exportStockBtn.classList.toggle("hidden", !dono);
       el.exportAllBtn.classList.toggle("hidden", !dono);
-
       el.addEmployeeBtn.classList.toggle("hidden", !dono);
+
       document.querySelector('.nav-btn[data-section="config"]').classList.toggle("hidden", !canSeeConfig());
-
-      if(!dono && !gerente){
-        document.querySelector('.nav-btn[data-section="financial"]').classList.add("hidden");
-        document.querySelector('.nav-btn[data-section="stock"]').classList.add("hidden");
-        document.querySelector('.nav-btn[data-section="employees"]').classList.add("hidden");
-      }else{
-        document.querySelector('.nav-btn[data-section="financial"]').classList.remove("hidden");
-        document.querySelector('.nav-btn[data-section="stock"]').classList.remove("hidden");
-        document.querySelector('.nav-btn[data-section="employees"]').classList.remove("hidden");
-      }
-
-      if(!canSeeConfig() && state.currentSection === "config"){
-        setActiveSection("overview");
-      }
     }
 
     async function loadEmployees(){
@@ -1872,7 +1768,6 @@
       if(error){
         console.error(error);
         state.employees = [];
-        showToast("Falha ao carregar funcionários.", "error");
         return;
       }
       state.employees = data || [];
@@ -1887,7 +1782,6 @@
       if(error){
         console.error(error);
         state.operations = [];
-        showToast("Falha ao carregar operações.", "error");
         return;
       }
       state.operations = data || [];
@@ -1902,7 +1796,6 @@
       if(error){
         console.error(error);
         state.financial = [];
-        showToast("Falha ao carregar financeiro.", "error");
         return;
       }
       state.financial = data || [];
@@ -1921,19 +1814,9 @@
     }
 
     function renderOverview(){
-      const openOps = state.operations.filter(op => {
-        const s = String(op.status || "").toLowerCase();
-        return !["concluída","concluido","concluida","finalizada","done","completed"].includes(s);
-      }).length;
-
-      const pendingOps = state.operations.filter(op => {
-        const s = String(op.status || "").toLowerCase();
-        return ["pendente","pending","aguardando"].includes(s);
-      }).length;
-
-      const activeEmployees = state.employees.filter(e => {
-        return !["inativo","demitido"].includes(String(e.status || "").toLowerCase());
-      }).length;
+      const openOps = state.operations.filter(op => !/concl|final|done|completed/i.test(String(op.status || ""))).length;
+      const pendingOps = state.operations.filter(op => /pend|aguard/i.test(String(op.status || ""))).length;
+      const activeEmployees = state.employees.filter(e => !/inativo|demitido/i.test(String(e.status || ""))).length;
 
       let entradas = 0;
       let saidas = 0;
@@ -1961,51 +1844,37 @@
     }
 
     function renderRecentOperations(){
-      el.recentOperationsList.innerHTML = "";
       const rows = state.operations.slice(0,5);
       if(!rows.length){
         el.recentOperationsList.innerHTML = `<div class="empty">Sem operações</div>`;
         return;
       }
-      rows.forEach(item => {
-        const title = item.title || item.nome || item.name || "Operação";
-        const type = item.type || item.tipo || "Geral";
-        const status = item.status || "Pendente";
-        const div = document.createElement("div");
-        div.className = "list-item";
-        div.innerHTML = `
+      el.recentOperationsList.innerHTML = rows.map(item => `
+        <div class="list-item">
           <div>
-            <strong>${escapeHtml(title)}</strong><br>
-            <small>${escapeHtml(type)} · ${escapeHtml(status)}</small>
+            <strong>${escapeHtml(item.title || item.nome || item.name || "Operação")}</strong><br>
+            <small>${escapeHtml(item.type || item.tipo || "Geral")} · ${escapeHtml(item.status || "Pendente")}</small>
           </div>
           <small>${escapeHtml(formatDate(item.date || item.created_at))}</small>
-        `;
-        el.recentOperationsList.appendChild(div);
-      });
+        </div>
+      `).join("");
     }
 
     function renderRecentFinancial(){
-      el.recentFinancialList.innerHTML = "";
       const rows = state.financial.slice(0,5);
       if(!rows.length){
         el.recentFinancialList.innerHTML = `<div class="empty">Sem lançamentos</div>`;
         return;
       }
-      rows.forEach(item => {
-        const description = item.description || item.descricao || item.title || "Lançamento";
-        const value = item.amount ?? item.value ?? 0;
-        const type = item.type || item.tipo || "geral";
-        const div = document.createElement("div");
-        div.className = "list-item";
-        div.innerHTML = `
+      el.recentFinancialList.innerHTML = rows.map(item => `
+        <div class="list-item">
           <div>
-            <strong>${escapeHtml(description)}</strong><br>
-            <small>${escapeHtml(type)}</small>
+            <strong>${escapeHtml(item.description || item.descricao || item.title || "Lançamento")}</strong><br>
+            <small>${escapeHtml(item.type || item.tipo || "geral")}</small>
           </div>
-          <strong>${escapeHtml(formatCurrency(value))}</strong>
-        `;
-        el.recentFinancialList.appendChild(div);
-      });
+          <strong>${escapeHtml(formatCurrency(item.amount ?? item.value ?? 0))}</strong>
+        </div>
+      `).join("");
     }
 
     function renderMarketOverview(){
@@ -2052,13 +1921,9 @@
         ["Diesel", state.market.diesel]
       ];
 
-      el.marketGrid.innerHTML = "";
-      map.forEach(([title, value]) => {
-        const div = document.createElement("div");
-        div.className = "market-card";
-        div.innerHTML = `<h4>${escapeHtml(title)}</h4><div class="market-value">${escapeHtml(value)}</div>`;
-        el.marketGrid.appendChild(div);
-      });
+      el.marketGrid.innerHTML = map.map(([title, value]) =>
+        `<div class="market-card"><h4>${escapeHtml(title)}</h4><div class="market-value">${escapeHtml(value)}</div></div>`
+      ).join("");
 
       el.marketSoja.value = state.market.soja;
       el.marketMilho.value = state.market.milho;
@@ -2071,135 +1936,104 @@
     function renderEmployeesTable(){
       const query = el.employeesSearch.value.trim().toLowerCase();
       const rows = state.employees.filter(item => JSON.stringify(item).toLowerCase().includes(query));
-      el.employeesTableBody.innerHTML = "";
 
       if(!rows.length){
         el.employeesTableBody.innerHTML = `<tr><td colspan="6"><div class="empty">Nenhum funcionário</div></td></tr>`;
         return;
       }
 
-      rows.forEach(item => {
+      el.employeesTableBody.innerHTML = rows.map(item => {
         const name = item.name || item.full_name || item.nome || "Sem nome";
-        const username = item.username || (item.email ? String(item.email).replace("@agrocontrol","") : "—");
+        const username = item.username || "—";
         const phone = item.phone || item.telefone || "—";
         const role = uiRole(item.role || item.funcao || item.função);
         const status = item.status || "Ativo";
         const tagClass = /ativo/i.test(status) ? "tag-green" : /férias/i.test(status) ? "tag-yellow" : "tag-red";
 
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${escapeHtml(name)}</td>
-          <td>${escapeHtml(username)}</td>
-          <td>${escapeHtml(phone)}</td>
-          <td>${escapeHtml(role)}</td>
-          <td><span class="tag ${tagClass}">${escapeHtml(status)}</span></td>
-          <td>
-            <div class="row-actions">
-              <button class="tiny-btn" data-edit-employee="${item.id}">Editar</button>
-            </div>
-          </td>
+        return `
+          <tr>
+            <td>${escapeHtml(name)}</td>
+            <td>${escapeHtml(username)}</td>
+            <td>${escapeHtml(phone)}</td>
+            <td>${escapeHtml(role)}</td>
+            <td><span class="tag ${tagClass}">${escapeHtml(status)}</span></td>
+            <td><div class="row-actions"><button class="tiny-btn" data-edit-employee="${item.id}">Editar</button></div></td>
+          </tr>
         `;
-        el.employeesTableBody.appendChild(tr);
-      });
+      }).join("");
     }
 
     function renderOperationsTable(){
       const query = el.operationsSearch.value.trim().toLowerCase();
       const rows = state.operations.filter(item => JSON.stringify(item).toLowerCase().includes(query));
-      el.operationsTableBody.innerHTML = "";
 
       if(!rows.length){
         el.operationsTableBody.innerHTML = `<tr><td colspan="6"><div class="empty">Nenhuma operação</div></td></tr>`;
         return;
       }
 
-      rows.forEach(item => {
+      el.operationsTableBody.innerHTML = rows.map(item => {
         const title = item.title || item.name || item.nome || "Sem título";
         const type = item.type || item.tipo || "Geral";
         const status = item.status || "Pendente";
         const date = item.date || item.created_at || "";
-        const responsible = item.responsible || item.responsavel || item.responsável || item.owner || "—";
-
+        const responsible = item.responsible || item.responsavel || item.owner || "—";
         const tagClass = /concl/i.test(status) ? "tag-green" : /andamento|progress/i.test(status) ? "tag-blue" : /pend/i.test(status) ? "tag-yellow" : "tag-red";
 
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${escapeHtml(title)}</td>
-          <td>${escapeHtml(type)}</td>
-          <td><span class="tag ${tagClass}">${escapeHtml(status)}</span></td>
-          <td>${escapeHtml(formatDate(date))}</td>
-          <td>${escapeHtml(responsible)}</td>
-          <td>
-            <div class="row-actions">
-              <button class="tiny-btn" data-edit-operation="${item.id}">Editar</button>
-            </div>
-          </td>
+        return `
+          <tr>
+            <td>${escapeHtml(title)}</td>
+            <td>${escapeHtml(type)}</td>
+            <td><span class="tag ${tagClass}">${escapeHtml(status)}</span></td>
+            <td>${escapeHtml(formatDate(date))}</td>
+            <td>${escapeHtml(responsible)}</td>
+            <td><div class="row-actions"><button class="tiny-btn" data-edit-operation="${item.id}">Editar</button></div></td>
+          </tr>
         `;
-        el.operationsTableBody.appendChild(tr);
-      });
+      }).join("");
     }
 
     function renderFinancialTable(){
       const query = el.financialSearch.value.trim().toLowerCase();
       const rows = state.financial.filter(item => JSON.stringify(item).toLowerCase().includes(query));
-      el.financialTableBody.innerHTML = "";
 
       if(!rows.length){
         el.financialTableBody.innerHTML = `<tr><td colspan="6"><div class="empty">Nenhum lançamento</div></td></tr>`;
         return;
       }
 
-      rows.forEach(item => {
-        const desc = item.description || item.descricao || item.title || "Lançamento";
-        const category = item.category || item.categoria || "Geral";
-        const type = item.type || item.tipo || "Saída";
-        const value = item.amount ?? item.value ?? 0;
-        const date = item.date || item.created_at || "";
-
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${escapeHtml(desc)}</td>
-          <td>${escapeHtml(category)}</td>
-          <td>${escapeHtml(type)}</td>
-          <td>${escapeHtml(formatCurrency(value))}</td>
-          <td>${escapeHtml(formatDate(date))}</td>
-          <td>
-            <div class="row-actions">
-              <button class="tiny-btn" data-edit-financial="${item.id}">Editar</button>
-            </div>
-          </td>
-        `;
-        el.financialTableBody.appendChild(tr);
-      });
+      el.financialTableBody.innerHTML = rows.map(item => `
+        <tr>
+          <td>${escapeHtml(item.description || item.descricao || item.title || "Lançamento")}</td>
+          <td>${escapeHtml(item.category || item.categoria || "Geral")}</td>
+          <td>${escapeHtml(item.type || item.tipo || "Saída")}</td>
+          <td>${escapeHtml(formatCurrency(item.amount ?? item.value ?? 0))}</td>
+          <td>${escapeHtml(formatDate(item.date || item.created_at))}</td>
+          <td><div class="row-actions"><button class="tiny-btn" data-edit-financial="${item.id}">Editar</button></div></td>
+        </tr>
+      `).join("");
     }
 
     function renderStockTable(){
       const query = el.stockSearch.value.trim().toLowerCase();
       const rows = state.stock.filter(item => JSON.stringify(item).toLowerCase().includes(query));
-      el.stockTableBody.innerHTML = "";
 
       if(!rows.length){
         el.stockTableBody.innerHTML = `<tr><td colspan="7"><div class="empty">Nenhum item</div></td></tr>`;
         return;
       }
 
-      rows.forEach(item => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
+      el.stockTableBody.innerHTML = rows.map(item => `
+        <tr>
           <td>${escapeHtml(item.produto || "—")}</td>
           <td>${escapeHtml(item.quantidade || "—")}</td>
           <td>${escapeHtml(item.entrada || "—")}</td>
           <td>${escapeHtml(item.saida || "—")}</td>
           <td>${escapeHtml(item.local || "—")}</td>
           <td>${escapeHtml(item.categoria || "—")}</td>
-          <td>
-            <div class="row-actions">
-              <button class="tiny-btn" data-edit-stock="${item.id}">Editar</button>
-            </div>
-          </td>
-        `;
-        el.stockTableBody.appendChild(tr);
-      });
+          <td><div class="row-actions"><button class="tiny-btn" data-edit-stock="${item.id}">Editar</button></div></td>
+        </tr>
+      `).join("");
     }
 
     function setActiveSection(section){
@@ -2240,9 +2074,9 @@
       const lon = state.weather.lon;
 
       if(!lat || !lon){
-        if(showMsg) showToast("Defina latitude e longitude nas configurações.", "error");
         renderClimateOverview();
         renderClimateSection();
+        if(showMsg) showToast("Defina latitude e longitude nas configurações.", "error");
         return;
       }
 
@@ -2271,8 +2105,8 @@
     function openCrudModal(type, record = null){
       state.currentModal = type;
       state.editingRecord = record;
-
       const isEdit = !!record;
+
       el.modalBody.innerHTML = "";
       el.modalSubtitle.textContent = isEdit ? "Editar registro" : "Novo registro";
 
@@ -2360,7 +2194,6 @@
       if(type === "employee"){
         const payload = {
           name: document.getElementById("crudName").value.trim(),
-          full_name: document.getElementById("crudName").value.trim(),
           username: document.getElementById("crudUsername").value.trim().toLowerCase(),
           phone: document.getElementById("crudPhone").value.trim(),
           role: dbRoleFromUi(document.getElementById("crudRole").value),
@@ -2368,12 +2201,9 @@
           internal_email: document.getElementById("crudInternalEmail").value.trim()
         };
 
-        let response;
-        if(isEdit){
-          response = await supabaseClient.from("employees").update(payload).eq("id", state.editingRecord.id);
-        }else{
-          response = await supabaseClient.from("employees").insert(payload);
-        }
+        const response = isEdit
+          ? await supabaseClient.from("employees").update(payload).eq("id", state.editingRecord.id)
+          : await supabaseClient.from("employees").insert(payload);
 
         if(response.error){
           showToast(response.error.message || "Erro ao salvar funcionário.", "error");
@@ -2398,12 +2228,9 @@
           notes: document.getElementById("crudNotes").value.trim()
         };
 
-        let response;
-        if(isEdit){
-          response = await supabaseClient.from("operations").update(payload).eq("id", state.editingRecord.id);
-        }else{
-          response = await supabaseClient.from("operations").insert(payload);
-        }
+        const response = isEdit
+          ? await supabaseClient.from("operations").update(payload).eq("id", state.editingRecord.id)
+          : await supabaseClient.from("operations").insert(payload);
 
         if(response.error){
           showToast(response.error.message || "Erro ao salvar operação.", "error");
@@ -2426,12 +2253,9 @@
           date: document.getElementById("crudDate").value
         };
 
-        let response;
-        if(isEdit){
-          response = await supabaseClient.from("financial_transactions").update(payload).eq("id", state.editingRecord.id);
-        }else{
-          response = await supabaseClient.from("financial_transactions").insert(payload);
-        }
+        const response = isEdit
+          ? await supabaseClient.from("financial_transactions").update(payload).eq("id", state.editingRecord.id)
+          : await supabaseClient.from("financial_transactions").insert(payload);
 
         if(response.error){
           showToast(response.error.message || "Erro ao salvar lançamento.", "error");
@@ -2472,7 +2296,6 @@
 
     function openAnalysis(type){
       state.currentAnalysis = type;
-      el.analysisBody.innerHTML = "";
       el.analysisTitle.textContent = type === "financial" ? "Análise Financeira" : "Análise de Estoque";
 
       if(type === "financial"){
@@ -2502,9 +2325,7 @@
             </div>
           </div>
         `;
-      }
-
-      if(type === "stock"){
+      } else {
         el.analysisBody.innerHTML = `
           <div class="analysis-grid">
             <div class="analysis-card">
@@ -2560,9 +2381,9 @@
       renderProfile();
       applyPermissions();
       setHeroBanner(state.banner);
+      showApp();
       await refreshAllData();
       await refreshWeather(false);
-      showApp();
     }
 
     function bindEvents(){
@@ -2570,29 +2391,22 @@
         btn.addEventListener("click", () => setActiveSection(btn.dataset.section));
       });
 
-     el.loginForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const email = el.loginEmail.value.trim();
-  const password = el.loginPassword.value;
+      el.loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const email = el.loginEmail.value.trim();
+        const password = el.loginPassword.value;
 
-  if(!email || !password){
-    showToast("Preencha e-mail e senha.", "error");
-    return;
-  }
+        if(!email || !password){
+          showToast("Preencha e-mail e senha.", "error");
+          return;
+        }
 
-  await login(email, password);
-});
-
-      el.continueSessionBtn.addEventListener("click", continueSession);
-      el.clearSavedSessionBtn.addEventListener("click", async () => {
-        await supabaseClient.auth.signOut();
-        state.hasSupabaseSession = false;
-        updateSavedSessionVisibility();
-        showToast("Sessão salva removida.", "info");
+        await login(email, password);
       });
-      el.forgotPasswordBtn.addEventListener("click", forgotPassword);
 
+      el.forgotPasswordBtn.addEventListener("click", forgotPassword);
       el.logoutBtn.addEventListener("click", logout);
+
       el.refreshAllBtn.addEventListener("click", async () => {
         await refreshAllData(true);
         await refreshWeather(true);
@@ -2615,28 +2429,6 @@
         });
       });
 
-      ["dragenter","dragover"].forEach(evt => {
-        el.avatarDropzone.addEventListener(evt, (e) => {
-          e.preventDefault();
-          el.avatarDropzone.classList.add("dragover");
-        });
-      });
-      ["dragleave","drop"].forEach(evt => {
-        el.avatarDropzone.addEventListener(evt, (e) => {
-          e.preventDefault();
-          el.avatarDropzone.classList.remove("dragover");
-        });
-      });
-      el.avatarDropzone.addEventListener("drop", (e) => {
-        const file = e.dataTransfer.files?.[0];
-        readImageFile(file, (result) => {
-          state.tempAvatarDataUrl = result;
-          state.selectedPresetAvatar = null;
-          el.profileAvatarPreview.src = result;
-          el.profileAvatarUrl.value = "";
-        });
-      });
-
       el.saveProfileBtn.addEventListener("click", saveProfile);
 
       el.saveFarmConfigBtn.addEventListener("click", async () => {
@@ -2653,13 +2445,9 @@
         state.weather.lat = lat;
         state.weather.lon = lon;
 
-        const payload = {
-          farm_name: farmName
-        };
-
         const { data, error } = await supabaseClient
           .from("profiles")
-          .update(payload)
+          .update({ farm_name: farmName })
           .eq("id", state.user.id)
           .select()
           .single();
@@ -2728,10 +2516,6 @@
       el.exportFinancialBtn.addEventListener("click", () => exportCsv("financeiro.csv", state.financial));
       el.exportStockBtn.addEventListener("click", () => exportCsv("estoque.csv", state.stock));
       el.exportAllBtn.addEventListener("click", () => exportCsv("geral-financeiro.csv", state.financial));
-      el.exportAnalysisBtn.addEventListener("click", () => {
-        if(state.currentAnalysis === "financial") exportCsv("analise-financeira.csv", state.financial);
-        if(state.currentAnalysis === "stock") exportCsv("analise-estoque.csv", state.stock);
-      });
 
       el.employeesSearch.addEventListener("input", renderEmployeesTable);
       el.operationsSearch.addEventListener("input", renderOperationsTable);
@@ -2763,23 +2547,23 @@
       });
     }
 
-   aasync function init(){
-  bindEvents();
-  buildAvatarPresets();
-  renderMarket();
-  showLogin();
-  await checkExistingSession();
+    async function init(){
+      bindEvents();
+      buildAvatarPresets();
+      renderMarket();
+      showLogin();
+      await checkExistingSession();
 
-  if(state.rememberedEmail){
-    el.loginEmail.value = state.rememberedEmail;
-  }
+      if(state.rememberedEmail){
+        el.loginEmail.value = state.rememberedEmail;
+      }
 
-  supabaseClient.auth.onAuthStateChange(async (event, session) => {
-    state.hasSupabaseSession = !!session;
-    updateSavedSessionVisibility();
-    if(event === "SIGNED_OUT") showLogin();
-  });
-}
+      supabaseClient.auth.onAuthStateChange(async (event, session) => {
+        state.hasSupabaseSession = !!session;
+        updateSavedSessionVisibility();
+        if(event === "SIGNED_OUT") showLogin();
+      });
+    }
 
     init();
   </script>
