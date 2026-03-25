@@ -1607,7 +1607,6 @@
     el.avatarPresetGrid.appendChild(button);
   });
 }
-
     function readImageFile(file, cb){
       if(!file) return;
       if(!file.type.startsWith("image/")){
@@ -2764,24 +2763,23 @@
       });
     }
 
-   async function init(){
-  buildAvatarPresets();
+   aasync function init(){
   bindEvents();
-  await checkExistingSession();
+  buildAvatarPresets();
+  renderMarket();
   showLogin();
+  await checkExistingSession();
 
   if(state.rememberedEmail){
     el.loginEmail.value = state.rememberedEmail;
   }
-}
 
-      const { data } = await supabaseClient.auth.getSession();
-      if(data?.session?.user){
-        state.session = data.session;
-        state.user = data.session.user;
-        await afterAuthenticated();
-      }
-    }
+  supabaseClient.auth.onAuthStateChange(async (event, session) => {
+    state.hasSupabaseSession = !!session;
+    updateSavedSessionVisibility();
+    if(event === "SIGNED_OUT") showLogin();
+  });
+}
 
     init();
   </script>
