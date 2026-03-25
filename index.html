@@ -1637,12 +1637,17 @@
 }
     
     async function login(email,password){
+  console.log("1. tentando login", email);
+
   const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
   if(error){
+    console.error("2. erro no login", error);
     showToast(error.message || "Falha no login.", "error");
     return false;
   }
+
+  console.log("3. login OK", data);
 
   state.session = data.session;
   state.user = data.user;
@@ -1650,7 +1655,9 @@
   if(el.rememberLogin.checked) localStorage.setItem("agrocontrol_remembered_email", email);
   else localStorage.removeItem("agrocontrol_remembered_email");
 
+  console.log("4. chamando afterAuthenticated");
   await afterAuthenticated();
+  console.log("5. entrou na central");
   return true;
 }
 
