@@ -3,2970 +3,792 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AgroControl Desktop v2.1</title>
+  <title>AgroControl Desktop v2.2</title>
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="estilos.css" />
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <style>
-    :root{
-      --bg:#07100b;
-      --bg-2:#0b1510;
-      --panel:#101b14;
-      --panel-2:#142119;
-      --line:rgba(255,255,255,.09);
-      --text:#eef6ef;
-      --muted:#9bb09f;
-      --green:#72d07b;
-      --green-2:#3e9247;
-      --danger:#ff7373;
-      --yellow:#e2c65e;
-      --blue:#81bfff;
-      --shadow:0 18px 40px rgba(0,0,0,.28);
-      --radius-xl:26px;
-      --radius-lg:20px;
-      --radius-md:14px;
-      --radius-sm:10px;
-      --sidebar-width:290px;
-      --topbar-height:86px;
-    }
-
-    *{box-sizing:border-box;margin:0;padding:0}
-    html,body{
-      width:100%;
-      height:100%;
-      font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;
-      background:linear-gradient(180deg,#08110c 0%,#0b1510 100%);
-      color:var(--text);
-      overflow:hidden;
-    }
-    img{display:block;max-width:100%}
-    button,input,select,textarea{font:inherit}
-    button{cursor:pointer;border:none;outline:none}
-    a{text-decoration:none;color:inherit}
-    .hidden{display:none !important}
-
-    .ghost-btn,.soft-btn,.primary-btn,.danger-btn,.tiny-btn{
-      border-radius:14px;
-      padding:12px 14px;
-      font-weight:700;
-      transition:.18s ease;
-    }
-    .primary-btn{background:linear-gradient(135deg,var(--green),var(--green-2));color:#07140a}
-    .primary-btn:hover{filter:brightness(1.04)}
-    .soft-btn{background:rgba(255,255,255,.07);color:var(--text);border:1px solid var(--line)}
-    .soft-btn:hover{background:rgba(255,255,255,.11)}
-    .ghost-btn{background:transparent;color:var(--text);border:1px solid var(--line)}
-    .ghost-btn:hover{background:rgba(255,255,255,.05)}
-    .danger-btn{background:rgba(255,115,115,.12);color:#ffd0d0;border:1px solid rgba(255,115,115,.2)}
-    .danger-btn:hover{background:rgba(255,115,115,.18)}
-    .tiny-btn{
-      padding:8px 10px;
-      font-size:12px;
-      background:rgba(255,255,255,.07);
-      color:var(--text);
-      border:1px solid var(--line);
-    }
-    .tiny-btn:hover{background:rgba(255,255,255,.11)}
-
-    .tag{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-width:86px;
-      padding:6px 10px;
-      border-radius:999px;
-      font-size:12px;
-      font-weight:800;
-      white-space:nowrap;
-    }
-    .tag-green{background:rgba(114,208,123,.15);color:#c4f1c8}
-    .tag-yellow{background:rgba(226,198,94,.15);color:#ffeaa0}
-    .tag-red{background:rgba(255,115,115,.15);color:#ffd0d0}
-    .tag-blue{background:rgba(129,191,255,.15);color:#d3e8ff}
-
-    .app-shell{
-      width:100%;
-      height:100%;
-      display:none;
-      grid-template-columns:var(--sidebar-width) 1fr;
-    }
-
-    .sidebar{
-      background:linear-gradient(180deg,#09120d 0%,#08110c 100%);
-      border-right:1px solid var(--line);
-      min-height:100vh;
-      padding:16px;
-      display:flex;
-      flex-direction:column;
-      gap:18px;
-      box-shadow:var(--shadow);
-      z-index:20;
-    }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:14px;
-      padding:16px 14px;
-      border-radius:24px;
-      border:1px solid var(--line);
-      background:linear-gradient(135deg,rgba(114,208,123,.14),rgba(255,255,255,.03));
-    }
-    .brand-mark{
-      width:52px;
-      height:52px;
-      border-radius:18px;
-      display:grid;
-      place-items:center;
-      background:linear-gradient(135deg,#6ecc76,#3b8e44);
-      color:#0b160e;
-      font-size:26px;
-      font-weight:900;
-    }
-    .brand-text strong{
-      display:block;
-      font-size:20px;
-      line-height:1;
-      margin-bottom:5px;
-    }
-    .brand-text span{
-      color:var(--muted);
-      font-size:13px;
-    }
-
-    .nav-title{
-      padding:0 10px;
-      color:#7f9784;
-      font-size:12px;
-      text-transform:uppercase;
-      letter-spacing:1px;
-      margin-top:4px;
-    }
-    .nav{
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-    }
-    .nav-btn{
-      width:100%;
-      padding:14px 14px;
-      border-radius:18px;
-      color:var(--text);
-      background:transparent;
-      border:1px solid transparent;
-      text-align:left;
-      display:flex;
-      align-items:center;
-      gap:12px;
-      font-size:16px;
-      transition:.18s ease;
-    }
-    .nav-btn:hover{background:rgba(255,255,255,.05);border-color:var(--line)}
-    .nav-btn.active{
-      background:linear-gradient(135deg,rgba(114,208,123,.18),rgba(255,255,255,.03));
-      border-color:rgba(114,208,123,.25);
-    }
-    .nav-icon{width:18px;text-align:center}
-
-    .sidebar-footer{
-      margin-top:auto;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-
-    .main{
-      min-width:0;
-      min-height:100vh;
-      display:flex;
-      flex-direction:column;
-      overflow:hidden;
-    }
-
-    .topbar{
-      height:var(--topbar-height);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-      padding:16px 22px;
-      border-bottom:1px solid var(--line);
-      background:rgba(7,14,10,.78);
-      backdrop-filter:blur(12px);
-      z-index:12;
-    }
-    .topbar-left h2{
-      font-size:24px;
-      line-height:1;
-      margin-bottom:4px;
-    }
-    .topbar-left p{
-      color:var(--muted);
-      font-size:14px;
-    }
-
-    .topbar-right{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      flex-wrap:wrap;
-    }
-
-    .profile-chip{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      min-width:220px;
-      padding:10px 12px;
-      border-radius:999px;
-      background:rgba(255,255,255,.06);
-      border:1px solid var(--line);
-    }
-    .profile-chip img{
-      width:42px;
-      height:42px;
-      border-radius:50%;
-      object-fit:cover;
-      border:1px solid rgba(255,255,255,.08);
-      background:#203126;
-    }
-    .profile-chip-info{
-      min-width:0;
-      flex:1;
-    }
-    .profile-chip-info strong,.profile-chip-info span{
-      display:block;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .profile-chip-info strong{font-size:14px}
-    .profile-chip-info span{font-size:12px;color:var(--muted)}
-
-    .content{
-      flex:1;
-      overflow:auto;
-      padding:22px;
-      display:flex;
-      flex-direction:column;
-      gap:20px;
-    }
-
-    .hero{
-      min-height:220px;
-      border-radius:30px;
-      overflow:hidden;
-      position:relative;
-      border:1px solid var(--line);
-      background:
-        linear-gradient(90deg,rgba(7,12,8,.88),rgba(7,12,8,.28) 58%,rgba(7,12,8,.72)),
-        url("imagens/hero_bg_crop.png") center/cover no-repeat;
-      box-shadow:var(--shadow);
-    }
-    .hero-custom{
-      position:absolute;
-      inset:0;
-      background-position:center;
-      background-size:cover;
-      background-repeat:no-repeat;
-      z-index:1;
-    }
-    .hero::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.24));
-      z-index:2;
-    }
-    .hero-content{
-      position:relative;
-      z-index:3;
-      height:100%;
-      padding:24px;
-      display:flex;
-      flex-direction:column;
-      justify-content:flex-end;
-      gap:14px;
-    }
-    .hero-title{
-      font-size:32px;
-      line-height:1;
-    }
-
-    .hero-kpis{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-    }
-    .hero-kpi{
-      min-width:140px;
-      padding:12px 14px;
-      border-radius:18px;
-      background:rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.09);
-      backdrop-filter:blur(10px);
-    }
-    .hero-kpi span{
-      display:block;
-      font-size:12px;
-      color:#d4e4d6;
-      margin-bottom:6px;
-    }
-    .hero-kpi strong{
-      font-size:18px;
-    }
-
-    .section{
-      display:none;
-      flex-direction:column;
-      gap:18px;
-    }
-    .section.active{display:flex}
-    .section-head{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
-    }
-    .section-head h3{font-size:24px}
-    .section-actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .grid{display:grid;gap:18px}
-    .grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
-    .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
-    .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .split{display:grid;grid-template-columns:1.4fr 1fr;gap:18px}
-
-    .card{
-      background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.03));
-      border:1px solid var(--line);
-      border-radius:22px;
-      padding:18px;
-      box-shadow:var(--shadow);
-      min-width:0;
-    }
-
-    .metric-card{
-      min-height:132px;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-    .metric-top{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-    }
-    .metric-icon{
-      width:42px;
-      height:42px;
-      border-radius:14px;
-      display:grid;
-      place-items:center;
-      background:rgba(114,208,123,.15);
-      color:#c6f0ca;
-      font-size:20px;
-    }
-    .metric-value{
-      font-size:30px;
-      font-weight:900;
-      line-height:1;
-    }
-    .metric-label{
-      color:var(--muted);
-      font-size:13px;
-    }
-
-    .list{
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-    .list-item{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      padding:14px;
-      border-radius:16px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
-    }
-    .list-item small{color:var(--muted)}
-
-    .table-wrap{
-      overflow:auto;
-      border-radius:18px;
-      border:1px solid var(--line);
-    }
-    table{
-      width:100%;
-      min-width:860px;
-      border-collapse:collapse;
-      background:rgba(255,255,255,.02);
-    }
-    th,td{
-      padding:14px;
-      border-bottom:1px solid var(--line);
-      text-align:left;
-      font-size:14px;
-      vertical-align:middle;
-    }
-    th{
-      font-size:12px;
-      color:#9ab09e;
-      text-transform:uppercase;
-      letter-spacing:.8px;
-      background:rgba(255,255,255,.03);
-    }
-    tr:hover td{background:rgba(255,255,255,.03)}
-    .row-actions{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-    }
-
-    .searchbar{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-    .searchbar input,
-    .searchbar select,
-    .form-group input,
-    .form-group select,
-    .form-group textarea{
-      width:100%;
-      background:rgba(255,255,255,.05);
-      color:var(--text);
-      border:1px solid var(--line);
-      border-radius:14px;
-      padding:12px 14px;
-      outline:none;
-    }
-    .form-group textarea{
-      resize:vertical;
-      min-height:110px;
-    }
-
-    .market-grid{
-      display:grid;
-      grid-template-columns:repeat(6,minmax(0,1fr));
-      gap:14px;
-    }
-    .market-card{
-      min-height:118px;
-      padding:16px;
-      border-radius:20px;
-      border:1px solid var(--line);
-      background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
-      box-shadow:var(--shadow);
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      gap:14px;
-    }
-    .market-card h4{font-size:16px}
-    .market-value{font-size:24px;font-weight:900}
-
-    .empty{
-      padding:24px;
-      border:1px dashed rgba(255,255,255,.14);
-      border-radius:18px;
-      color:var(--muted);
-      text-align:center;
-      background:rgba(255,255,255,.02);
-    }
-
-    .drawer-backdrop,.modal-backdrop,.login-screen{
-      position:fixed;
-      inset:0;
-    }
-    .drawer-backdrop,.modal-backdrop{
-      display:none;
-      background:rgba(0,0,0,.42);
-      backdrop-filter:blur(6px);
-      z-index:50;
-    }
-    .drawer-backdrop.show,.modal-backdrop.show{display:block}
-
-    .drawer{
-      position:fixed;
-      top:0;
-      right:-460px;
-      width:min(440px,100vw);
-      height:100vh;
-      z-index:60;
-      background:linear-gradient(180deg,#101811,#142019);
-      border-left:1px solid var(--line);
-      box-shadow:var(--shadow);
-      transition:right .22s ease;
-      display:flex;
-      flex-direction:column;
-    }
-    .drawer.show{right:0}
-    .drawer-header{
-      padding:20px;
-      border-bottom:1px solid var(--line);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-    }
-    .drawer-body{
-      padding:20px;
-      overflow:auto;
-      display:flex;
-      flex-direction:column;
-      gap:18px;
-    }
-
-    .avatar-editor{
-      display:flex;
-      align-items:center;
-      gap:14px;
-    }
-    .avatar-lg{
-      width:90px;
-      height:90px;
-      border-radius:50%;
-      object-fit:cover;
-      background:#253228;
-      border:2px solid rgba(255,255,255,.08);
-    }
-
-    .dropzone{
-      border:1px dashed rgba(255,255,255,.2);
-      border-radius:18px;
-      padding:18px;
-      text-align:center;
-      background:rgba(255,255,255,.03);
-      color:var(--muted);
-      transition:.18s ease;
-    }
-    .dropzone.dragover{
-      border-color:rgba(114,208,123,.45);
-      background:rgba(114,208,123,.08);
-      color:#d8f3db;
-    }
-
-    .avatar-preset-grid{
-      display:grid;
-      grid-template-columns:repeat(5,1fr);
-      gap:10px;
-    }
-    .avatar-preset{
-      width:100%;
-      aspect-ratio:1;
-      border-radius:50%;
-      overflow:hidden;
-      border:2px solid transparent;
-      background:rgba(255,255,255,.04);
-      transition:.18s ease;
-    }
-    .avatar-preset.active{border-color:var(--green)}
-    .avatar-preset img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-    }
-
-    .modal{
-      position:fixed;
-      inset:0;
-      z-index:70;
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding:20px;
-    }
-    .modal.show{display:flex}
-    .modal-box{
-      width:min(820px,100%);
-      max-height:90vh;
-      overflow:auto;
-      border-radius:26px;
-      border:1px solid var(--line);
-      background:linear-gradient(180deg,#101912,#132019);
-      box-shadow:var(--shadow);
-    }
-    .modal-header{
-      padding:18px 20px;
-      border-bottom:1px solid var(--line);
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-    }
-    .modal-body{
-      padding:20px;
-      display:flex;
-      flex-direction:column;
-      gap:16px;
-    }
-    .modal-footer{
-      padding:18px 20px;
-      border-top:1px solid var(--line);
-      display:flex;
-      justify-content:flex-end;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .form-grid{display:grid;gap:14px}
-    .form-grid.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .form-group{display:flex;flex-direction:column;gap:8px}
-    .form-group label{
-      color:#bfd0c1;
-      font-size:13px;
-      font-weight:700;
-    }
-
-    .analysis-grid{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:18px;
-    }
-    .analysis-card{
-      padding:18px;
-      border-radius:20px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
-    }
-    .analysis-card h4{
-      font-size:18px;
-      margin-bottom:14px;
-    }
-    .bar-chart{
-      display:flex;
-      align-items:flex-end;
-      gap:10px;
-      height:220px;
-      padding-top:10px;
-    }
-    .bar-col{
-      flex:1;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:8px;
-      min-width:0;
-    }
-    .bar{
-      width:100%;
-      border-radius:12px 12px 4px 4px;
-      background:linear-gradient(180deg,#8ed694,#4c9d54);
-      min-height:10px;
-    }
-    .bar-col span{
-      color:var(--muted);
-      font-size:12px;
-      white-space:nowrap;
-    }
-    .line-points{
-      position:relative;
-      height:220px;
-      border:1px solid rgba(255,255,255,.05);
-      border-radius:16px;
-      padding:14px;
-      background:rgba(255,255,255,.02);
-    }
-    .line-area{
-      position:absolute;
-      left:14px;
-      right:14px;
-      bottom:14px;
-      top:14px;
-      display:flex;
-      align-items:flex-end;
-      gap:10px;
-    }
-    .line-node-wrap{
-      flex:1;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:flex-end;
-      gap:8px;
-      height:100%;
-    }
-    .line-node{
-      width:10px;
-      height:10px;
-      border-radius:50%;
-      background:#93db99;
-      box-shadow:0 0 0 4px rgba(147,219,153,.12);
-    }
-    .line-stick{
-      width:2px;
-      background:rgba(147,219,153,.45);
-      border-radius:999px;
-    }
-    .line-node-wrap span{
-      font-size:12px;
-      color:var(--muted);
-      white-space:nowrap;
-    }
-
-    .login-screen{
-      z-index:100;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      overflow:hidden;
-    }
-    .login-bg{
-      position:absolute;
-      inset:0;
-      background:url("imagens/hero_bg_crop.png") center/cover no-repeat;
-    }
-    .login-overlay{
-      position:absolute;
-      inset:0;
-      background:linear-gradient(90deg,rgba(0,0,0,.7),rgba(0,0,0,.22));
-    }
-    .login-logo{
-      position:absolute;
-      top:38px;
-      left:54px;
-      display:flex;
-      align-items:center;
-      gap:12px;
-      z-index:5;
-      color:#fff;
-      font-weight:800;
-      font-size:26px;
-    }
-    .login-logo-mark{
-      width:42px;
-      height:42px;
-      border-radius:50%;
-      display:grid;
-      place-items:center;
-      background:rgba(114,208,123,.18);
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow:var(--shadow);
-      font-size:20px;
-    }
-    .login-card{
-      position:relative;
-      z-index:5;
-      width:min(360px,92vw);
-      padding:28px;
-      border-radius:18px;
-      background:rgba(10,15,11,.72);
-      border:1px solid rgba(255,255,255,.1);
-      backdrop-filter:blur(10px);
-      box-shadow:var(--shadow);
-    }
-    .login-card h3{
-      font-size:30px;
-      margin-bottom:10px;
-    }
-    .login-card p{
-      color:#c7d5c9;
-      margin-bottom:18px;
-    }
-    .login-form{
-      display:flex;
-      flex-direction:column;
-      gap:14px;
-    }
-    .login-form input{
-      width:100%;
-      padding:12px 14px;
-      border-radius:10px;
-      background:rgba(255,255,255,.05);
-      color:#fff;
-      border:1px solid rgba(255,255,255,.1);
-      outline:none;
-    }
-    .login-options{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      flex-wrap:wrap;
-      font-size:13px;
-      color:#ccd9ce;
-    }
-    .check-line{
-      display:flex;
-      align-items:center;
-      gap:8px;
-    }
-    .login-saved{
-      margin-top:16px;
-      padding-top:16px;
-      border-top:1px solid rgba(255,255,255,.08);
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-
-    .toast-wrap{
-      position:fixed;
-      top:18px;
-      right:18px;
-      z-index:200;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-    .toast{
-      min-width:260px;
-      max-width:380px;
-      padding:14px 16px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.08);
-      background:#152019;
-      color:var(--text);
-      box-shadow:var(--shadow);
-    }
-    .toast.success{border-left:4px solid #63c86c}
-    .toast.error{border-left:4px solid #ff7373}
-    .toast.info{border-left:4px solid #81bfff}
-
-    .muted{color:var(--muted)}
-    .w-full{width:100%}
-
-    @media (max-width:1380px){
-      .grid-4{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .market-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
-      .split{grid-template-columns:1fr}
-      .analysis-grid{grid-template-columns:1fr}
-    }
-    @media (max-width:980px){
-      .app-shell{grid-template-columns:1fr}
-      .sidebar{display:none}
-      .market-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .grid-3,.grid-2{grid-template-columns:1fr}
-    }
-    @media (max-width:640px){
-      .market-grid,.grid-4{grid-template-columns:1fr}
-      .content{padding:14px}
-      .topbar{padding:12px 14px}
-      .form-grid.cols-2{grid-template-columns:1fr}
-      .login-logo{top:20px;left:20px;font-size:22px}
-    }
-  </style>
 </head>
 <body>
 
-  <div id="loginScreen" class="login-screen">
-    <div class="login-bg"></div>
-    <div class="login-overlay"></div>
+  <!-- LOGIN -->
+  <section id="login" class="login-screen">
+    <div class="login-left">
+      <div class="login-left-inner">
+        <div class="brand-wrap">
+          <img src="imagens/logo.png" alt="AgroControl" class="brand-logo" />
+        </div>
 
-    <div class="login-logo">
-      <div class="login-logo-mark">🌿</div>
-      <div>AgroControl</div>
-    </div>
+        <div class="login-copy">
+          <span class="eyebrow">AgroControl Desktop v2.2</span>
+          <h1>Centro de comando da fazenda</h1>
+          <p>
+            Gestão rural premium com clima, mercado, operações, financeiro,
+            equipe e inteligência da fazenda em um único painel.
+          </p>
+        </div>
 
-    <div class="login-card">
-      <h3>Entrar</h3>
-      <p>Central de Comando</p>
+        <form id="loginForm" class="login-form">
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" class="input" type="email" placeholder="dono@agrocontrol" />
+          </div>
 
-      <form id="loginForm" class="login-form">
-        <input id="loginEmail" type="email" placeholder="E-mail" required />
-        <input id="loginPassword" type="password" placeholder="Senha" required />
+          <div class="field">
+            <label for="senha">Senha</label>
+            <input id="senha" class="input" type="password" placeholder="Digite sua senha" />
+          </div>
 
-        <div class="login-options">
-          <label class="check-line">
-            <input id="rememberLogin" type="checkbox" />
-            <span>Lembrar login</span>
+          <div class="login-options">
+            <label class="checkbox-row">
+              <input type="checkbox" id="rememberLogin" />
+              <span>Lembrar login</span>
+            </label>
+
+            <button type="button" class="text-link" id="recoverPasswordBtn">
+              Recuperar senha
+            </button>
+          </div>
+
+          <label class="checkbox-row continue-session">
+            <input type="checkbox" id="continueSession" checked />
+            <span>Continuar sessão</span>
           </label>
-          <button id="forgotPasswordBtn" class="ghost-btn" type="button">Recuperar senha</button>
+
+          <button type="submit" class="btn btn-primary">Entrar</button>
+        </form>
+
+        <div class="login-note">
+          <strong>AgroControl</strong><br />
+          Operação rural organizada, moderna e visualmente profissional.
         </div>
-
-        <button class="primary-btn w-full" type="submit">Entrar</button>
-      </form>
-
-      <div id="savedSessionBox" class="login-saved hidden">
-        <button id="continueSessionBtn" class="soft-btn w-full">Continuar sessão</button>
-        <button id="clearSavedSessionBtn" class="ghost-btn w-full">Esquecer sessão salva</button>
       </div>
     </div>
-  </div>
 
-  <div id="appShell" class="app-shell">
+    <div class="login-right">
+      <div class="login-overlay"></div>
+    </div>
+  </section>
+
+  <!-- APP -->
+  <section id="app" class="app-shell hidden">
+
+    <!-- SIDEBAR -->
     <aside class="sidebar">
-      <div class="brand">
-        <div class="brand-mark">🌿</div>
-        <div class="brand-text">
-          <strong>AgroControl</strong>
-          <span id="brandFarmName">Minha Fazenda</span>
+      <div class="sidebar-top">
+        <img src="imagens/logo.png" alt="AgroControl" class="sidebar-logo" />
+
+        <div class="sidebar-user-card">
+          <div class="user-avatar" id="userInitials">AG</div>
+          <div class="user-meta">
+            <strong id="sidebarUserName">Usuário</strong>
+            <span id="sidebarUserRole">Dono</span>
+          </div>
         </div>
       </div>
 
-      <div class="nav-title">Menu</div>
-      <nav class="nav">
-        <button class="nav-btn active" data-section="overview"><span class="nav-icon">🏡</span><span>Central de Comando</span></button>
-        <button class="nav-btn" data-section="mercado"><span class="nav-icon">📈</span><span>Mercado</span></button>
-        <button class="nav-btn" data-section="employees"><span class="nav-icon">👨‍🌾</span><span>Funcionários</span></button>
-        <button class="nav-btn" data-section="operations"><span class="nav-icon">🚜</span><span>Operações</span></button>
-        <button class="nav-btn" data-section="financial"><span class="nav-icon">💰</span><span>Financeiro</span></button>
-        <button class="nav-btn" data-section="stock"><span class="nav-icon">📦</span><span>Estoque</span></button>
-        <button class="nav-btn" data-section="config"><span class="nav-icon">⚙️</span><span>Configurações</span></button>
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-view="dashboard">
+          <span>Central de Comando</span>
+        </button>
+
+        <button class="nav-item" data-view="operations">
+          <span>Operações</span>
+        </button>
+
+        <button class="nav-item" data-view="employees">
+          <span>Funcionários</span>
+        </button>
+
+        <button class="nav-item" data-view="financial">
+          <span>Financeiro</span>
+        </button>
+
+        <button class="nav-item" data-view="market">
+          <span>Mercado</span>
+        </button>
+
+        <button class="nav-item" data-view="climate">
+          <span>Clima</span>
+        </button>
+
+        <button class="nav-item" data-view="plots">
+          <span>Talhões</span>
+        </button>
+
+        <button class="nav-item" data-view="inventory">
+          <span>Estoque</span>
+        </button>
+
+        <button class="nav-item" data-view="ai">
+          <span>IA da Fazenda</span>
+        </button>
+
+        <button class="nav-item" data-view="settings">
+          <span>Configurações</span>
+        </button>
       </nav>
 
-      <div class="sidebar-footer">
-        <button id="openProfileBtnSidebar" class="soft-btn">Perfil</button>
-        <button id="logoutBtn" class="danger-btn">Sair</button>
+      <div class="sidebar-bottom">
+        <button id="refreshAllBtn" class="btn btn-secondary btn-full">Atualizar dados</button>
+        <button id="logoutBtn" class="btn btn-danger btn-full">Sair</button>
       </div>
     </aside>
 
-    <main class="main">
+    <!-- MAIN -->
+    <main class="main-content">
       <header class="topbar">
         <div class="topbar-left">
-          <h2 id="topbarTitle">Central de Comando</h2>
-          <p id="topbarSubtitle">Gestão da fazenda</p>
+          <span class="eyebrow" id="pageEyebrow">AgroControl</span>
+          <h2 id="pageTitle">Central de Comando</h2>
+          <p id="pageSubtitle">
+            Visão geral da operação, clima, mercado e desempenho da fazenda.
+          </p>
         </div>
 
         <div class="topbar-right">
-          <button id="refreshAllBtn" class="ghost-btn">Atualizar dados</button>
-
-          <button id="openProfileBtn" class="profile-chip">
-            <img id="topbarAvatar" src="" alt="Avatar" />
-            <div class="profile-chip-info">
-              <strong id="topbarUserName">Usuário</strong>
-              <span id="topbarFarmName">Fazenda</span>
+          <div class="topbar-user">
+            <div class="user-avatar small" id="topbarInitials">AG</div>
+            <div class="user-meta">
+              <strong id="topUserName">Usuário</strong>
+              <span id="topUserMeta">Dono · Fazenda</span>
             </div>
-          </button>
+          </div>
         </div>
       </header>
 
-      <div class="content">
-        <section class="hero">
-          <div id="heroCustomBg" class="hero-custom hidden"></div>
-          <div class="hero-content">
-            <h3 id="heroFarmTitle" class="hero-title">Minha Fazenda</h3>
+      <div class="main-scroll">
 
-            <div class="hero-kpis">
-              <div class="hero-kpi"><span>Funcionários</span><strong id="heroEmployeesCount">0</strong></div>
-              <div class="hero-kpi"><span>Operações</span><strong id="heroOperationsCount">0</strong></div>
-              <div class="hero-kpi"><span>Lançamentos</span><strong id="heroFinancialCount">0</strong></div>
-              <div class="hero-kpi"><span>Função</span><strong id="heroUserRole">Dono</strong></div>
-            </div>
-          </div>
-        </section>
+        <!-- DASHBOARD -->
+        <section id="dashboard" class="view active">
 
-        <section id="section-overview" class="section active">
-          <div class="section-head">
-            <h3>Central de Comando</h3>
-          </div>
+          <div class="farm-banner">
+            <div class="farm-banner-overlay"></div>
 
-          <div class="grid grid-4">
-            <div class="card metric-card">
-              <div class="metric-top"><div>🛠️</div><div class="metric-icon">📌</div></div>
-              <div class="metric-value" id="metricOpsOpen">0</div>
-              <div class="metric-label">Em andamento</div>
-            </div>
+            <div class="farm-banner-content">
+              <div class="farm-banner-left">
+                <span class="chip">Central de Comando</span>
+                <h1 id="farmNameBanner">Fazenda AgroControl</h1>
+                <p id="farmTagline">
+                  Operação rural centralizada, mercado monitorado, clima em leitura constante
+                  e gestão premium da fazenda.
+                </p>
+              </div>
 
-            <div class="card metric-card">
-              <div class="metric-top"><div>📋</div><div class="metric-icon">⏳</div></div>
-              <div class="metric-value" id="metricOpsPending">0</div>
-              <div class="metric-label">Pendentes</div>
-            </div>
-
-            <div class="card metric-card">
-              <div class="metric-top"><div>👨‍🌾</div><div class="metric-icon">✅</div></div>
-              <div class="metric-value" id="metricEmployeesActive">0</div>
-              <div class="metric-label">Ativos</div>
-            </div>
-
-            <div class="card metric-card">
-              <div class="metric-top"><div>💵</div><div class="metric-icon">📊</div></div>
-              <div class="metric-value" id="metricFinancialBalance">R$ 0</div>
-              <div class="metric-label">Saldo</div>
-            </div>
-          </div>
-
-          <div class="split">
-            <div class="card">
-              <h3 style="margin-bottom:14px;">Operações</h3>
-              <div id="recentOperationsList" class="list"></div>
-            </div>
-
-            <div class="card">
-              <h3 style="margin-bottom:14px;">Financeiro</h3>
-              <div id="recentFinancialList" class="list"></div>
-            </div>
-          </div>
-        </section>
-
-        <section id="section-mercado" class="section">
-          <div class="section-head">
-            <h3>Mercado</h3>
-          </div>
-
-          <div id="marketGrid" class="market-grid"></div>
-        </section>
-
-        <section id="section-employees" class="section">
-          <div class="section-head">
-            <h3>Funcionários</h3>
-            <div class="section-actions">
-              <button id="addEmployeeBtn" class="primary-btn">Novo funcionário</button>
-              <button id="exportEmployeesBtn" class="ghost-btn hidden">Exportar CSV</button>
-            </div>
-          </div>
-
-          <div class="searchbar">
-            <input id="employeesSearch" type="text" placeholder="Pesquisar" />
-          </div>
-
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Nome</th>
-                  <th>Usuário</th>
-                  <th>Telefone</th>
-                  <th>Função</th>
-                  <th>Status</th>
-                  <th>Ações</th>
-                </tr>
-              </thead>
-              <tbody id="employeesTableBody"></tbody>
-            </table>
-          </div>
-        </section>
-
-        <section id="section-operations" class="section">
-          <div class="section-head">
-            <h3>Operações</h3>
-            <div class="section-actions">
-              <button id="addOperationBtn" class="primary-btn">Nova operação</button>
-              <button id="exportOperationsBtn" class="ghost-btn hidden">Exportar CSV</button>
-            </div>
-          </div>
-
-          <div class="searchbar">
-            <input id="operationsSearch" type="text" placeholder="Pesquisar" />
-          </div>
-
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Título</th>
-                  <th>Tipo</th>
-                  <th>Status</th>
-                  <th>Data</th>
-                  <th>Responsável</th>
-                  <th>Ações</th>
-                </tr>
-              </thead>
-              <tbody id="operationsTableBody"></tbody>
-            </table>
-          </div>
-        </section>
-
-        <section id="section-financial" class="section">
-          <div class="section-head">
-            <h3>Financeiro</h3>
-            <div class="section-actions">
-              <button id="addFinancialBtn" class="primary-btn">Novo lançamento</button>
-              <button id="financialAnalysisBtn" class="soft-btn hidden">Ver análise</button>
-              <button id="exportFinancialBtn" class="ghost-btn hidden">Exportar CSV</button>
-            </div>
-          </div>
-
-          <div class="searchbar">
-            <input id="financialSearch" type="text" placeholder="Pesquisar" />
-          </div>
-
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Descrição</th>
-                  <th>Categoria</th>
-                  <th>Tipo</th>
-                  <th>Valor</th>
-                  <th>Data</th>
-                  <th>Ações</th>
-                </tr>
-              </thead>
-              <tbody id="financialTableBody"></tbody>
-            </table>
-          </div>
-        </section>
-
-        <section id="section-stock" class="section">
-          <div class="section-head">
-            <h3>Estoque</h3>
-            <div class="section-actions">
-              <button id="addStockBtn" class="primary-btn">Novo item</button>
-              <button id="stockAnalysisBtn" class="soft-btn hidden">Ver análise</button>
-              <button id="exportStockBtn" class="ghost-btn hidden">Exportar CSV</button>
-            </div>
-          </div>
-
-          <div class="searchbar">
-            <input id="stockSearch" type="text" placeholder="Pesquisar" />
-          </div>
-
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Produto</th>
-                  <th>Quantidade</th>
-                  <th>Entrada</th>
-                  <th>Saída</th>
-                  <th>Local</th>
-                  <th>Categoria</th>
-                  <th>Ações</th>
-                </tr>
-              </thead>
-              <tbody id="stockTableBody"></tbody>
-            </table>
-          </div>
-        </section>
-
-        <section id="section-config" class="section">
-          <div class="section-head">
-            <h3>Configurações</h3>
-            <div class="section-actions">
-              <button id="exportAllBtn" class="ghost-btn hidden">Exportar geral</button>
-            </div>
-          </div>
-
-          <div class="grid grid-2">
-            <div class="card">
-              <div class="form-grid">
-                <div class="form-group">
-                  <label for="configFarmName">Nome da fazenda</label>
-                  <input id="configFarmName" type="text" placeholder="Nome da fazenda" />
+              <div class="farm-banner-stats">
+                <div class="mini-stat">
+                  <span>Funcionários</span>
+                  <strong id="bannerEmployeesCount">0</strong>
                 </div>
-                <div class="form-group">
-                  <label for="configFarmCity">Cidade</label>
-                  <input id="configFarmCity" type="text" placeholder="Cidade" />
+
+                <div class="mini-stat">
+                  <span>Operações</span>
+                  <strong id="bannerOperationsCount">0</strong>
                 </div>
-                <button id="saveFarmConfigBtn" class="primary-btn">Salvar</button>
+
+                <div class="mini-stat">
+                  <span>Lançamentos</span>
+                  <strong id="bannerTransactionsCount">0</strong>
+                </div>
+
+                <div class="mini-stat">
+                  <span>Função</span>
+                  <strong id="bannerRole">Dono</strong>
+                </div>
               </div>
             </div>
+          </div>
 
-            <div class="card">
-              <div class="form-grid">
-                <div class="form-group">
-                  <label>Banner</label>
-                  <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                    <button id="changeBannerBtn" class="soft-btn" type="button">Trocar banner</button>
-                    <button id="removeBannerBtn" class="ghost-btn" type="button">Remover banner</button>
+          <div class="dashboard-grid">
+            <div class="dashboard-left">
+
+              <div class="panel">
+                <div class="panel-head">
+                  <div>
+                    <h3>Visão operacional</h3>
+                    <p>Tarefas, frentes ativas e leitura rápida da operação.</p>
                   </div>
                 </div>
-                <div class="form-group">
-                  <label>Perfil</label>
-                  <button id="configProfileBtn" class="soft-btn" type="button">Abrir perfil</button>
+
+                <div class="kpi-grid">
+                  <div class="kpi-card">
+                    <span>Tarefas em andamento</span>
+                    <strong id="kpiInProgress">0</strong>
+                  </div>
+
+                  <div class="kpi-card">
+                    <span>Tarefas pendentes</span>
+                    <strong id="kpiPending">0</strong>
+                  </div>
+
+                  <div class="kpi-card">
+                    <span>Máquinas operando</span>
+                    <strong id="kpiMachines">4</strong>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
 
-          <div class="card">
-            <h3 style="margin-bottom:14px;">Mercado manual</h3>
-            <div class="form-grid cols-2">
-              <div class="form-group"><label>Soja</label><input id="marketSoja" type="text" /></div>
-              <div class="form-group"><label>Milho</label><input id="marketMilho" type="text" /></div>
-              <div class="form-group"><label>Arroz</label><input id="marketArroz" type="text" /></div>
-              <div class="form-group"><label>Arroba</label><input id="marketArroba" type="text" /></div>
-              <div class="form-group"><label>Dólar</label><input id="marketDolar" type="text" /></div>
-              <div class="form-group"><label>Diesel</label><input id="marketDiesel" type="text" /></div>
+              <div class="panel">
+                <div class="panel-head">
+                  <div>
+                    <h3>Operações em andamento</h3>
+                    <p>Principais frentes da fazenda neste momento.</p>
+                  </div>
+                </div>
+
+                <div id="dashboardOperationsList" class="stack-list"></div>
+              </div>
+
+              <div class="panel">
+                <div class="panel-head">
+                  <div>
+                    <h3>Mercado</h3>
+                    <p>Resumo rápido dos itens monitorados.</p>
+                  </div>
+
+                  <button class="btn btn-secondary" data-open-view="market">
+                    Abrir mercado
+                  </button>
+                </div>
+
+                <div id="dashboardMarketTicker" class="market-summary-grid"></div>
+              </div>
+
+              <div class="panel">
+                <div class="panel-head">
+                  <div>
+                    <h3>Produtividade e talhões</h3>
+                    <p>Visão resumida do desempenho por área.</p>
+                  </div>
+                </div>
+
+                <div id="plotSummaryCards" class="plot-grid"></div>
+              </div>
+
             </div>
-            <div style="margin-top:14px;">
-              <button id="saveMarketBtn" class="primary-btn">Salvar mercado</button>
+
+            <div class="dashboard-right">
+
+              <div class="panel climate-panel">
+                <div class="climate-bg-overlay"></div>
+
+                <div class="climate-content">
+                  <div class="panel-head">
+                    <div>
+                      <h3>Clima</h3>
+                      <p id="climateLocationLabel">Dom Pedrito, RS</p>
+                    </div>
+
+                    <button class="btn btn-secondary" data-open-view="climate">
+                      Abrir clima
+                    </button>
+                  </div>
+
+                  <div class="climate-main">
+                    <div>
+                      <strong class="climate-temp" id="climateTemp">24°</strong>
+                      <p id="climateCondition">Tempo estável</p>
+                    </div>
+
+                    <span class="chip" id="applyStatusChip">Pode aplicar</span>
+                  </div>
+
+                  <div class="climate-metrics">
+                    <div class="metric-card">
+                      <span>Vento</span>
+                      <strong id="climateWind">12 km/h</strong>
+                    </div>
+
+                    <div class="metric-card">
+                      <span>Umidade</span>
+                      <strong id="climateHumidity">64%</strong>
+                    </div>
+
+                    <div class="metric-card">
+                      <span>Atualização</span>
+                      <strong id="climateUpdatedAt">Manual</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel">
+                <div class="panel-head">
+                  <div>
+                    <h3>IA da Fazenda</h3>
+                    <p>Leituras rápidas para apoiar decisão.</p>
+                  </div>
+                </div>
+
+                <div id="aiInsightsList" class="stack-list"></div>
+              </div>
+
             </div>
           </div>
         </section>
+
+        <!-- OPERAÇÕES -->
+        <section id="operations" class="view">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h3>Operações</h3>
+                <p>Cadastro, acompanhamento e status operacional.</p>
+              </div>
+
+              <button id="seedOperationsBtn" class="btn btn-primary">
+                Gerar exemplo
+              </button>
+            </div>
+
+            <div id="operationsFullList" class="stack-list"></div>
+          </div>
+        </section>
+
+        <!-- FUNCIONÁRIOS -->
+        <section id="employees" class="view">
+          <div class="split-grid">
+
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>Funcionários</h3>
+                  <p>Gestão interna de usuários e equipe.</p>
+                </div>
+              </div>
+
+              <div id="employeesList" class="stack-list"></div>
+            </div>
+
+            <div class="panel" id="employeeFormCard">
+              <div class="panel-head">
+                <div>
+                  <h3>Novo funcionário</h3>
+                  <p>O Dono define o acesso e o sistema gera o email interno.</p>
+                </div>
+              </div>
+
+              <form id="employeeForm" class="form-grid">
+                <div class="field">
+                  <label for="employeeUsername">Usuário</label>
+                  <input id="employeeUsername" class="input" placeholder="beto" />
+                </div>
+
+                <div class="field">
+                  <label for="employeeFullName">Nome completo</label>
+                  <input id="employeeFullName" class="input" placeholder="Beto Ferreira" />
+                </div>
+
+                <div class="field">
+                  <label for="employeeRole">Função</label>
+                  <select id="employeeRole" class="select">
+                    <option>Dono</option>
+                    <option>Gerente</option>
+                    <option>Funcionário</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="employeeTempPassword">Senha inicial</label>
+                  <input id="employeeTempPassword" class="input" type="password" placeholder="Defina uma senha inicial" />
+                </div>
+
+                <button type="submit" class="btn btn-primary">Cadastrar internamente</button>
+              </form>
+
+              <div class="panel-note">
+                O cadastro interno fica pronto. Criação real de usuário do Supabase com senha definida pelo Dono exige backend seguro.
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- FINANCEIRO -->
+        <section id="financial" class="view">
+          <div class="split-grid">
+
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>Financeiro</h3>
+                  <p>Entradas, saídas e saldo consolidado.</p>
+                </div>
+
+                <button class="btn btn-secondary analysis-toggle" data-target="financialAnalysis">
+                  Ver análise
+                </button>
+              </div>
+
+              <div class="kpi-grid">
+                <div class="kpi-card">
+                  <span>Entradas</span>
+                  <strong id="financeIncome">R$ 0,00</strong>
+                </div>
+
+                <div class="kpi-card">
+                  <span>Saídas</span>
+                  <strong id="financeExpense">R$ 0,00</strong>
+                </div>
+
+                <div class="kpi-card">
+                  <span>Saldo</span>
+                  <strong id="financeBalance">R$ 0,00</strong>
+                </div>
+              </div>
+
+              <div id="financeList" class="stack-list mt-20"></div>
+              <div id="financialAnalysis" class="analysis-box hidden"></div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>Novo lançamento</h3>
+                  <p>Cadastre entradas e saídas da operação.</p>
+                </div>
+              </div>
+
+              <form id="financeForm" class="form-grid">
+                <div class="field">
+                  <label for="financeDescription">Descrição</label>
+                  <input id="financeDescription" class="input" placeholder="Diesel, venda de soja, manutenção..." />
+                </div>
+
+                <div class="field">
+                  <label for="financeType">Tipo</label>
+                  <select id="financeType" class="select">
+                    <option value="income">Entrada</option>
+                    <option value="expense">Saída</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="financeAmount">Valor</label>
+                  <input id="financeAmount" class="input" type="number" step="0.01" placeholder="0.00" />
+                </div>
+
+                <button type="submit" class="btn btn-primary">Salvar lançamento</button>
+              </form>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- MERCADO -->
+        <section id="market" class="view">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h3>Mercado</h3>
+                <p>Leitura tipo bolsa com valor, unidade e direção do movimento.</p>
+              </div>
+
+              <button class="btn btn-secondary analysis-toggle" data-target="marketAnalysis">
+                Ver análise
+              </button>
+            </div>
+
+            <div id="marketList" class="stack-list"></div>
+            <div id="marketAnalysis" class="analysis-box hidden"></div>
+          </div>
+        </section>
+
+        <!-- CLIMA -->
+        <section id="climate" class="view">
+          <div class="split-grid">
+
+            <div class="panel climate-panel large">
+              <div class="climate-bg-overlay"></div>
+
+              <div class="climate-content">
+                <div class="panel-head">
+                  <div>
+                    <h3>Clima detalhado</h3>
+                    <p>Resumo principal e leitura operacional.</p>
+                  </div>
+                </div>
+
+                <div class="climate-main">
+                  <div>
+                    <strong class="climate-temp" id="climateTempLarge">24°</strong>
+                    <p id="climateConditionLarge">Tempo estável</p>
+                  </div>
+
+                  <span class="chip" id="applyStatusChipLarge">Pode aplicar</span>
+                </div>
+
+                <div class="climate-metrics">
+                  <div class="metric-card">
+                    <span>Vento</span>
+                    <strong id="climateWindLarge">12 km/h</strong>
+                  </div>
+
+                  <div class="metric-card">
+                    <span>Umidade</span>
+                    <strong id="climateHumidityLarge">64%</strong>
+                  </div>
+
+                  <div class="metric-card">
+                    <span>Origem</span>
+                    <strong id="climateSourceLarge">Manual</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>Regras de aplicação</h3>
+                  <p>Como o sistema define se pode aplicar.</p>
+                </div>
+              </div>
+
+              <div id="climateRulesList" class="stack-list"></div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- TALHÕES -->
+        <section id="plots" class="view">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h3>Talhões</h3>
+                <p>Visão rápida de área, cultura e produtividade esperada.</p>
+              </div>
+            </div>
+
+            <div id="plotsGrid" class="plot-grid"></div>
+          </div>
+        </section>
+
+        <!-- ESTOQUE -->
+        <section id="inventory" class="view">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h3>Estoque</h3>
+                <p>Resumo operacional de insumos e materiais.</p>
+              </div>
+
+              <button class="btn btn-secondary analysis-toggle" data-target="inventoryAnalysis">
+                Ver análise
+              </button>
+            </div>
+
+            <div id="inventoryList" class="stack-list"></div>
+            <div id="inventoryAnalysis" class="analysis-box hidden"></div>
+          </div>
+        </section>
+
+        <!-- IA -->
+        <section id="ai" class="view">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h3>IA da Fazenda</h3>
+                <p>Assistente de leitura operacional com base nos dados carregados.</p>
+              </div>
+            </div>
+
+            <div id="aiFullList" class="stack-list"></div>
+          </div>
+        </section>
+
+        <!-- CONFIGURAÇÕES -->
+        <section id="settings" class="view">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h3>Configurações</h3>
+                <p>Perfil, fazenda, mercado e clima em uma área separada.</p>
+              </div>
+            </div>
+
+            <div class="tabs">
+              <button class="tab-btn active" data-tab="settings-profile">Perfil</button>
+              <button class="tab-btn" data-tab="settings-farm">Fazenda</button>
+              <button class="tab-btn" data-tab="settings-market">Mercado</button>
+              <button class="tab-btn" data-tab="settings-climate">Clima</button>
+            </div>
+
+            <div id="settings-profile" class="tab-pane active">
+              <div class="split-grid">
+                <div class="panel soft">
+                  <div class="field">
+                    <label for="profileNameInput">Nome</label>
+                    <input id="profileNameInput" class="input" />
+                  </div>
+
+                  <div class="field">
+                    <label for="profileEmailInput">Email</label>
+                    <input id="profileEmailInput" class="input" disabled />
+                  </div>
+
+                  <div class="field">
+                    <label for="profileRoleInput">Função</label>
+                    <input id="profileRoleInput" class="input" disabled />
+                  </div>
+
+                  <button id="saveProfileBtn" class="btn btn-primary">Salvar perfil</button>
+                </div>
+
+                <div class="panel soft">
+                  <div class="field">
+                    <label for="newPasswordInput">Nova senha</label>
+                    <input id="newPasswordInput" class="input" type="password" placeholder="Atualizar senha da conta" />
+                  </div>
+
+                  <button id="changePasswordBtn" class="btn btn-secondary">Atualizar senha</button>
+                </div>
+              </div>
+            </div>
+
+            <div id="settings-farm" class="tab-pane">
+              <div class="split-grid">
+                <div class="panel soft">
+                  <form id="farmSettingsForm" class="form-grid">
+                    <div class="field">
+                      <label for="farmNameInput">Nome da fazenda</label>
+                      <input id="farmNameInput" class="input" />
+                    </div>
+
+                    <div class="field">
+                      <label for="farmDescInput">Descrição</label>
+                      <textarea id="farmDescInput" class="textarea"></textarea>
+                    </div>
+
+                    <div class="field">
+                      <label for="farmBannerInput">Banner da fazenda</label>
+                      <input id="farmBannerInput" class="input" value="imagens/dashboard_bg.jpg" />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Salvar fazenda</button>
+                  </form>
+                </div>
+
+                <div class="panel soft">
+                  <p class="panel-note">
+                    Nesta versão, o caminho do banner é configurável. Se quiser upload real de imagem, depois ligamos ao Supabase Storage.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div id="settings-market" class="tab-pane">
+              <div class="split-grid">
+                <div class="panel soft">
+                  <div class="panel-head">
+                    <div>
+                      <h3>Itens do mercado</h3>
+                      <p>Controle total do que aparece no dashboard.</p>
+                    </div>
+                  </div>
+
+                  <div id="marketSettingsList" class="stack-list"></div>
+                </div>
+
+                <div class="panel soft">
+                  <form id="marketForm" class="form-grid">
+                    <div class="field">
+                      <label for="marketNameInput">Nome do item</label>
+                      <input id="marketNameInput" class="input" placeholder="Soja" />
+                    </div>
+
+                    <div class="field">
+                      <label for="marketValueInput">Valor</label>
+                      <input id="marketValueInput" class="input" type="number" step="0.01" />
+                    </div>
+
+                    <div class="field">
+                      <label for="marketUnitInput">Unidade</label>
+                      <input id="marketUnitInput" class="input" placeholder="R$/saca" />
+                    </div>
+
+                    <div class="field">
+                      <label for="marketChangeInput">Variação (%)</label>
+                      <input id="marketChangeInput" class="input" type="number" step="0.01" />
+                    </div>
+
+                    <div class="field">
+                      <label for="marketModeInput">Modo</label>
+                      <select id="marketModeInput" class="select">
+                        <option value="manual">Manual</option>
+                        <option value="auto">Automático</option>
+                        <option value="hybrid">Automático com ajuste manual</option>
+                      </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Adicionar item</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <div id="settings-climate" class="tab-pane">
+              <div class="split-grid">
+                <div class="panel soft">
+                  <form id="climateSettingsForm" class="form-grid">
+                    <div class="field">
+                      <label for="climateCityInput">Cidade</label>
+                      <input id="climateCityInput" class="input" placeholder="Dom Pedrito, RS" />
+                    </div>
+
+                    <div class="field">
+                      <label for="climateLatInput">Latitude</label>
+                      <input id="climateLatInput" class="input" placeholder="-30.98" />
+                    </div>
+
+                    <div class="field">
+                      <label for="climateLonInput">Longitude</label>
+                      <input id="climateLonInput" class="input" placeholder="-54.67" />
+                    </div>
+
+                    <div class="field">
+                      <label for="climateModeInput">Modo</label>
+                      <select id="climateModeInput" class="select">
+                        <option value="manual">Manual</option>
+                        <option value="online">Online</option>
+                        <option value="hybrid">Online com fallback manual</option>
+                      </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Salvar clima</button>
+                  </form>
+                </div>
+
+                <div class="panel soft">
+                  <div class="field">
+                    <label for="climateWindRuleInput">Limite máximo de vento</label>
+                    <input id="climateWindRuleInput" class="input" type="number" step="1" />
+                  </div>
+
+                  <div class="field">
+                    <label for="climateHumidityRuleInput">Limite mínimo de umidade</label>
+                    <input id="climateHumidityRuleInput" class="input" type="number" step="1" />
+                  </div>
+
+                  <div class="field">
+                    <label for="climateStatusRuleInput">Status manual</label>
+                    <input id="climateStatusRuleInput" class="input" />
+                  </div>
+
+                  <button id="saveClimateRulesBtn" class="btn btn-secondary">Salvar regras</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
       </div>
     </main>
-  </div>
+  </section>
 
-  <div id="drawerBackdrop" class="drawer-backdrop"></div>
-  <aside id="profileDrawer" class="drawer">
-    <div class="drawer-header">
-      <div>
-        <h3>Perfil</h3>
-        <p class="muted">Usuário</p>
-      </div>
-      <button id="closeProfileDrawerBtn" class="ghost-btn">Fechar</button>
-    </div>
-
-    <div class="drawer-body">
-      <div class="avatar-editor">
-        <img id="profileAvatarPreview" class="avatar-lg" src="" alt="Avatar" />
-        <div>
-          <strong id="profileDrawerName">Usuário</strong>
-          <p id="profileDrawerEmail" class="muted">email</p>
-          <p id="profileDrawerRole" class="muted">Função</p>
-        </div>
-      </div>
-
-      <div class="form-grid">
-        <div class="form-group">
-          <label for="profileFullName">Nome</label>
-          <input id="profileFullName" type="text" />
-        </div>
-
-        <div class="form-group">
-          <label for="profileFarmName">Fazenda</label>
-          <input id="profileFarmName" type="text" />
-        </div>
-
-        <div class="form-group">
-          <label for="profileRoleLabel">Função</label>
-          <select id="profileRoleLabel">
-            <option value="Dono">Dono</option>
-            <option value="Gerente">Gerente</option>
-            <option value="Funcionário">Funcionário</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Enviar foto</label>
-        <div id="avatarDropzone" class="dropzone">
-          Arraste uma imagem
-          <div style="margin-top:12px;">
-            <button id="pickAvatarBtn" class="soft-btn" type="button">Selecionar arquivo</button>
-            <input id="avatarFileInput" type="file" accept="image/*" class="hidden" />
-          </div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Escolher avatar</label>
-        <div id="avatarPresetGrid" class="avatar-preset-grid"></div>
-      </div>
-
-      <div class="form-group">
-        <label for="profileAvatarUrl">URL</label>
-        <input id="profileAvatarUrl" type="text" />
-      </div>
-
-      <button id="saveProfileBtn" class="primary-btn">Salvar perfil</button>
-    </div>
-  </aside>
-
-  <div id="modalBackdrop" class="modal-backdrop"></div>
-  <div id="crudModal" class="modal">
-    <div class="modal-box">
-      <div class="modal-header">
-        <div>
-          <h3 id="modalTitle">Cadastro</h3>
-          <p id="modalSubtitle" class="muted"></p>
-        </div>
-        <button id="closeModalBtn" class="ghost-btn">Fechar</button>
-      </div>
-
-      <div id="modalBody" class="modal-body"></div>
-
-      <div class="modal-footer">
-        <button id="modalCancelBtn" class="ghost-btn">Cancelar</button>
-        <button id="modalSaveBtn" class="primary-btn">Salvar</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="analysisModal" class="modal">
-    <div class="modal-box">
-      <div class="modal-header">
-        <div>
-          <h3 id="analysisTitle">Análise</h3>
-        </div>
-        <button id="closeAnalysisBtn" class="ghost-btn">Fechar</button>
-      </div>
-      <div id="analysisBody" class="modal-body"></div>
-      <div class="modal-footer">
-        <button id="exportAnalysisBtn" class="ghost-btn">Exportar CSV</button>
-      </div>
-    </div>
-  </div>
-
-  <input id="bannerFileInput" type="file" accept="image/*" class="hidden" />
-  <div id="toastWrap" class="toast-wrap"></div>
-
-  <script>
-    const SUPABASE_URL = "https://xksllcfagvpccvuzwqmg.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_5O1ZECSV-NpB8Hrl7RQtHg_7af8cgXy";
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    const DB_TO_ROLE = {
-      owner: "Dono",
-      dono: "Dono",
-      admin: "Dono",
-      gerente: "Gerente",
-      manager: "Gerente",
-      employee: "Funcionário",
-      funcionario: "Funcionário",
-      "funcionário": "Funcionário",
-      user: "Funcionário"
-    };
-
-    const ROLE_TO_DB = {
-      "Dono": "owner",
-      "Gerente": "manager",
-      "Funcionário": "employee"
-    };
-
-    const DEFAULT_MARKET = {
-      soja: "R$ 132,40",
-      milho: "R$ 66,90",
-      arroz: "R$ 96,30",
-      arroba: "R$ 321,50",
-      dolar: "R$ 5,08",
-      diesel: "R$ 6,19"
-    };
-
-    const state = {
-      session: null,
-      user: null,
-      profile: null,
-      employees: [],
-      operations: [],
-      financial: [],
-      stock: [],
-      currentSection: "overview",
-      currentModal: null,
-      currentAnalysis: null,
-      editingRecord: null,
-      tempAvatarDataUrl: null,
-      selectedPresetAvatar: null,
-      rememberedEmail: localStorage.getItem("agrocontrol_remembered_email") || "",
-      banner: localStorage.getItem("agrocontrol_banner_v21") || "",
-      market: JSON.parse(localStorage.getItem("agrocontrol_market_v21") || "null") || { ...DEFAULT_MARKET },
-      hasSupabaseSession: false
-    };
-
-    const AVATARS = [
-      "https://api.dicebear.com/7.x/bottts/svg?seed=Agro1",
-      "https://api.dicebear.com/7.x/bottts/svg?seed=Agro2",
-      "https://api.dicebear.com/7.x/adventurer/svg?seed=Agro3",
-      "https://api.dicebear.com/7.x/adventurer/svg?seed=Campo1",
-      "https://api.dicebear.com/7.x/personas/svg?seed=Campo2",
-      "https://api.dicebear.com/7.x/micah/svg?seed=Campo3",
-      "https://api.dicebear.com/7.x/personas/svg?seed=AgroControl"
-    ];
-
-    const el = {
-      loginScreen: document.getElementById("loginScreen"),
-      appShell: document.getElementById("appShell"),
-      loginForm: document.getElementById("loginForm"),
-      loginEmail: document.getElementById("loginEmail"),
-      loginPassword: document.getElementById("loginPassword"),
-      rememberLogin: document.getElementById("rememberLogin"),
-      forgotPasswordBtn: document.getElementById("forgotPasswordBtn"),
-      savedSessionBox: document.getElementById("savedSessionBox"),
-      continueSessionBtn: document.getElementById("continueSessionBtn"),
-      clearSavedSessionBtn: document.getElementById("clearSavedSessionBtn"),
-
-      brandFarmName: document.getElementById("brandFarmName"),
-      topbarTitle: document.getElementById("topbarTitle"),
-      topbarSubtitle: document.getElementById("topbarSubtitle"),
-      topbarAvatar: document.getElementById("topbarAvatar"),
-      topbarUserName: document.getElementById("topbarUserName"),
-      topbarFarmName: document.getElementById("topbarFarmName"),
-
-      heroFarmTitle: document.getElementById("heroFarmTitle"),
-      heroEmployeesCount: document.getElementById("heroEmployeesCount"),
-      heroOperationsCount: document.getElementById("heroOperationsCount"),
-      heroFinancialCount: document.getElementById("heroFinancialCount"),
-      heroUserRole: document.getElementById("heroUserRole"),
-      heroCustomBg: document.getElementById("heroCustomBg"),
-
-      metricOpsOpen: document.getElementById("metricOpsOpen"),
-      metricOpsPending: document.getElementById("metricOpsPending"),
-      metricEmployeesActive: document.getElementById("metricEmployeesActive"),
-      metricFinancialBalance: document.getElementById("metricFinancialBalance"),
-
-      recentOperationsList: document.getElementById("recentOperationsList"),
-      recentFinancialList: document.getElementById("recentFinancialList"),
-
-      marketGrid: document.getElementById("marketGrid"),
-
-      employeesSearch: document.getElementById("employeesSearch"),
-      operationsSearch: document.getElementById("operationsSearch"),
-      financialSearch: document.getElementById("financialSearch"),
-      stockSearch: document.getElementById("stockSearch"),
-
-      employeesTableBody: document.getElementById("employeesTableBody"),
-      operationsTableBody: document.getElementById("operationsTableBody"),
-      financialTableBody: document.getElementById("financialTableBody"),
-      stockTableBody: document.getElementById("stockTableBody"),
-
-      addEmployeeBtn: document.getElementById("addEmployeeBtn"),
-      addOperationBtn: document.getElementById("addOperationBtn"),
-      addFinancialBtn: document.getElementById("addFinancialBtn"),
-      addStockBtn: document.getElementById("addStockBtn"),
-
-      exportEmployeesBtn: document.getElementById("exportEmployeesBtn"),
-      exportOperationsBtn: document.getElementById("exportOperationsBtn"),
-      exportFinancialBtn: document.getElementById("exportFinancialBtn"),
-      exportStockBtn: document.getElementById("exportStockBtn"),
-      exportAllBtn: document.getElementById("exportAllBtn"),
-
-      financialAnalysisBtn: document.getElementById("financialAnalysisBtn"),
-      stockAnalysisBtn: document.getElementById("stockAnalysisBtn"),
-
-      openProfileBtn: document.getElementById("openProfileBtn"),
-      openProfileBtnSidebar: document.getElementById("openProfileBtnSidebar"),
-      closeProfileDrawerBtn: document.getElementById("closeProfileDrawerBtn"),
-      drawerBackdrop: document.getElementById("drawerBackdrop"),
-      profileDrawer: document.getElementById("profileDrawer"),
-
-      profileAvatarPreview: document.getElementById("profileAvatarPreview"),
-      profileDrawerName: document.getElementById("profileDrawerName"),
-      profileDrawerEmail: document.getElementById("profileDrawerEmail"),
-      profileDrawerRole: document.getElementById("profileDrawerRole"),
-      profileFullName: document.getElementById("profileFullName"),
-      profileFarmName: document.getElementById("profileFarmName"),
-      profileRoleLabel: document.getElementById("profileRoleLabel"),
-      profileAvatarUrl: document.getElementById("profileAvatarUrl"),
-      saveProfileBtn: document.getElementById("saveProfileBtn"),
-      avatarDropzone: document.getElementById("avatarDropzone"),
-      pickAvatarBtn: document.getElementById("pickAvatarBtn"),
-      avatarFileInput: document.getElementById("avatarFileInput"),
-      avatarPresetGrid: document.getElementById("avatarPresetGrid"),
-
-      configFarmName: document.getElementById("configFarmName"),
-      configFarmCity: document.getElementById("configFarmCity"),
-      saveFarmConfigBtn: document.getElementById("saveFarmConfigBtn"),
-      changeBannerBtn: document.getElementById("changeBannerBtn"),
-      removeBannerBtn: document.getElementById("removeBannerBtn"),
-      bannerFileInput: document.getElementById("bannerFileInput"),
-      configProfileBtn: document.getElementById("configProfileBtn"),
-
-      marketSoja: document.getElementById("marketSoja"),
-      marketMilho: document.getElementById("marketMilho"),
-      marketArroz: document.getElementById("marketArroz"),
-      marketArroba: document.getElementById("marketArroba"),
-      marketDolar: document.getElementById("marketDolar"),
-      marketDiesel: document.getElementById("marketDiesel"),
-      saveMarketBtn: document.getElementById("saveMarketBtn"),
-
-      logoutBtn: document.getElementById("logoutBtn"),
-      refreshAllBtn: document.getElementById("refreshAllBtn"),
-
-      crudModal: document.getElementById("crudModal"),
-      modalBackdrop: document.getElementById("modalBackdrop"),
-      modalTitle: document.getElementById("modalTitle"),
-      modalSubtitle: document.getElementById("modalSubtitle"),
-      modalBody: document.getElementById("modalBody"),
-      closeModalBtn: document.getElementById("closeModalBtn"),
-      modalCancelBtn: document.getElementById("modalCancelBtn"),
-      modalSaveBtn: document.getElementById("modalSaveBtn"),
-
-      analysisModal: document.getElementById("analysisModal"),
-      analysisTitle: document.getElementById("analysisTitle"),
-      analysisBody: document.getElementById("analysisBody"),
-      closeAnalysisBtn: document.getElementById("closeAnalysisBtn"),
-      exportAnalysisBtn: document.getElementById("exportAnalysisBtn"),
-
-      toastWrap: document.getElementById("toastWrap")
-    };
-
-    function showToast(message, type = "info"){
-      const toast = document.createElement("div");
-      toast.className = `toast ${type}`;
-      toast.textContent = message;
-      el.toastWrap.appendChild(toast);
-      setTimeout(() => {
-        toast.style.opacity = "0";
-        toast.style.transform = "translateY(-6px)";
-      }, 2500);
-      setTimeout(() => toast.remove(), 3200);
-    }
-
-    function escapeHtml(v){
-      return String(v ?? "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-    }
-
-    function formatCurrency(value){
-      const n = Number(value || 0);
-      return new Intl.NumberFormat("pt-BR",{ style:"currency", currency:"BRL" }).format(n);
-    }
-
-    function formatDate(value){
-      if(!value) return "—";
-      const d = new Date(value);
-      if(Number.isNaN(d.getTime())) return value;
-      return d.toLocaleDateString("pt-BR");
-    }
-
-    function safeAvatar(){
-      return state.profile?.avatar_url || state.tempAvatarDataUrl || "https://api.dicebear.com/7.x/personas/svg?seed=AgroControlUser";
-    }
-
-    function uiRole(dbRole){
-      return DB_TO_ROLE[String(dbRole || "").toLowerCase()] || "Funcionário";
-    }
-
-    function dbRoleFromUi(label){
-      return ROLE_TO_DB[label] || "employee";
-    }
-
-    function currentRoleLabel(){
-      return uiRole(state.profile?.role);
-    }
-
-    function isDono(){
-      return currentRoleLabel() === "Dono";
-    }
-
-    function isGerente(){
-      return currentRoleLabel() === "Gerente";
-    }
-
-    function canManageUsers(){
-      return isDono();
-    }
-
-    function canUseAnalysis(){
-      return isDono();
-    }
-
-    function canSeeConfig(){
-      return isDono();
-    }
-
-    function setHeroBanner(image){
-      if(image){
-        el.heroCustomBg.style.backgroundImage = `url("${image}")`;
-        el.heroCustomBg.classList.remove("hidden");
-      }else{
-        el.heroCustomBg.style.backgroundImage = "";
-        el.heroCustomBg.classList.add("hidden");
-      }
-    }
-
-    function updateSavedSessionVisibility(){
-      if(state.hasSupabaseSession) el.savedSessionBox.classList.remove("hidden");
-      else el.savedSessionBox.classList.add("hidden");
-    }
-
-    function buildAvatarPresets(){
-      el.avatarPresetGrid.innerHTML = "";
-      AVATARS.forEach(url => {
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = "avatar-preset";
-        button.innerHTML = `<img src="${url}" alt="Avatar">`;
-        button.addEventListener("click", () => {
-          state.selectedPresetAvatar = url;
-          state.tempAvatarDataUrl = null;
-          el.profileAvatarPreview.src = url;
-          el.profileAvatarUrl.value = url;
-          [...el.avatarPresetGrid.querySelectorAll(".avatar-preset")].forEach(x => x.classList.remove("active"));
-          button.classList.add("active");
-        });
-        el.avatarPresetGrid.appendChild(button);
-      });
-    }
-
-    function readImageFile(file, cb){
-      if(!file) return;
-      if(!file.type.startsWith("image/")){
-        showToast("Selecione uma imagem válida.", "error");
-        return;
-      }
-      const reader = new FileReader();
-      reader.onload = () => cb(reader.result);
-      reader.readAsDataURL(file);
-    }
-
-    async function checkExistingSession(){
-      const { data, error } = await supabaseClient.auth.getSession();
-      if(error){
-        state.hasSupabaseSession = false;
-        updateSavedSessionVisibility();
-        return;
-      }
-      state.hasSupabaseSession = !!data?.session;
-      updateSavedSessionVisibility();
-
-      if(state.rememberedEmail){
-        el.loginEmail.value = state.rememberedEmail;
-        el.rememberLogin.checked = true;
-      }
-    }
-
-    async function login(email,password){
-      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-      if(error){
-        showToast(error.message || "Falha no login.", "error");
-        return false;
-      }
-
-      state.session = data.session;
-      state.user = data.user;
-
-      if(el.rememberLogin.checked) localStorage.setItem("agrocontrol_remembered_email", email);
-      else localStorage.removeItem("agrocontrol_remembered_email");
-
-      await afterAuthenticated();
-      return true;
-    }
-
-    async function continueSession(){
-      const { data, error } = await supabaseClient.auth.getSession();
-      if(error || !data?.session){
-        showToast("Não foi possível continuar a sessão.", "error");
-        return;
-      }
-      state.session = data.session;
-      state.user = data.session.user;
-      await afterAuthenticated();
-    }
-
-    async function logout(){
-      await supabaseClient.auth.signOut();
-      state.session = null;
-      state.user = null;
-      state.profile = null;
-      showLogin();
-      await checkExistingSession();
-      showToast("Sessão encerrada.", "info");
-    }
-
-    async function forgotPassword(){
-      const email = el.loginEmail.value.trim();
-      if(!email){
-        showToast("Digite o e-mail.", "error");
-        return;
-      }
-      const { error } = await supabaseClient.auth.resetPasswordForEmail(email, { redirectTo: window.location.href });
-      if(error){
-        showToast(error.message || "Erro ao enviar recuperação.", "error");
-        return;
-      }
-      showToast("E-mail de recuperação enviado.", "success");
-    }
-
-    function showLogin(){
-      el.loginScreen.style.display = "flex";
-      el.appShell.style.display = "none";
-    }
-
-    function showApp(){
-      el.loginScreen.style.display = "none";
-      el.appShell.style.display = "grid";
-    }
-
-    async function ensureProfile(){
-      if(!state.user?.id) return;
-
-      const { data, error } = await supabaseClient
-        .from("profiles")
-        .select("*")
-        .eq("id", state.user.id)
-        .maybeSingle();
-
-      if(error){
-        console.error(error);
-        showToast("Erro ao carregar perfil.", "error");
-        return;
-      }
-
-      if(data){
-        state.profile = data;
-        return;
-      }
-
-      const fallbackProfile = {
-        id: state.user.id,
-        email: state.user.email,
-        full_name: state.user.user_metadata?.full_name || "",
-        farm_name: "Minha Fazenda",
-        avatar_url: "",
-        role: "owner"
-      };
-
-      const { data: inserted, error: insertError } = await supabaseClient
-        .from("profiles")
-        .upsert(fallbackProfile)
-        .select()
-        .single();
-
-      if(insertError){
-        console.error(insertError);
-        state.profile = fallbackProfile;
-        return;
-      }
-      state.profile = inserted;
-    }
-
-    function renderProfile(){
-      const profile = state.profile || {};
-      const farm = profile.farm_name || "Minha Fazenda";
-      const name = profile.full_name || state.user?.user_metadata?.full_name || "Usuário";
-      const email = profile.email || state.user?.email || "";
-      const roleLabel = currentRoleLabel();
-      const avatar = safeAvatar();
-
-      el.topbarAvatar.src = avatar;
-      el.topbarUserName.textContent = name;
-      el.topbarFarmName.textContent = farm;
-
-      el.brandFarmName.textContent = farm;
-      el.heroFarmTitle.textContent = farm;
-      el.heroUserRole.textContent = roleLabel;
-
-      el.profileAvatarPreview.src = avatar;
-      el.profileDrawerName.textContent = name;
-      el.profileDrawerEmail.textContent = email;
-      el.profileDrawerRole.textContent = roleLabel;
-
-      el.profileFullName.value = profile.full_name || "";
-      el.profileFarmName.value = farm;
-      el.profileAvatarUrl.value = profile.avatar_url || "";
-      el.profileRoleLabel.value = roleLabel;
-
-      el.configFarmName.value = farm;
-      el.configFarmCity.value = localStorage.getItem("agrocontrol_farm_city") || "";
-    }
-
-    async function saveProfile(){
-      if(!state.user?.id) return;
-
-      let avatar_url = el.profileAvatarUrl.value.trim();
-      if(state.tempAvatarDataUrl) avatar_url = state.tempAvatarDataUrl;
-      if(state.selectedPresetAvatar) avatar_url = state.selectedPresetAvatar;
-
-      const payload = {
-        full_name: el.profileFullName.value.trim(),
-        farm_name: el.profileFarmName.value.trim(),
-        avatar_url
-      };
-
-      const newRoleUi = el.profileRoleLabel.value;
-      if(newRoleUi) payload.role = dbRoleFromUi(newRoleUi);
-
-      const { data, error } = await supabaseClient
-        .from("profiles")
-        .update(payload)
-        .eq("id", state.user.id)
-        .select()
-        .single();
-
-      if(error){
-        console.error(error);
-        showToast("Erro ao salvar perfil. Se a constraint do role for diferente, ajuste o mapa de função.", "error");
-        return;
-      }
-
-      state.profile = { ...state.profile, ...data };
-      renderProfile();
-      applyPermissions();
-      closeProfileDrawer();
-      showToast("Perfil salvo.", "success");
-    }
-
-    function openProfileDrawer(){
-      renderProfile();
-      if(!isDono() && !isGerente()){
-        el.profileRoleLabel.disabled = true;
-      }else{
-        el.profileRoleLabel.disabled = false;
-      }
-      el.drawerBackdrop.classList.add("show");
-      el.profileDrawer.classList.add("show");
-    }
-
-    function closeProfileDrawer(){
-      el.drawerBackdrop.classList.remove("show");
-      el.profileDrawer.classList.remove("show");
-    }
-
-    function applyPermissions(){
-      const dono = isDono();
-      const gerente = isGerente();
-
-      el.financialAnalysisBtn.classList.toggle("hidden", !dono);
-      el.stockAnalysisBtn.classList.toggle("hidden", !dono);
-
-      el.exportEmployeesBtn.classList.toggle("hidden", !dono);
-      el.exportOperationsBtn.classList.toggle("hidden", !dono);
-      el.exportFinancialBtn.classList.toggle("hidden", !dono);
-      el.exportStockBtn.classList.toggle("hidden", !dono);
-      el.exportAllBtn.classList.toggle("hidden", !dono);
-
-      el.addEmployeeBtn.classList.toggle("hidden", !dono);
-      document.querySelector('.nav-btn[data-section="config"]').classList.toggle("hidden", !canSeeConfig());
-
-      if(!dono && !gerente){
-        document.querySelector('.nav-btn[data-section="financial"]').classList.add("hidden");
-        document.querySelector('.nav-btn[data-section="stock"]').classList.add("hidden");
-        document.querySelector('.nav-btn[data-section="employees"]').classList.add("hidden");
-      }else{
-        document.querySelector('.nav-btn[data-section="financial"]').classList.remove("hidden");
-        document.querySelector('.nav-btn[data-section="stock"]').classList.remove("hidden");
-        document.querySelector('.nav-btn[data-section="employees"]').classList.remove("hidden");
-      }
-
-      if(!canSeeConfig() && state.currentSection === "config"){
-        setActiveSection("overview");
-      }
-    }
-
-    async function loadEmployees(){
-      const { data, error } = await supabaseClient
-        .from("employees")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      if(error){
-        console.error(error);
-        state.employees = [];
-        showToast("Falha ao carregar funcionários.", "error");
-        return;
-      }
-      state.employees = data || [];
-    }
-
-    async function loadOperations(){
-      const { data, error } = await supabaseClient
-        .from("operations")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      if(error){
-        console.error(error);
-        state.operations = [];
-        showToast("Falha ao carregar operações.", "error");
-        return;
-      }
-      state.operations = data || [];
-    }
-
-    async function loadFinancial(){
-      const { data, error } = await supabaseClient
-        .from("financial_transactions")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      if(error){
-        console.error(error);
-        state.financial = [];
-        showToast("Falha ao carregar financeiro.", "error");
-        return;
-      }
-      state.financial = data || [];
-    }
-
-    async function loadStock(){
-      const { data, error } = await supabaseClient
-        .from("estoque_itens")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      if(error){
-        console.error(error);
-        state.stock = [];
-        showToast("Falha ao carregar estoque.", "error");
-        return;
-      }
-      state.stock = data || [];
-    }
-
-    async function refreshAllData(showMessage = false){
-      await Promise.all([loadEmployees(), loadOperations(), loadFinancial(), loadStock()]);
-      renderOverview();
-      renderMarket();
-      renderEmployeesTable();
-      renderOperationsTable();
-      renderFinancialTable();
-      renderStockTable();
-      if(showMessage) showToast("Dados atualizados.", "success");
-    }
-
-    function renderOverview(){
-      const openOps = state.operations.filter(op => {
-        const s = String(op.status || "").toLowerCase();
-        return !["concluída","concluido","concluida","finalizada","done","completed"].includes(s);
-      }).length;
-
-      const pendingOps = state.operations.filter(op => {
-        const s = String(op.status || "").toLowerCase();
-        return ["pendente","pending","aguardando"].includes(s);
-      }).length;
-
-      const activeEmployees = state.employees.filter(e => {
-        return !["inativo","demitido"].includes(String(e.status || "").toLowerCase());
-      }).length;
-
-      let entradas = 0;
-      let saidas = 0;
-      state.financial.forEach(item => {
-        const type = String(item.type || item.tipo || "").toLowerCase();
-        const value = Number(item.amount ?? item.value ?? 0);
-        if(/receita|entrada|income/.test(type)) entradas += value;
-        else saidas += value;
-      });
-      const saldo = entradas - saidas;
-
-      el.metricOpsOpen.textContent = openOps;
-      el.metricOpsPending.textContent = pendingOps;
-      el.metricEmployeesActive.textContent = activeEmployees;
-      el.metricFinancialBalance.textContent = formatCurrency(saldo);
-
-      el.heroEmployeesCount.textContent = state.employees.length;
-      el.heroOperationsCount.textContent = state.operations.length;
-      el.heroFinancialCount.textContent = state.financial.length;
-
-      renderRecentOperations();
-      renderRecentFinancial();
-    }
-
-    function renderRecentOperations(){
-      el.recentOperationsList.innerHTML = "";
-      const rows = state.operations.slice(0,5);
-      if(!rows.length){
-        el.recentOperationsList.innerHTML = `<div class="empty">Sem operações</div>`;
-        return;
-      }
-      rows.forEach(item => {
-        const title = item.title || item.nome || item.name || "Operação";
-        const type = item.type || item.tipo || "Geral";
-        const status = item.status || "Pendente";
-        const div = document.createElement("div");
-        div.className = "list-item";
-        div.innerHTML = `
-          <div>
-            <strong>${escapeHtml(title)}</strong><br>
-            <small>${escapeHtml(type)} · ${escapeHtml(status)}</small>
-          </div>
-          <small>${escapeHtml(formatDate(item.date || item.created_at))}</small>
-        `;
-        el.recentOperationsList.appendChild(div);
-      });
-    }
-
-    function renderRecentFinancial(){
-      el.recentFinancialList.innerHTML = "";
-      const rows = state.financial.slice(0,5);
-      if(!rows.length){
-        el.recentFinancialList.innerHTML = `<div class="empty">Sem lançamentos</div>`;
-        return;
-      }
-      rows.forEach(item => {
-        const description = item.description || item.descricao || item.title || "Lançamento";
-        const value = item.amount ?? item.value ?? 0;
-        const type = item.type || item.tipo || "geral";
-        const div = document.createElement("div");
-        div.className = "list-item";
-        div.innerHTML = `
-          <div>
-            <strong>${escapeHtml(description)}</strong><br>
-            <small>${escapeHtml(type)}</small>
-          </div>
-          <strong>${escapeHtml(formatCurrency(value))}</strong>
-        `;
-        el.recentFinancialList.appendChild(div);
-      });
-    }
-
-    function renderMarket(){
-      const map = [
-        ["Soja", state.market.soja],
-        ["Milho", state.market.milho],
-        ["Arroz", state.market.arroz],
-        ["Arroba", state.market.arroba],
-        ["Dólar", state.market.dolar],
-        ["Diesel", state.market.diesel]
-      ];
-
-      el.marketGrid.innerHTML = "";
-      map.forEach(([title, value]) => {
-        const div = document.createElement("div");
-        div.className = "market-card";
-        div.innerHTML = `<h4>${escapeHtml(title)}</h4><div class="market-value">${escapeHtml(value)}</div>`;
-        el.marketGrid.appendChild(div);
-      });
-
-      el.marketSoja.value = state.market.soja;
-      el.marketMilho.value = state.market.milho;
-      el.marketArroz.value = state.market.arroz;
-      el.marketArroba.value = state.market.arroba;
-      el.marketDolar.value = state.market.dolar;
-      el.marketDiesel.value = state.market.diesel;
-    }
-
-    function renderEmployeesTable(){
-      const query = el.employeesSearch.value.trim().toLowerCase();
-      const rows = state.employees.filter(item => JSON.stringify(item).toLowerCase().includes(query));
-      el.employeesTableBody.innerHTML = "";
-
-      if(!rows.length){
-        el.employeesTableBody.innerHTML = `<tr><td colspan="6"><div class="empty">Nenhum funcionário</div></td></tr>`;
-        return;
-      }
-
-      rows.forEach(item => {
-        const name = item.name || item.full_name || item.nome || "Sem nome";
-        const username = item.username || (item.email ? String(item.email).replace("@agrocontrol","") : "—");
-        const phone = item.phone || item.telefone || "—";
-        const role = uiRole(item.role || item.funcao || item.função);
-        const status = item.status || "Ativo";
-        const tagClass = /ativo/i.test(status) ? "tag-green" : /férias/i.test(status) ? "tag-yellow" : "tag-red";
-
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${escapeHtml(name)}</td>
-          <td>${escapeHtml(username)}</td>
-          <td>${escapeHtml(phone)}</td>
-          <td>${escapeHtml(role)}</td>
-          <td><span class="tag ${tagClass}">${escapeHtml(status)}</span></td>
-          <td>
-            <div class="row-actions">
-              <button class="tiny-btn" data-edit-employee="${item.id}">Editar</button>
-            </div>
-          </td>
-        `;
-        el.employeesTableBody.appendChild(tr);
-      });
-    }
-
-    function renderOperationsTable(){
-      const query = el.operationsSearch.value.trim().toLowerCase();
-      const rows = state.operations.filter(item => JSON.stringify(item).toLowerCase().includes(query));
-      el.operationsTableBody.innerHTML = "";
-
-      if(!rows.length){
-        el.operationsTableBody.innerHTML = `<tr><td colspan="6"><div class="empty">Nenhuma operação</div></td></tr>`;
-        return;
-      }
-
-      rows.forEach(item => {
-        const title = item.title || item.name || item.nome || "Sem título";
-        const type = item.type || item.tipo || "Geral";
-        const status = item.status || "Pendente";
-        const date = item.date || item.created_at || "";
-        const responsible = item.responsible || item.responsavel || item.responsável || "—";
-
-        const tagClass = /concl/i.test(status) ? "tag-green" : /andamento|progress/i.test(status) ? "tag-blue" : /pend/i.test(status) ? "tag-yellow" : "tag-red";
-
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${escapeHtml(title)}</td>
-          <td>${escapeHtml(type)}</td>
-          <td><span class="tag ${tagClass}">${escapeHtml(status)}</span></td>
-          <td>${escapeHtml(formatDate(date))}</td>
-          <td>${escapeHtml(responsible)}</td>
-          <td><div class="row-actions"><button class="tiny-btn" data-edit-operation="${item.id}">Editar</button></div></td>
-        `;
-        el.operationsTableBody.appendChild(tr);
-      });
-    }
-
-    function renderFinancialTable(){
-      const query = el.financialSearch.value.trim().toLowerCase();
-      const rows = state.financial.filter(item => JSON.stringify(item).toLowerCase().includes(query));
-      el.financialTableBody.innerHTML = "";
-
-      if(!rows.length){
-        el.financialTableBody.innerHTML = `<tr><td colspan="6"><div class="empty">Nenhum lançamento</div></td></tr>`;
-        return;
-      }
-
-      rows.forEach(item => {
-        const description = item.description || item.descricao || item.title || "Sem descrição";
-        const category = item.category || item.categoria || "Geral";
-        const type = item.type || item.tipo || "Geral";
-        const amount = item.amount ?? item.value ?? 0;
-        const date = item.date || item.created_at || "";
-        const tagClass = /receita|entrada/i.test(type) ? "tag-green" : /despesa|saida|saída/i.test(type) ? "tag-red" : "tag-blue";
-
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${escapeHtml(description)}</td>
-          <td>${escapeHtml(category)}</td>
-          <td><span class="tag ${tagClass}">${escapeHtml(type)}</span></td>
-          <td>${escapeHtml(formatCurrency(amount))}</td>
-          <td>${escapeHtml(formatDate(date))}</td>
-          <td><div class="row-actions"><button class="tiny-btn" data-edit-financial="${item.id}">Editar</button></div></td>
-        `;
-        el.financialTableBody.appendChild(tr);
-      });
-    }
-
-    function renderStockTable(){
-      const query = el.stockSearch.value.trim().toLowerCase();
-      const rows = state.stock.filter(item => JSON.stringify(item).toLowerCase().includes(query));
-      el.stockTableBody.innerHTML = "";
-
-      if(!rows.length){
-        el.stockTableBody.innerHTML = `<tr><td colspan="7"><div class="empty">Nenhum item</div></td></tr>`;
-        return;
-      }
-
-      rows.forEach(item => {
-        const product = item.product || item.nome || item.name || "Sem nome";
-        const qty = item.quantity ?? item.quantidade ?? 0;
-        const entry = item.entry ?? item.entrada ?? 0;
-        const exit = item.exit ?? item.saida ?? item.saída ?? 0;
-        const place = item.location || item.local || "—";
-        const category = item.category || item.categoria || "—";
-
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${escapeHtml(product)}</td>
-          <td>${escapeHtml(String(qty))}</td>
-          <td>${escapeHtml(String(entry))}</td>
-          <td>${escapeHtml(String(exit))}</td>
-          <td>${escapeHtml(place)}</td>
-          <td>${escapeHtml(category)}</td>
-          <td><div class="row-actions"><button class="tiny-btn" data-edit-stock="${item.id}">Editar</button></div></td>
-        `;
-        el.stockTableBody.appendChild(tr);
-      });
-    }
-
-    function setActiveSection(section){
-      state.currentSection = section;
-
-      document.querySelectorAll(".nav-btn").forEach(btn => {
-        btn.classList.toggle("active", btn.dataset.section === section);
-      });
-
-      document.querySelectorAll(".section").forEach(sec => sec.classList.remove("active"));
-      const target = document.getElementById(`section-${section}`);
-      if(target) target.classList.add("active");
-
-      const titles = {
-        overview: ["Central de Comando","Gestão da fazenda"],
-        mercado: ["Mercado","Preços"],
-        employees: ["Funcionários","Equipe"],
-        operations: ["Operações","Campo"],
-        financial: ["Financeiro","Entradas e saídas"],
-        stock: ["Estoque","Itens"],
-        config: ["Configurações","Sistema"]
-      };
-      el.topbarTitle.textContent = titles[section]?.[0] || "AgroControl";
-      el.topbarSubtitle.textContent = titles[section]?.[1] || "";
-    }
-
-    function openModal(type, record = null){
-      state.currentModal = type;
-      state.editingRecord = record || null;
-      el.modalBody.innerHTML = "";
-
-      if(type === "employee"){
-        el.modalTitle.textContent = record ? "Editar funcionário" : "Novo funcionário";
-        el.modalSubtitle.textContent = "Funcionário";
-        const data = record || {};
-        const userValue = data.username || (data.email ? String(data.email).replace("@agrocontrol","") : "");
-        const roleLabel = uiRole(data.role || data.funcao || data.função);
-
-        el.modalBody.innerHTML = `
-          <div class="form-grid cols-2">
-            <div class="form-group">
-              <label>Nome</label>
-              <input id="modalEmployeeName" type="text" value="${escapeHtml(data.name || data.full_name || data.nome || "")}">
-            </div>
-            <div class="form-group">
-              <label>Usuário</label>
-              <input id="modalEmployeeUsername" type="text" value="${escapeHtml(userValue)}" ${record ? "disabled" : ""}>
-            </div>
-            <div class="form-group">
-              <label>Senha inicial</label>
-              <input id="modalEmployeePassword" type="password" placeholder="${record ? "Deixe vazio para não alterar" : "Senha inicial"}">
-            </div>
-            <div class="form-group">
-              <label>Função</label>
-              <select id="modalEmployeeRole">
-                <option value="Funcionário">Funcionário</option>
-                <option value="Gerente">Gerente</option>
-                <option value="Dono">Dono</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Telefone</label>
-              <input id="modalEmployeePhone" type="text" value="${escapeHtml(data.phone || data.telefone || "")}">
-            </div>
-            <div class="form-group">
-              <label>Status</label>
-              <select id="modalEmployeeStatus">
-                <option value="Ativo">Ativo</option>
-                <option value="Férias">Férias</option>
-                <option value="Inativo">Inativo</option>
-              </select>
-            </div>
-          </div>
-        `;
-
-        document.getElementById("modalEmployeeRole").value = roleLabel;
-        document.getElementById("modalEmployeeStatus").value = data.status || "Ativo";
-      }
-
-      if(type === "operation"){
-        el.modalTitle.textContent = record ? "Editar operação" : "Nova operação";
-        el.modalSubtitle.textContent = "Operação";
-        const data = record || {};
-        el.modalBody.innerHTML = `
-          <div class="form-grid cols-2">
-            <div class="form-group">
-              <label>Título</label>
-              <input id="modalOperationTitle" type="text" value="${escapeHtml(data.title || data.name || data.nome || "")}">
-            </div>
-            <div class="form-group">
-              <label>Tipo</label>
-              <input id="modalOperationType" type="text" value="${escapeHtml(data.type || data.tipo || "")}">
-            </div>
-            <div class="form-group">
-              <label>Status</label>
-              <select id="modalOperationStatus">
-                <option value="Pendente">Pendente</option>
-                <option value="Em andamento">Em andamento</option>
-                <option value="Concluída">Concluída</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Data</label>
-              <input id="modalOperationDate" type="date" value="${escapeHtml(String(data.date || "").slice(0,10))}">
-            </div>
-            <div class="form-group">
-              <label>Responsável</label>
-              <input id="modalOperationResponsible" type="text" value="${escapeHtml(data.responsible || data.responsavel || data.responsável || "")}">
-            </div>
-            <div class="form-group" style="grid-column:1/-1;">
-              <label>Descrição</label>
-              <textarea id="modalOperationDescription">${escapeHtml(data.description || data.descricao || "")}</textarea>
-            </div>
-          </div>
-        `;
-        document.getElementById("modalOperationStatus").value = data.status || "Pendente";
-      }
-
-      if(type === "financial"){
-        el.modalTitle.textContent = record ? "Editar lançamento" : "Novo lançamento";
-        el.modalSubtitle.textContent = "Financeiro";
-        const data = record || {};
-        el.modalBody.innerHTML = `
-          <div class="form-grid cols-2">
-            <div class="form-group">
-              <label>Descrição</label>
-              <input id="modalFinancialDescription" type="text" value="${escapeHtml(data.description || data.descricao || "")}">
-            </div>
-            <div class="form-group">
-              <label>Categoria</label>
-              <input id="modalFinancialCategory" type="text" value="${escapeHtml(data.category || data.categoria || "")}">
-            </div>
-            <div class="form-group">
-              <label>Tipo</label>
-              <select id="modalFinancialType">
-                <option value="Receita">Receita</option>
-                <option value="Despesa">Despesa</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Valor</label>
-              <input id="modalFinancialAmount" type="number" step="0.01" value="${escapeHtml(data.amount ?? data.value ?? "")}">
-            </div>
-            <div class="form-group">
-              <label>Data</label>
-              <input id="modalFinancialDate" type="date" value="${escapeHtml(String(data.date || "").slice(0,10))}">
-            </div>
-          </div>
-        `;
-        document.getElementById("modalFinancialType").value = data.type || data.tipo || "Despesa";
-      }
-
-      if(type === "stock"){
-        el.modalTitle.textContent = record ? "Editar item" : "Novo item";
-        el.modalSubtitle.textContent = "Estoque";
-        const data = record || {};
-        el.modalBody.innerHTML = `
-          <div class="form-grid cols-2">
-            <div class="form-group">
-              <label>Produto</label>
-              <input id="modalStockProduct" type="text" value="${escapeHtml(data.product || data.nome || data.name || "")}">
-            </div>
-            <div class="form-group">
-              <label>Quantidade</label>
-              <input id="modalStockQuantity" type="number" step="0.01" value="${escapeHtml(data.quantity ?? data.quantidade ?? "")}">
-            </div>
-            <div class="form-group">
-              <label>Entrada</label>
-              <input id="modalStockEntry" type="number" step="0.01" value="${escapeHtml(data.entry ?? data.entrada ?? "")}">
-            </div>
-            <div class="form-group">
-              <label>Saída</label>
-              <input id="modalStockExit" type="number" step="0.01" value="${escapeHtml(data.exit ?? data.saida ?? data.saída ?? "")}">
-            </div>
-            <div class="form-group">
-              <label>Local</label>
-              <input id="modalStockLocation" type="text" value="${escapeHtml(data.location || data.local || "")}">
-            </div>
-            <div class="form-group">
-              <label>Categoria</label>
-              <input id="modalStockCategory" type="text" value="${escapeHtml(data.category || data.categoria || "")}">
-            </div>
-          </div>
-        `;
-      }
-
-      el.modalBackdrop.classList.add("show");
-      el.crudModal.classList.add("show");
-    }
-
-    function closeModal(){
-      state.currentModal = null;
-      state.editingRecord = null;
-      el.modalBackdrop.classList.remove("show");
-      el.crudModal.classList.remove("show");
-    }
-
-    async function saveEmployeeRecord(){
-      const name = document.getElementById("modalEmployeeName").value.trim();
-      const username = document.getElementById("modalEmployeeUsername").value.trim().toLowerCase();
-      const password = document.getElementById("modalEmployeePassword").value.trim();
-      const roleLabel = document.getElementById("modalEmployeeRole").value;
-      const phone = document.getElementById("modalEmployeePhone").value.trim();
-      const status = document.getElementById("modalEmployeeStatus").value;
-
-      if(!name){
-        showToast("Informe o nome.", "error");
-        return;
-      }
-
-      if(state.editingRecord?.id){
-        const payload = {
-          name,
-          role: dbRoleFromUi(roleLabel),
-          phone,
-          status
-        };
-
-        const { error } = await supabaseClient
-          .from("employees")
-          .update(payload)
-          .eq("id", state.editingRecord.id);
-
-        if(error){
-          console.error(error);
-          showToast(error.message || "Erro ao salvar funcionário.", "error");
-          return;
-        }
-
-        showToast("Funcionário salvo.", "success");
-        return true;
-      }
-
-      if(!canManageUsers()){
-        showToast("Só o Dono pode criar login.", "error");
-        return;
-      }
-
-      if(!username){
-        showToast("Informe o usuário.", "error");
-        return;
-      }
-      if(!password){
-        showToast("Informe a senha inicial.", "error");
-        return;
-      }
-
-      const email = `${username}@agrocontrol`;
-
-      try{
-        const response = await fetch("/api/create-employee-user", {
-          method:"POST",
-          headers:{ "Content-Type":"application/json" },
-          body: JSON.stringify({
-            name,
-            username,
-            email,
-            password,
-            role: dbRoleFromUi(roleLabel),
-            role_label: roleLabel,
-            phone,
-            status,
-            farm_name: state.profile?.farm_name || "Minha Fazenda"
-          })
-        });
-
-        const result = await response.json();
-
-        if(!response.ok){
-          throw new Error(result?.error || "Falha ao criar login.");
-        }
-
-        if(result?.warning){
-          showToast(result.warning, "info");
-        }else{
-          showToast("Funcionário e login criados.", "success");
-        }
-        return true;
-      }catch(err){
-        console.error(err);
-        showToast(err.message || "Erro ao criar login.", "error");
-        return false;
-      }
-    }
-
-    async function saveOperationRecord(){
-      const payload = {
-        title: document.getElementById("modalOperationTitle").value.trim(),
-        type: document.getElementById("modalOperationType").value.trim(),
-        status: document.getElementById("modalOperationStatus").value,
-        date: document.getElementById("modalOperationDate").value || null,
-        responsible: document.getElementById("modalOperationResponsible").value.trim(),
-        description: document.getElementById("modalOperationDescription").value.trim()
-      };
-
-      let result;
-      if(state.editingRecord?.id){
-        result = await supabaseClient.from("operations").update(payload).eq("id", state.editingRecord.id);
-      }else{
-        result = await supabaseClient.from("operations").insert(payload);
-      }
-
-      if(result.error){
-        console.error(result.error);
-        showToast(result.error.message || "Erro ao salvar operação.", "error");
-        return false;
-      }
-
-      showToast("Operação salva.", "success");
-      return true;
-    }
-
-    async function saveFinancialRecord(){
-      const payload = {
-        description: document.getElementById("modalFinancialDescription").value.trim(),
-        category: document.getElementById("modalFinancialCategory").value.trim(),
-        type: document.getElementById("modalFinancialType").value,
-        amount: Number(document.getElementById("modalFinancialAmount").value || 0),
-        date: document.getElementById("modalFinancialDate").value || null
-      };
-
-      let result;
-      if(state.editingRecord?.id){
-        result = await supabaseClient.from("financial_transactions").update(payload).eq("id", state.editingRecord.id);
-      }else{
-        result = await supabaseClient.from("financial_transactions").insert(payload);
-      }
-
-      if(result.error){
-        console.error(result.error);
-        showToast(result.error.message || "Erro ao salvar lançamento.", "error");
-        return false;
-      }
-
-      showToast("Lançamento salvo.", "success");
-      return true;
-    }
-
-    async function saveStockRecord(){
-      const payload = {
-        product: document.getElementById("modalStockProduct").value.trim(),
-        quantity: Number(document.getElementById("modalStockQuantity").value || 0),
-        entry: Number(document.getElementById("modalStockEntry").value || 0),
-        exit: Number(document.getElementById("modalStockExit").value || 0),
-        location: document.getElementById("modalStockLocation").value.trim(),
-        category: document.getElementById("modalStockCategory").value.trim()
-      };
-
-      let result;
-      if(state.editingRecord?.id){
-        result = await supabaseClient.from("estoque_itens").update(payload).eq("id", state.editingRecord.id);
-      }else{
-        result = await supabaseClient.from("estoque_itens").insert(payload);
-      }
-
-      if(result.error){
-        console.error(result.error);
-        showToast(result.error.message || "Erro ao salvar item.", "error");
-        return false;
-      }
-
-      showToast("Item salvo.", "success");
-      return true;
-    }
-
-    async function saveModalRecord(){
-      let ok = false;
-
-      if(state.currentModal === "employee") ok = await saveEmployeeRecord();
-      if(state.currentModal === "operation") ok = await saveOperationRecord();
-      if(state.currentModal === "financial") ok = await saveFinancialRecord();
-      if(state.currentModal === "stock") ok = await saveStockRecord();
-
-      if(ok){
-        closeModal();
-        await refreshAllData();
-      }
-    }
-
-    function monthName(index){
-      return ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"][index];
-    }
-
-    function buildBarChartCard(title, labels, values, money = false){
-      const max = Math.max(...values, 1);
-      return `
-        <div class="analysis-card">
-          <h4>${escapeHtml(title)}</h4>
-          <div class="bar-chart">
-            ${labels.map((label, i) => {
-              const h = Math.max((values[i] / max) * 180, 10);
-              return `
-                <div class="bar-col">
-                  <div class="bar" style="height:${h}px" title="${money ? formatCurrency(values[i]) : values[i]}"></div>
-                  <span>${escapeHtml(label)}</span>
-                </div>
-              `;
-            }).join("")}
-          </div>
-        </div>
-      `;
-    }
-
-    function buildLineCard(title, labels, values){
-      const max = Math.max(...values, 1);
-      return `
-        <div class="analysis-card">
-          <h4>${escapeHtml(title)}</h4>
-          <div class="line-points">
-            <div class="line-area">
-              ${labels.map((label, i) => {
-                const stickHeight = Math.max((values[i] / max) * 150, 12);
-                return `
-                  <div class="line-node-wrap">
-                    <div class="line-stick" style="height:${stickHeight}px"></div>
-                    <div class="line-node"></div>
-                    <span>${escapeHtml(label)}</span>
-                  </div>
-                `;
-              }).join("")}
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    function buildFinancialAnalysis(){
-      const monthlyReceitas = new Array(12).fill(0);
-      const monthlyDespesas = new Array(12).fill(0);
-
-      state.financial.forEach(item => {
-        const date = new Date(item.date || item.created_at || Date.now());
-        const month = Number.isNaN(date.getTime()) ? 0 : date.getMonth();
-        const value = Number(item.amount ?? item.value ?? 0);
-        const type = String(item.type || item.tipo || "").toLowerCase();
-        if(/receita|entrada/.test(type)) monthlyReceitas[month] += value;
-        else monthlyDespesas[month] += value;
-      });
-
-      const labels = Array.from({length:12}, (_,i) => monthName(i));
-
-      el.analysisTitle.textContent = "Análise financeira";
-      el.analysisBody.innerHTML = `
-        <div class="analysis-grid">
-          ${buildBarChartCard("Receitas", labels, monthlyReceitas, true)}
-          ${buildBarChartCard("Despesas", labels, monthlyDespesas, true)}
-          ${buildLineCard("Fluxo", labels, labels.map((_,i) => monthlyReceitas[i] - monthlyDespesas[i]))}
-          ${buildBarChartCard("Lançamentos", labels, labels.map((_,i) => {
-            return state.financial.filter(item => {
-              const d = new Date(item.date || item.created_at || Date.now());
-              return !Number.isNaN(d.getTime()) && d.getMonth() === i;
-            }).length;
-          }))}
-        </div>
-      `;
-    }
-
-    function buildStockAnalysis(){
-      const categories = {};
-      const locations = {};
-      const movement = new Array(12).fill(0);
-
-      state.stock.forEach(item => {
-        const cat = item.category || item.categoria || "Sem categoria";
-        const loc = item.location || item.local || "Sem local";
-        categories[cat] = (categories[cat] || 0) + Number(item.quantity ?? item.quantidade ?? 0);
-        locations[loc] = (locations[loc] || 0) + 1;
-
-        const d = new Date(item.created_at || Date.now());
-        const month = Number.isNaN(d.getTime()) ? 0 : d.getMonth();
-        movement[month] += Number(item.entry ?? item.entrada ?? 0) + Number(item.exit ?? item.saida ?? item.saída ?? 0);
-      });
-
-      const catLabels = Object.keys(categories).slice(0,6);
-      const catValues = catLabels.map(k => categories[k]);
-      const locLabels = Object.keys(locations).slice(0,6);
-      const locValues = locLabels.map(k => locations[k]);
-      const monthLabels = Array.from({length:12}, (_,i) => monthName(i));
-
-      el.analysisTitle.textContent = "Análise de estoque";
-      el.analysisBody.innerHTML = `
-        <div class="analysis-grid">
-          ${buildBarChartCard("Quantidade por categoria", catLabels.length ? catLabels : ["Sem dados"], catValues.length ? catValues : [0])}
-          ${buildBarChartCard("Itens por local", locLabels.length ? locLabels : ["Sem dados"], locValues.length ? locValues : [0])}
-          ${buildLineCard("Movimentação", monthLabels, movement)}
-          ${buildBarChartCard("Entradas por mês", monthLabels, monthLabels.map((_,i) => {
-            return state.stock.reduce((acc,item) => {
-              const d = new Date(item.created_at || Date.now());
-              return (!Number.isNaN(d.getTime()) && d.getMonth() === i) ? acc + Number(item.entry ?? item.entrada ?? 0) : acc;
-            }, 0);
-          }))}
-        </div>
-      `;
-    }
-
-    function openAnalysis(type){
-      if(!canUseAnalysis()){
-        showToast("Só o Dono pode ver análise.", "error");
-        return;
-      }
-      state.currentAnalysis = type;
-      if(type === "financial") buildFinancialAnalysis();
-      if(type === "stock") buildStockAnalysis();
-      el.modalBackdrop.classList.add("show");
-      el.analysisModal.classList.add("show");
-    }
-
-    function closeAnalysis(){
-      state.currentAnalysis = null;
-      el.analysisModal.classList.remove("show");
-      if(!el.crudModal.classList.contains("show")){
-        el.modalBackdrop.classList.remove("show");
-      }
-    }
-
-    function downloadCsv(filename, rows){
-      if(!rows.length){
-        showToast("Sem dados para exportar.", "info");
-        return;
-      }
-      const headers = Object.keys(rows[0]);
-      const csv = [
-        headers.join(";"),
-        ...rows.map(row => headers.map(h => `"${String(row[h] ?? "").replaceAll('"','""')}"`).join(";"))
-      ].join("\n");
-
-      const blob = new Blob([csv], { type:"text/csv;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = filename;
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    function exportEmployees(){
-      if(!isDono()) return showToast("Só o Dono pode exportar.", "error");
-      downloadCsv("funcionarios.csv", state.employees.map(item => ({
-        nome: item.name || item.full_name || item.nome || "",
-        usuario: item.username || (item.email ? String(item.email).replace("@agrocontrol","") : ""),
-        telefone: item.phone || item.telefone || "",
-        funcao: uiRole(item.role || item.funcao || item.função),
-        status: item.status || ""
-      })));
-    }
-
-    function exportOperations(){
-      if(!isDono()) return showToast("Só o Dono pode exportar.", "error");
-      downloadCsv("operacoes.csv", state.operations.map(item => ({
-        titulo: item.title || item.name || item.nome || "",
-        tipo: item.type || item.tipo || "",
-        status: item.status || "",
-        data: item.date || item.created_at || "",
-        responsavel: item.responsible || item.responsavel || item.responsável || ""
-      })));
-    }
-
-    function exportFinancial(){
-      if(!isDono()) return showToast("Só o Dono pode exportar.", "error");
-      downloadCsv("financeiro.csv", state.financial.map(item => ({
-        descricao: item.description || item.descricao || "",
-        categoria: item.category || item.categoria || "",
-        tipo: item.type || item.tipo || "",
-        valor: item.amount ?? item.value ?? 0,
-        data: item.date || item.created_at || ""
-      })));
-    }
-
-    function exportStock(){
-      if(!isDono()) return showToast("Só o Dono pode exportar.", "error");
-      downloadCsv("estoque.csv", state.stock.map(item => ({
-        produto: item.product || item.nome || item.name || "",
-        quantidade: item.quantity ?? item.quantidade ?? 0,
-        entrada: item.entry ?? item.entrada ?? 0,
-        saida: item.exit ?? item.saida ?? item.saída ?? 0,
-        local: item.location || item.local || "",
-        categoria: item.category || item.categoria || ""
-      })));
-    }
-
-    function exportAnalysis(){
-      if(state.currentAnalysis === "financial") exportFinancial();
-      if(state.currentAnalysis === "stock") exportStock();
-    }
-
-    function exportAll(){
-      if(!isDono()) return showToast("Só o Dono pode exportar.", "error");
-      downloadCsv("agrocontrol_geral.csv", [
-        ...state.employees.map(item => ({
-          secao:"funcionarios",
-          a:item.name || item.full_name || item.nome || "",
-          b:item.username || (item.email ? String(item.email).replace("@agrocontrol","") : ""),
-          c:item.phone || item.telefone || "",
-          d:uiRole(item.role || item.funcao || item.função),
-          e:item.status || ""
-        })),
-        ...state.operations.map(item => ({
-          secao:"operacoes",
-          a:item.title || item.name || item.nome || "",
-          b:item.type || item.tipo || "",
-          c:item.status || "",
-          d:item.date || item.created_at || "",
-          e:item.responsible || item.responsavel || item.responsável || ""
-        })),
-        ...state.financial.map(item => ({
-          secao:"financeiro",
-          a:item.description || item.descricao || "",
-          b:item.category || item.categoria || "",
-          c:item.type || item.tipo || "",
-          d:item.amount ?? item.value ?? 0,
-          e:item.date || item.created_at || ""
-        })),
-        ...state.stock.map(item => ({
-          secao:"estoque",
-          a:item.product || item.nome || item.name || "",
-          b:item.quantity ?? item.quantidade ?? 0,
-          c:item.entry ?? item.entrada ?? 0,
-          d:item.exit ?? item.saida ?? item.saída ?? 0,
-          e:item.location || item.local || ""
-        }))
-      ]);
-    }
-
-    async function saveFarmConfig(){
-      const farmName = el.configFarmName.value.trim();
-      const city = el.configFarmCity.value.trim();
-      localStorage.setItem("agrocontrol_farm_city", city);
-
-      if(state.user?.id){
-        const { data, error } = await supabaseClient
-          .from("profiles")
-          .update({ farm_name: farmName })
-          .eq("id", state.user.id)
-          .select()
-          .single();
-
-        if(error){
-          console.error(error);
-          showToast("Erro ao salvar fazenda.", "error");
-          return;
-        }
-        state.profile = { ...state.profile, ...data };
-      }
-
-      renderProfile();
-      showToast("Configurações salvas.", "success");
-    }
-
-    function saveMarketConfig(){
-      state.market = {
-        soja: el.marketSoja.value.trim() || DEFAULT_MARKET.soja,
-        milho: el.marketMilho.value.trim() || DEFAULT_MARKET.milho,
-        arroz: el.marketArroz.value.trim() || DEFAULT_MARKET.arroz,
-        arroba: el.marketArroba.value.trim() || DEFAULT_MARKET.arroba,
-        dolar: el.marketDolar.value.trim() || DEFAULT_MARKET.dolar,
-        diesel: el.marketDiesel.value.trim() || DEFAULT_MARKET.diesel
-      };
-      localStorage.setItem("agrocontrol_market_v21", JSON.stringify(state.market));
-      renderMarket();
-      showToast("Mercado salvo.", "success");
-    }
-
-    function bindEvents(){
-      el.loginForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const email = el.loginEmail.value.trim();
-        const password = el.loginPassword.value.trim();
-        if(!email || !password) return showToast("Preencha e-mail e senha.", "error");
-        await login(email, password);
-      });
-
-      el.continueSessionBtn.addEventListener("click", continueSession);
-      el.clearSavedSessionBtn.addEventListener("click", async () => {
-        await supabaseClient.auth.signOut();
-        state.hasSupabaseSession = false;
-        updateSavedSessionVisibility();
-        showToast("Sessão salva removida.", "info");
-      });
-
-      el.forgotPasswordBtn.addEventListener("click", forgotPassword);
-      el.logoutBtn.addEventListener("click", logout);
-      el.refreshAllBtn.addEventListener("click", () => refreshAllData(true));
-
-      document.querySelectorAll(".nav-btn").forEach(btn => {
-        btn.addEventListener("click", () => setActiveSection(btn.dataset.section));
-      });
-
-      el.openProfileBtn.addEventListener("click", openProfileDrawer);
-      el.openProfileBtnSidebar.addEventListener("click", openProfileDrawer);
-      el.closeProfileDrawerBtn.addEventListener("click", closeProfileDrawer);
-      el.drawerBackdrop.addEventListener("click", closeProfileDrawer);
-      el.saveProfileBtn.addEventListener("click", saveProfile);
-
-      el.pickAvatarBtn.addEventListener("click", () => el.avatarFileInput.click());
-      el.avatarFileInput.addEventListener("change", (e) => {
-        const file = e.target.files?.[0];
-        readImageFile(file, (dataUrl) => {
-          state.tempAvatarDataUrl = dataUrl;
-          state.selectedPresetAvatar = null;
-          el.profileAvatarPreview.src = dataUrl;
-          el.profileAvatarUrl.value = "";
-          [...el.avatarPresetGrid.querySelectorAll(".avatar-preset")].forEach(x => x.classList.remove("active"));
-        });
-      });
-
-      ["dragenter","dragover"].forEach(evt => {
-        el.avatarDropzone.addEventListener(evt, (e) => {
-          e.preventDefault();
-          el.avatarDropzone.classList.add("dragover");
-        });
-      });
-
-      ["dragleave","drop"].forEach(evt => {
-        el.avatarDropzone.addEventListener(evt, (e) => {
-          e.preventDefault();
-          el.avatarDropzone.classList.remove("dragover");
-        });
-      });
-
-      el.avatarDropzone.addEventListener("drop", (e) => {
-        const file = e.dataTransfer?.files?.[0];
-        readImageFile(file, (dataUrl) => {
-          state.tempAvatarDataUrl = dataUrl;
-          state.selectedPresetAvatar = null;
-          el.profileAvatarPreview.src = dataUrl;
-          el.profileAvatarUrl.value = "";
-          [...el.avatarPresetGrid.querySelectorAll(".avatar-preset")].forEach(x => x.classList.remove("active"));
-        });
-      });
-
-      el.changeBannerBtn.addEventListener("click", () => el.bannerFileInput.click());
-      el.removeBannerBtn.addEventListener("click", () => {
-        state.banner = "";
-        localStorage.removeItem("agrocontrol_banner_v21");
-        setHeroBanner("");
-        showToast("Banner removido.", "info");
-      });
-
-      el.bannerFileInput.addEventListener("change", (e) => {
-        const file = e.target.files?.[0];
-        readImageFile(file, (dataUrl) => {
-          state.banner = dataUrl;
-          localStorage.setItem("agrocontrol_banner_v21", dataUrl);
-          setHeroBanner(dataUrl);
-          showToast("Banner atualizado.", "success");
-        });
-      });
-
-      el.configProfileBtn.addEventListener("click", openProfileDrawer);
-      el.saveFarmConfigBtn.addEventListener("click", saveFarmConfig);
-      el.saveMarketBtn.addEventListener("click", saveMarketConfig);
-
-      el.employeesSearch.addEventListener("input", renderEmployeesTable);
-      el.operationsSearch.addEventListener("input", renderOperationsTable);
-      el.financialSearch.addEventListener("input", renderFinancialTable);
-      el.stockSearch.addEventListener("input", renderStockTable);
-
-      el.addEmployeeBtn.addEventListener("click", () => openModal("employee"));
-      el.addOperationBtn.addEventListener("click", () => openModal("operation"));
-      el.addFinancialBtn.addEventListener("click", () => openModal("financial"));
-      el.addStockBtn.addEventListener("click", () => openModal("stock"));
-
-      el.closeModalBtn.addEventListener("click", closeModal);
-      el.modalCancelBtn.addEventListener("click", closeModal);
-      el.modalBackdrop.addEventListener("click", () => {
-        closeModal();
-        closeAnalysis();
-      });
-      el.modalSaveBtn.addEventListener("click", saveModalRecord);
-
-      el.financialAnalysisBtn.addEventListener("click", () => openAnalysis("financial"));
-      el.stockAnalysisBtn.addEventListener("click", () => openAnalysis("stock"));
-      el.closeAnalysisBtn.addEventListener("click", closeAnalysis);
-      el.exportAnalysisBtn.addEventListener("click", exportAnalysis);
-
-      el.exportEmployeesBtn.addEventListener("click", exportEmployees);
-      el.exportOperationsBtn.addEventListener("click", exportOperations);
-      el.exportFinancialBtn.addEventListener("click", exportFinancial);
-      el.exportStockBtn.addEventListener("click", exportStock);
-      el.exportAllBtn.addEventListener("click", exportAll);
-
-      el.employeesTableBody.addEventListener("click", (e) => {
-        const id = e.target?.dataset?.editEmployee;
-        if(!id) return;
-        const record = state.employees.find(item => String(item.id) === String(id));
-        openModal("employee", record);
-      });
-
-      el.operationsTableBody.addEventListener("click", (e) => {
-        const id = e.target?.dataset?.editOperation;
-        if(!id) return;
-        const record = state.operations.find(item => String(item.id) === String(id));
-        openModal("operation", record);
-      });
-
-      el.financialTableBody.addEventListener("click", (e) => {
-        const id = e.target?.dataset?.editFinancial;
-        if(!id) return;
-        const record = state.financial.find(item => String(item.id) === String(id));
-        openModal("financial", record);
-      });
-
-      el.stockTableBody.addEventListener("click", (e) => {
-        const id = e.target?.dataset?.editStock;
-        if(!id) return;
-        const record = state.stock.find(item => String(item.id) === String(id));
-        openModal("stock", record);
-      });
-    }
-
-    async function afterAuthenticated(){
-      showApp();
-      await ensureProfile();
-      buildAvatarPresets();
-      renderProfile();
-      applyPermissions();
-      setHeroBanner(state.banner);
-      renderMarket();
-      await refreshAllData();
-    }
-
-    async function init(){
-      bindEvents();
-      buildAvatarPresets();
-      renderMarket();
-      showLogin();
-      await checkExistingSession();
-
-      supabaseClient.auth.onAuthStateChange(async (event, session) => {
-        state.hasSupabaseSession = !!session;
-        updateSavedSessionVisibility();
-        if(event === "SIGNED_OUT") showLogin();
-      });
-    }
-
-    init();
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
