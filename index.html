@@ -113,24 +113,34 @@
       border:1px solid var(--line);
       background:linear-gradient(135deg,rgba(114,208,123,.14),rgba(255,255,255,.03));
     }
-    .brand img{
-      width:42px;
-      height:42px;
-      object-fit:contain;
-      border-radius:12px;
-      background:rgba(114,208,123,.12);
-      padding:6px;
-    }
-    .brand-text strong{
-      display:block;
-      font-size:20px;
-      line-height:1;
-      margin-bottom:5px;
-    }
-    .brand-text span{
-      color:var(--muted);
-      font-size:13px;
-    }
+    .brand-logo-img{
+  width:180px;
+  height:auto;
+  object-fit:contain;
+  display:block;
+  background:none;
+  padding:0;
+  border-radius:0;
+}
+    .brand{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:10px;
+  padding:16px 14px;
+  border-radius:24px;
+  border:1px solid var(--line);
+  background:linear-gradient(135deg,rgba(114,208,123,.14),rgba(255,255,255,.03));
+}
+
+.brand-text strong{
+  display:none;
+}
+
+.brand-text span{
+  color:var(--muted);
+  font-size:13px;
+}
 
     .nav-title{
       padding:0 10px;
@@ -693,24 +703,20 @@
       inset:0;
       background:linear-gradient(90deg,rgba(0,0,0,.62),rgba(0,0,0,.16));
     }
-    .login-logo{
-      position:absolute;
-      top:38px;
-      left:54px;
-      display:flex;
-      align-items:center;
-      gap:12px;
-      z-index:5;
-      color:#fff;
-      font-weight:800;
-      font-size:26px;
-    }
-    .login-logo img{
-      width:42px;
-      height:42px;
-      object-fit:contain;
-      filter:drop-shadow(0 2px 10px rgba(0,0,0,.28));
-    }
+   .login-logo{
+  position:absolute;
+  top:34px;
+  left:46px;
+  z-index:5;
+}
+
+.login-logo-img{
+  width:220px;
+  height:auto;
+  object-fit:contain;
+  display:block;
+  filter:drop-shadow(0 3px 14px rgba(0,0,0,.30));
+}
     .login-card{
       position:relative;
       z-index:5;
@@ -823,9 +829,8 @@
     <div class="login-overlay"></div>
 
     <div class="login-logo">
-      <img src="imagens/logo.png" alt="AgroControl">
-      <div>AgroControl</div>
-    </div>
+  <img src="imagens/logo.png" alt="AgroControl" class="login-logo-img">
+</div>
 
     <div class="login-card">
       <h3>Entrar</h3>
@@ -855,13 +860,12 @@
 
   <div id="appShell" class="app-shell">
     <aside class="sidebar">
-      <div class="brand">
-        <img src="imagens/logo.png" alt="AgroControl">
-        <div class="brand-text">
-          <strong>AgroControl</strong>
-          <span id="brandFarmName">Minha Fazenda</span>
-        </div>
-      </div>
+     <div class="brand">
+  <img src="imagens/logo.png" alt="AgroControl" class="brand-logo-img">
+  <div class="brand-text">
+    <span id="brandFarmName">Minha Fazenda</span>
+  </div>
+</div>
 
       <div class="nav-title">Menu</div>
       <nav class="nav">
@@ -1579,6 +1583,8 @@
     }
 
     function updateSavedSessionVisibility(){
+  el.savedSessionBox.classList.add("hidden");
+}
       if(state.hasSupabaseSession) el.savedSessionBox.classList.remove("hidden");
       else el.savedSessionBox.classList.add("hidden");
     }
@@ -1614,21 +1620,22 @@
     }
 
     async function checkExistingSession(){
-      const { data, error } = await supabaseClient.auth.getSession();
-      if(error){
-        state.hasSupabaseSession = false;
-        updateSavedSessionVisibility();
-        return;
-      }
-      state.hasSupabaseSession = !!data?.session;
-      updateSavedSessionVisibility();
+  const { data, error } = await supabaseClient.auth.getSession();
 
-      if(state.rememberedEmail){
-        el.loginEmail.value = state.rememberedEmail;
-        el.rememberLogin.checked = true;
-      }
-    }
+  if(error){
+    state.hasSupabaseSession = false;
+  } else {
+    state.hasSupabaseSession = !!data?.session;
+  }
 
+  if(state.rememberedEmail){
+    el.loginEmail.value = state.rememberedEmail;
+    el.rememberLogin.checked = true;
+  }
+
+  updateSavedSessionVisibility();
+}
+    
     async function login(email,password){
       const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
       if(error){
@@ -2751,14 +2758,15 @@
     }
 
     async function init(){
-      buildAvatarPresets();
-      bindEvents();
-      await checkExistingSession();
-      showLogin();
+  buildAvatarPresets();
+  bindEvents();
+  await checkExistingSession();
+  showLogin();
 
-      if(state.rememberedEmail){
-        el.loginEmail.value = state.rememberedEmail;
-      }
+  if(state.rememberedEmail){
+    el.loginEmail.value = state.rememberedEmail;
+  }
+}
 
       const { data } = await supabaseClient.auth.getSession();
       if(data?.session?.user){
