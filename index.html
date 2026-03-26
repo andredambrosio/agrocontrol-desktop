@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AgroControl Desktop v2.2</title>
+  <title>AgroControl Desktop v5</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
@@ -41,21 +41,29 @@
     .w-full{width:100%}
 
     .ghost-btn,.soft-btn,.primary-btn,.danger-btn,.tiny-btn{
-      border-radius:14px;
-      padding:12px 14px;
-      font-weight:700;
-      transition:.18s ease;
+      border-radius:16px;
+      padding:12px 16px;
+      font-weight:800;
+      letter-spacing:.1px;
+      transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
+      box-shadow:0 8px 24px rgba(0,0,0,.16);
     }
-    .primary-btn{background:linear-gradient(135deg,var(--green),var(--green-2));color:#07140a}
-    .soft-btn{background:rgba(255,255,255,.07);color:var(--text);border:1px solid var(--line)}
-    .ghost-btn{background:transparent;color:var(--text);border:1px solid var(--line)}
-    .danger-btn{background:rgba(255,115,115,.12);color:#ffd0d0;border:1px solid rgba(255,115,115,.2)}
+    .ghost-btn:hover,.soft-btn:hover,.primary-btn:hover,.danger-btn:hover,.tiny-btn:hover{transform:translateY(-1px)}
+    .primary-btn{
+      background:linear-gradient(135deg,#7fe48a 0%,#4ea95a 100%);
+      color:#07140a;
+      box-shadow:0 14px 30px rgba(62,146,71,.28), inset 0 1px 0 rgba(255,255,255,.26);
+    }
+    .soft-btn{background:rgba(255,255,255,.08);color:var(--text);border:1px solid rgba(255,255,255,.10)}
+    .ghost-btn{background:rgba(255,255,255,.02);color:var(--text);border:1px solid rgba(255,255,255,.10)}
+    .danger-btn{background:rgba(255,115,115,.12);color:#ffd0d0;border:1px solid rgba(255,115,115,.24)}
     .tiny-btn{
-      padding:8px 10px;
+      padding:8px 11px;
       font-size:12px;
-      background:rgba(255,255,255,.07);
+      background:rgba(255,255,255,.06);
       color:var(--text);
-      border:1px solid var(--line);
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow:none;
     }
 
     .tag{
@@ -82,318 +90,797 @@
     }
 
     .sidebar{
-      background:linear-gradient(180deg,#09120d 0%,#08110c 100%);
-      border-right:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(9,18,13,.96) 0%,rgba(8,17,12,.98) 100%);
+      border-right:1px solid rgba(255,255,255,.08);
       min-height:100vh;
-      padding:16px;
+      padding:18px;
       display:flex;
       flex-direction:column;
       gap:18px;
-      box-shadow:var(--shadow);
+      box-shadow:0 24px 50px rgba(0,0,0,.34);
       z-index:20;
+      backdrop-filter:blur(16px);
     }
 
-        .brand{
-      position:relative;
+    .brand{
       display:flex;
       align-items:center;
       gap:14px;
       padding:18px 16px;
       border-radius:26px;
       border:1px solid rgba(255,255,255,.08);
-      background:
-        linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.025)),
-        linear-gradient(135deg,rgba(114,208,123,.10),rgba(255,255,255,.01));
-      box-shadow:
-        0 18px 34px rgba(0,0,0,.22),
-        inset 0 1px 0 rgba(255,255,255,.05);
-      overflow:hidden;
-      backdrop-filter:blur(14px);
-    }
-    .brand::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:
-        radial-gradient(circle at top left, rgba(114,208,123,.12), transparent 38%),
-        linear-gradient(135deg, transparent 0%, rgba(255,255,255,.03) 100%);
-      pointer-events:none;
+      background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.025)),linear-gradient(135deg,rgba(114,208,123,.13),rgba(255,255,255,.02));
+      box-shadow:0 16px 30px rgba(0,0,0,.2), inset 0 1px 0 rgba(255,255,255,.05);
     }
     .brand img{
-      position:relative;
-      z-index:1;
-      width:48px;
-      height:48px;
+      width:42px;
+      height:42px;
       object-fit:contain;
-      filter:
-        drop-shadow(0 8px 18px rgba(0,0,0,.30))
-        drop-shadow(0 0 10px rgba(114,208,123,.10));
-    }
-    .brand-text{
-      position:relative;
-      z-index:1;
-      min-width:0;
     }
     .brand-text strong{
       display:block;
-      font-size:22px;
+      font-size:20px;
       line-height:1;
-      margin-bottom:6px;
-      letter-spacing:.2px;
-      font-weight:800;
-      color:#f4fbf4;
-      text-shadow:0 4px 18px rgba(0,0,0,.18);
+      margin-bottom:5px;
     }
     .brand-text span{
-      display:block;
-      color:#98ad9c;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .nav-title{
+      padding:0 10px;
+      color:#7f9784;
       font-size:12px;
-      letter-spacing:.6px;
       text-transform:uppercase;
+      letter-spacing:1px;
+      margin-top:4px;
+    }
+    .nav{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    .nav-btn{
+      width:100%;
+      padding:14px 14px;
+      border-radius:18px;
+      color:var(--text);
+      background:transparent;
+      border:1px solid transparent;
+      text-align:left;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-size:16px;
+      transition:.18s ease;
+    }
+    .nav-btn:hover{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.08)}
+    .nav-btn.active{
+      background:linear-gradient(135deg,rgba(114,208,123,.22),rgba(255,255,255,.04));
+      border-color:rgba(114,208,123,.30);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+    }
+    .nav-icon{width:18px;text-align:center}
+
+    .sidebar-footer{
+      margin-top:auto;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .main{
+      min-width:0;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+    }
+
+    .topbar{
+      height:var(--topbar-height);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:16px 22px;
+      border-bottom:1px solid rgba(255,255,255,.07);
+      background:rgba(8,15,11,.80);
+      backdrop-filter:blur(18px);
+      z-index:12;
+      box-shadow:0 10px 24px rgba(0,0,0,.18);
+    }
+    .topbar-left h2{
+      font-size:24px;
+      line-height:1;
+      margin-bottom:4px;
+    }
+    .topbar-left p{
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .topbar-right{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .profile-chip{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:220px;
+      padding:10px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.06);
+      border:1px solid var(--line);
+    }
+    .profile-chip img{
+      width:42px;
+      height:42px;
+      border-radius:50%;
+      object-fit:cover;
+      background:#203126;
+    }
+    .profile-chip-info{
+      min-width:0;
+      flex:1;
+    }
+    .profile-chip-info strong,.profile-chip-info span{
+      display:block;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
     }
+    .profile-chip-info strong{font-size:14px}
+    .profile-chip-info span{font-size:12px;color:var(--muted)}
+
+    .content{
+      flex:1;
+      overflow:auto;
+      padding:24px;
+      display:flex;
+      flex-direction:column;
+      gap:20px;
+      background:radial-gradient(circle at top right, rgba(114,208,123,.05), transparent 24%);
+    }
+
+    .hero{
+      min-height:230px;
+      border-radius:32px;
+      overflow:hidden;
+      position:relative;
+      border:1px solid rgba(255,255,255,.08);
+      background:
+        linear-gradient(90deg,rgba(7,12,8,.84),rgba(7,12,8,.22) 58%,rgba(7,12,8,.70)),
+        url("imagens/dashboard_bg.jpg") center/cover no-repeat;
+      box-shadow:0 24px 50px rgba(0,0,0,.28);
+    }
+    .hero-custom{
+      position:absolute;
+      inset:0;
+      background-position:center;
+      background-size:cover;
+      background-repeat:no-repeat;
+      z-index:1;
+    }
+    .hero-content{
+      position:relative;
+      z-index:3;
+      height:100%;
+      padding:24px;
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-end;
+      gap:14px;
+    }
+    .hero-title{
+      font-size:34px;
+      line-height:1;
+      letter-spacing:-.6px;
+      text-shadow:0 10px 20px rgba(0,0,0,.25);
+    }
+
+    .hero-kpis{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .hero-kpi{
+      min-width:140px;
+      padding:12px 14px;
+      border-radius:18px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.09);
+      backdrop-filter:blur(10px);
+    }
+    .hero-kpi span{
+      display:block;
+      font-size:12px;
+      color:#d4e4d6;
+      margin-bottom:6px;
+    }
+    .hero-kpi strong{
+      font-size:18px;
+    }
+
+    .section{
+      display:none;
+      flex-direction:column;
+      gap:18px;
+    }
+    .section.active{display:flex}
+    .section-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .section-head h3{font-size:24px}
+    .section-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .grid{display:grid;gap:18px}
+    .grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .split{display:grid;grid-template-columns:1.4fr 1fr;gap:18px}
+
+    .card{
+      background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.025));
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:24px;
+      padding:18px;
+      box-shadow:0 20px 40px rgba(0,0,0,.20), inset 0 1px 0 rgba(255,255,255,.04);
+      min-width:0;
+      backdrop-filter:blur(10px);
+    }
+
+    .metric-card{
+      min-height:132px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .metric-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+    }
+    .metric-icon{
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      background:rgba(114,208,123,.15);
+      color:#c6f0ca;
+      font-size:20px;
+    }
+    .metric-value{
+      font-size:30px;
+      font-weight:900;
+      line-height:1;
+    }
+    .metric-label{
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .list{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .list-item{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      padding:14px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+    }
+    .list-item small{color:var(--muted)}
+
+    .table-wrap{
+      overflow:auto;
+      border-radius:18px;
+      border:1px solid var(--line);
+    }
+    table{
+      width:100%;
+      min-width:860px;
+      border-collapse:collapse;
+      background:rgba(255,255,255,.02);
+    }
+    th,td{
+      padding:14px;
+      border-bottom:1px solid var(--line);
+      text-align:left;
+      font-size:14px;
+      vertical-align:middle;
+    }
+    th{
+      font-size:12px;
+      color:#9ab09e;
+      text-transform:uppercase;
+      letter-spacing:.8px;
+      background:rgba(255,255,255,.03);
+    }
+    tr:hover td{background:rgba(255,255,255,.03)}
+    .row-actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .searchbar{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .searchbar input,
+    .form-group input,
+    .form-group select,
+    .form-group textarea{
+      width:100%;
+      background:rgba(255,255,255,.05);
+      color:var(--text);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px 14px;
+      outline:none;
+    }
+    .form-group textarea{
+      resize:vertical;
+      min-height:110px;
+    }
+
+    .market-grid{
+      display:grid;
+      grid-template-columns:repeat(6,minmax(0,1fr));
+      gap:14px;
+    }
+    .market-card{
+      min-height:124px;
+      padding:16px;
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.08);
+      background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.025));
+      box-shadow:0 18px 36px rgba(0,0,0,.18);
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      gap:14px;
+      position:relative;
+      overflow:hidden;
+    }
+    .market-card::after{
+      content:"";
+      position:absolute;
+      inset:auto -20% -40% auto;
+      width:120px;
+      height:120px;
+      background:radial-gradient(circle, rgba(114,208,123,.10), transparent 65%);
+      pointer-events:none;
+    }
+    .market-card h4{font-size:16px}
+    .market-value{font-size:24px;font-weight:900}
+
+    .climate-main-card{
+      min-height:220px;
+      background:
+        linear-gradient(180deg,rgba(8,15,10,.75),rgba(8,15,10,.72)),
+        url("imagens/clima_bg.jpg") center/cover no-repeat;
+    }
+
+    .empty{
+      padding:24px;
+      border:1px dashed rgba(255,255,255,.14);
+      border-radius:18px;
+      color:var(--muted);
+      text-align:center;
+      background:rgba(255,255,255,.02);
+    }
+
+    .drawer-backdrop,.modal-backdrop,.login-screen{
+      position:fixed;
+      inset:0;
+    }
+    .drawer-backdrop,.modal-backdrop{
+      display:none;
+      background:rgba(0,0,0,.42);
+      backdrop-filter:blur(6px);
+      z-index:50;
+    }
+    .drawer-backdrop.show,.modal-backdrop.show{display:block}
+
+    .drawer{
+      position:fixed;
+      top:0;
+      right:-460px;
+      width:min(440px,100vw);
+      height:100vh;
+      z-index:60;
+      background:linear-gradient(180deg,#101811,#142019);
+      border-left:1px solid var(--line);
+      box-shadow:var(--shadow);
+      transition:right .22s ease;
+      display:flex;
+      flex-direction:column;
+    }
+    .drawer.show{right:0}
+    .drawer-header{
+      padding:20px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .drawer-body{
+      padding:20px;
+      overflow:auto;
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+    }
+
+    .avatar-editor{
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+    .avatar-lg{
+      width:90px;
+      height:90px;
+      border-radius:50%;
+      object-fit:cover;
+      background:#253228;
+      border:2px solid rgba(255,255,255,.08);
+    }
+
+    .dropzone{
+      border:1px dashed rgba(255,255,255,.2);
+      border-radius:18px;
+      padding:18px;
+      text-align:center;
+      background:rgba(255,255,255,.03);
+      color:var(--muted);
+    }
+
+    .avatar-preset-grid{
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:10px;
+    }
+    .avatar-preset{
+      width:100%;
+      aspect-ratio:1;
+      border-radius:50%;
+      overflow:hidden;
+      border:2px solid transparent;
+      background:rgba(255,255,255,.04);
+    }
+    .avatar-preset.active{border-color:var(--green)}
+    .avatar-preset img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    .modal{
+      position:fixed;
+      inset:0;
+      z-index:70;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+    }
+    .modal.show{display:flex}
+    .modal-box{
+      width:min(820px,100%);
+      max-height:90vh;
+      overflow:auto;
+      border-radius:26px;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg,#101912,#132019);
+      box-shadow:var(--shadow);
+    }
+    .modal-header{
+      padding:18px 20px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+    }
+    .modal-body{
+      padding:20px;
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+    }
+    .modal-footer{
+      padding:18px 20px;
+      border-top:1px solid var(--line);
+      display:flex;
+      justify-content:flex-end;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .form-grid{display:grid;gap:14px}
+    .form-grid.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .form-group{display:flex;flex-direction:column;gap:8px}
+    .form-group label{
+      color:#bfd0c1;
+      font-size:13px;
+      font-weight:700;
+    }
+
+    .analysis-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:18px;
+    }
+    .analysis-card{
+      padding:18px;
+      border-radius:20px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+    }
+    .analysis-card h4{
+      font-size:18px;
+      margin-bottom:14px;
+    }
+    .bar-chart{
+      display:flex;
+      align-items:flex-end;
+      gap:10px;
+      height:220px;
+      padding-top:10px;
+    }
+    .bar-col{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:8px;
+      min-width:0;
+    }
+    .bar{
+      width:100%;
+      border-radius:12px 12px 4px 4px;
+      background:linear-gradient(180deg,#8ed694,#4c9d54);
+      min-height:10px;
+    }
+    .bar-col span{
+      color:var(--muted);
+      font-size:12px;
+      white-space:nowrap;
+    }
 
     .login-screen{
-  position:fixed;
-  inset:0;
-  z-index:1000;
-  display:flex;
-  align-items:center;
-  justify-content:flex-start;
-  padding:32px;
-  background:#08110c;
-  overflow:hidden;
-}
+      z-index:100;
+      display:flex;
+      align-items:flex-start;
+      justify-content:flex-start;
+      overflow:hidden;
+      background:#060d09;
+      padding:56px 64px;
+    }
+    .login-screen::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:radial-gradient(circle at 18% 22%, rgba(114,208,123,.14), transparent 30%), radial-gradient(circle at 76% 24%, rgba(255,255,255,.06), transparent 22%);
+      z-index:1;
+      pointer-events:none;
+    }
+    .login-bg{
+      position:absolute;
+      inset:0;
+      background:url("imagens/login_bg.jpg") center/cover no-repeat;
+      filter:brightness(.60) saturate(.96) contrast(1.02);
+      transform:scale(1.02);
+    }
+    .login-overlay{
+      position:absolute;
+      inset:0;
+      background:linear-gradient(90deg,rgba(5,10,7,.82) 0%,rgba(5,10,7,.56) 34%,rgba(5,10,7,.18) 66%,rgba(5,10,7,.34) 100%);
+      z-index:2;
+    }
+    .login-logo{
+      position:absolute;
+      top:42px;
+      left:54px;
+      z-index:5;
+    }
+    .login-logo img{
+      width:238px;
+      height:auto;
+      object-fit:contain;
+      filter:drop-shadow(0 14px 24px rgba(0,0,0,.28));
+    }
+    .login-card{
+      position:relative;
+      z-index:5;
+      width:320px;
+      margin-left:0;
+      margin-top:92px;
+      padding:18px 18px 16px;
+      border-radius:12px;
+      background:linear-gradient(180deg,rgba(15,18,24,.76),rgba(12,16,19,.60));
+      border:1px solid rgba(255,255,255,.08);
+      backdrop-filter:blur(12px);
+      box-shadow:0 22px 60px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.03);
+    }
+    .login-card h3{display:none}
+    .login-card p{display:none}
+    .login-form{display:flex;flex-direction:column;gap:10px}
+    .login-form input{
+      width:100%;
+      height:36px;
+      padding:0 12px;
+      border-radius:6px;
+      background:rgba(255,255,255,.04);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.08);
+      outline:none;
+      font-size:12px;
+    }
+    .login-form input:focus{border-color:rgba(114,208,123,.35); box-shadow:0 0 0 3px rgba(114,208,123,.08)}
+    .login-options{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      gap:8px;
+      font-size:11px;
+      color:#ccd9ce;
+      margin-top:2px;
+    }
+    .check-line{display:flex;align-items:center;gap:7px}
+    .check-line input{accent-color:#72d07b}
+    .login-saved{
+      margin-top:12px;
+      padding-top:12px;
+      border-top:1px solid rgba(255,255,255,.08);
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
 
-.login-bg{
-  position:absolute;
-  inset:0;
-  background:url("imagens/login_bg.jpg") center center/cover no-repeat;
-  filter:brightness(.58) saturate(1.02);
-  transform:scale(1.02);
-}
+    .market-visibility-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:10px;
+      margin-top:14px;
+    }
+    .market-toggle{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:12px 14px;
+      border-radius:16px;
+      background:rgba(255,255,255,.035);
+      border:1px solid rgba(255,255,255,.08);
+      color:var(--text);
+    }
+    .market-toggle input{accent-color:#72d07b}
 
-.login-overlay{
-  position:absolute;
-  inset:0;
-  background:
-    linear-gradient(90deg, rgba(5,10,7,.86) 0%, rgba(5,10,7,.70) 28%, rgba(5,10,7,.38) 56%, rgba(5,10,7,.52) 100%);
-}
+    .toast-wrap{
+      position:fixed;
+      top:18px;
+      right:18px;
+      z-index:200;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .toast{
+      min-width:260px;
+      max-width:380px;
+      padding:14px 16px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.08);
+      background:#152019;
+      color:var(--text);
+      box-shadow:var(--shadow);
+    }
+    .toast.success{border-left:4px solid #63c86c}
+    .toast.error{border-left:4px solid #ff7373}
+    .toast.info{border-left:4px solid #81bfff}
 
-.login-logo{
-  position:absolute;
-  top:34px;
-  left:34px;
-  z-index:2;
-}
-
-.login-logo img{
-  width:220px;
-  height:auto;
-  display:block;
-  object-fit:contain;
-  filter:drop-shadow(0 10px 25px rgba(0,0,0,.35));
-}
-
-.login-card{
-  position:relative;
-  z-index:2;
-  width:100%;
-  max-width:440px;
-  padding:34px 28px 28px;
-  border-radius:28px;
-  border:1px solid rgba(255,255,255,.10);
-  background:linear-gradient(180deg, rgba(8,20,12,.74), rgba(8,16,11,.58));
-  backdrop-filter:blur(18px);
-  -webkit-backdrop-filter:blur(18px);
-  box-shadow:
-    0 20px 60px rgba(0,0,0,.42),
-    inset 0 1px 0 rgba(255,255,255,.05);
-}
-
-.login-card h3{
-  margin:0 0 10px;
-  font-size:56px;
-  line-height:.95;
-  font-weight:800;
-  color:#f4f7f4;
-  letter-spacing:-1.2px;
-}
-
-.login-card p{
-  margin:0 0 26px;
-  color:rgba(235,242,236,.78);
-  font-size:16px;
-  line-height:1.45;
-  max-width:360px;
-}
-
-.login-form{
-  display:flex;
-  flex-direction:column;
-  gap:16px;
-}
-
-.login-form input{
-  width:100%;
-  height:58px;
-  border:none;
-  outline:none;
-  border-radius:18px;
-  padding:0 20px;
-  font-size:16px;
-  color:#f5f7f5;
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
-}
-
-.login-form input::placeholder{
-  color:rgba(231,237,232,.72);
-}
-
-.login-form input:focus{
-  border-color:rgba(105,205,112,.45);
-  box-shadow:
-    0 0 0 4px rgba(105,205,112,.10),
-    inset 0 1px 0 rgba(255,255,255,.05);
-  background:rgba(255,255,255,.10);
-}
-
-.login-options{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:14px;
-  margin-top:2px;
-  margin-bottom:4px;
-}
-
-.check-line{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-size:14px;
-  color:#eef3ee;
-}
-
-.check-line input{
-  width:16px;
-  height:16px;
-  accent-color:#69cd70;
-}
-
-.login-options .ghost-btn{
-  min-height:40px;
-  padding:0 16px;
-  border-radius:14px;
-}
-
-.login-form .primary-btn{
-  width:100%;
-  min-height:58px;
-  border-radius:20px;
-  font-size:16px;
-  font-weight:800;
-  margin-top:2px;
-}
-
-.login-saved{
-  margin-top:16px;
-  padding-top:16px;
-  border-top:1px solid rgba(255,255,255,.08);
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-
-@media (max-width: 768px){
-  .login-screen{
-    padding:18px;
-    align-items:flex-start;
-  }
-
-  .login-logo{
-    top:18px;
-    left:18px;
-  }
-
-  .login-logo img{
-    width:170px;
-  }
-
-  .login-card{
-    margin-top:82px;
-    max-width:100%;
-    padding:26px 20px 22px;
-    border-radius:24px;
-  }
-
-  .login-card h3{
-    font-size:42px;
-  }
-
-  .login-card p{
-    font-size:15px;
-  }
-
-  .login-options{
-    flex-direction:column;
-    align-items:flex-start;
-  }
-
-  .login-options .ghost-btn{
-    width:100%;
-  }
-}
+    @media (max-width:1380px){
+      .grid-4{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .market-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+      .split{grid-template-columns:1fr}
+      .analysis-grid{grid-template-columns:1fr}
+    }
+    @media (max-width:980px){
+      .app-shell{grid-template-columns:1fr}
+      .sidebar{display:none}
+      .market-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .grid-3,.grid-2{grid-template-columns:1fr}
+      .login-logo{
+        top:20px;
+        left:20px;
+      }
+      .login-card{
+        margin-left:20px;
+        margin-right:20px;
+        margin-top:90px;
+        width:min(340px,calc(100vw - 40px));
+      }
+      .login-overlay{
+        background:linear-gradient(180deg,rgba(0,0,0,.62),rgba(0,0,0,.36));
+      }
+    }
+    @media (max-width:640px){
+      .market-grid,.grid-4{grid-template-columns:1fr}
+      .content{padding:14px}
+      .topbar{padding:12px 14px}
+      .form-grid.cols-2{grid-template-columns:1fr}
+    }
   </style>
 </head>
 <body>
 
   <div id="loginScreen" class="login-screen">
-  <div class="login-bg"></div>
-  <div class="login-overlay"></div>
+    <div class="login-bg"></div>
+    <div class="login-overlay"></div>
 
-  <div class="login-logo">
-    <img src="imagens/logo.png" alt="AgroControl">
-  </div>
+    <div class="login-logo">
+      <img src="imagens/logo.png" alt="AgroControl">
+    </div>
 
-  <div class="login-card">
-    <h3>Entrar</h3>
-    <p>Central de comando da fazenda. Controle visual, operacional e financeiro em um só lugar.</p>
+    <div class="login-card">
+      <h3>Entrar</h3>
+      <p>Central de comando rural premium</p>
 
-    <form id="loginForm" class="login-form">
-      <input id="loginEmail" type="email" placeholder="E-mail" required />
-      <input id="loginPassword" type="password" placeholder="Senha" required />
+      <form id="loginForm" class="login-form">
+        <input id="loginEmail" type="email" placeholder="E-mail" required />
+        <input id="loginPassword" type="password" placeholder="Senha" required />
 
-      <div class="login-options">
-        <label class="check-line">
-          <input id="rememberLogin" type="checkbox" />
-          <span>Lembrar login</span>
-        </label>
-        <button id="forgotPasswordBtn" class="ghost-btn" type="button">Recuperar senha</button>
+        <div class="login-options">
+          <label class="check-line">
+            <input id="rememberLogin" type="checkbox" />
+            <span>Lembrar login</span>
+          </label>
+          <button id="forgotPasswordBtn" class="ghost-btn" type="button">Recuperar senha</button>
+        </div>
+
+        <button class="primary-btn w-full" type="submit">Entrar</button>
+      </form>
+
+      <div id="savedSessionBox" class="login-saved hidden">
+        <button id="continueSessionBtn" class="soft-btn w-full">Continuar sessão</button>
+        <button id="clearSavedSessionBtn" class="ghost-btn w-full">Esquecer sessão salva</button>
       </div>
-
-      <button class="primary-btn" type="submit">Entrar</button>
-    </form>
-
-    <div id="savedSessionBox" class="login-saved hidden">
-      <button id="continueSessionBtn" class="soft-btn w-full">Continuar sessão</button>
-      <button id="clearSavedSessionBtn" class="ghost-btn w-full">Esquecer sessão salva</button>
     </div>
   </div>
-</div>
+
   <div id="appShell" class="app-shell">
     <aside class="sidebar">
-     <div class="brand">
-  <img src="imagens/logo.png" alt="AgroControl">
-  <div class="brand-text">
-    <strong>AgroControl</strong>
-    <span id="brandFarmName">Minha Fazenda</span>
-  </div>
-</div>
+      <div class="brand">
+        <img src="imagens/logo.png" alt="AgroControl">
+        <div class="brand-text">
+          <strong>AgroControl</strong>
+          <span id="brandFarmName">Minha Fazenda</span>
+        </div>
+      </div>
 
       <div class="nav-title">Menu</div>
       <nav class="nav">
@@ -710,6 +1197,10 @@
               <div class="form-group"><label>Dólar</label><input id="marketDolar" type="text" /></div>
               <div class="form-group"><label>Diesel</label><input id="marketDiesel" type="text" /></div>
             </div>
+            <div style="margin-top:18px;">
+              <h4 style="margin-bottom:10px;">Itens visíveis no painel e no mercado</h4>
+              <div id="marketVisibilityGrid" class="market-visibility-grid"></div>
+            </div>
             <div style="margin-top:14px;">
               <button id="saveMarketBtn" class="primary-btn">Salvar mercado</button>
             </div>
@@ -813,53 +1304,48 @@
         </div>
         <button id="closeAnalysisBtn" class="ghost-btn">Fechar</button>
       </div>
+
       <div id="analysisBody" class="modal-body"></div>
+
       <div class="modal-footer">
-        <button id="exportAnalysisBtn" class="ghost-btn">Exportar CSV</button>
+        <button id="exportAnalysisBtn" class="soft-btn">Exportar CSV</button>
       </div>
     </div>
   </div>
 
   <input id="bannerFileInput" type="file" accept="image/*" class="hidden" />
+
   <div id="toastWrap" class="toast-wrap"></div>
-
-  <script>
-    const SUPABASE_URL = "https://xksllcfagvpccvuzwqmg.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_5O1ZECSV-NpB8Hrl7RQtHg_7af8cgXy";
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    const DB_TO_ROLE = {
-      owner: "Dono",
-      dono: "Dono",
-      admin: "Dono",
-      gerente: "Gerente",
-      manager: "Gerente",
-      employee: "Funcionário",
-      funcionario: "Funcionário",
-      "funcionário": "Funcionário",
-      user: "Funcionário"
-    };
-
-    const ROLE_TO_DB = {
-      "Dono": "owner",
-      "Gerente": "manager",
-      "Funcionário": "employee"
-    };
+    <script>
+    const SUPABASE_URL = "https://SEU-PROJETO.supabase.co";
+    const SUPABASE_ANON_KEY = "SUA-ANON-KEY";
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const DEFAULT_MARKET = {
-      soja: "R$ 132,40",
-      milho: "R$ 66,90",
-      arroz: "R$ 96,30",
-      arroba: "R$ 321,50",
-      dolar: "R$ 5,08",
-      diesel: "R$ 6,19"
+      soja: "R$ 132,00/sc",
+      milho: "R$ 61,00/sc",
+      arroz: "R$ 91,00/sc",
+      arroba: "R$ 314,00",
+      dolar: "R$ 5,42",
+      diesel: "R$ 6,09/L"
     };
 
     const DEFAULT_STOCK = [
-      { id: "s1", produto: "Herbicida", quantidade: "28 bombonas", entrada: "12/03/2026", saida: "—", local: "Galpão A", categoria: "Defensivo" },
-      { id: "s2", produto: "Semente soja", quantidade: "86 sacas", entrada: "10/03/2026", saida: "—", local: "Depósito", categoria: "Semente" },
-      { id: "s3", produto: "Diesel interno", quantidade: "2200 litros", entrada: "09/03/2026", saida: "—", local: "Tanque", categoria: "Combustível" }
+      { id:"stock-1", produto:"Semente de soja", quantidade:"120 sacas", entrada:"120", saida:"0", local:"Galpão principal", categoria:"Sementes" },
+      { id:"stock-2", produto:"Ureia", quantidade:"80 sacas", entrada:"80", saida:"0", local:"Depósito 2", categoria:"Fertilizantes" }
     ];
+
+    const DB_TO_ROLE = {
+      owner: "Dono",
+      manager: "Gerente",
+      employee: "Funcionário"
+    };
+
+    const ROLE_TO_DB = {
+      Dono: "owner",
+      Gerente: "manager",
+      Funcionário: "employee"
+    };
 
     const state = {
       session: null,
@@ -878,6 +1364,7 @@
       rememberedEmail: localStorage.getItem("agrocontrol_remembered_email") || "",
       banner: localStorage.getItem("agrocontrol_banner_v22") || "",
       market: JSON.parse(localStorage.getItem("agrocontrol_market_v22") || "null") || { ...DEFAULT_MARKET },
+      marketVisible: JSON.parse(localStorage.getItem("agrocontrol_market_visible_v5") || "null") || ["soja","milho","arroz","arroba","dolar","diesel"],
       hasSupabaseSession: false,
       weather: {
         city: localStorage.getItem("agrocontrol_farm_city") || "Dom Pedrito, RS",
@@ -1007,6 +1494,7 @@
       marketArroba: document.getElementById("marketArroba"),
       marketDolar: document.getElementById("marketDolar"),
       marketDiesel: document.getElementById("marketDiesel"),
+      marketVisibilityGrid: document.getElementById("marketVisibilityGrid"),
       saveMarketBtn: document.getElementById("saveMarketBtn"),
 
       logoutBtn: document.getElementById("logoutBtn"),
@@ -1094,7 +1582,40 @@
     }
 
     function updateSavedSessionVisibility(){
-      el.savedSessionBox.classList.add("hidden");
+      const shouldShow = !!state.hasSupabaseSession || !!state.rememberedEmail;
+      el.savedSessionBox.classList.toggle("hidden", !shouldShow);
+    }
+
+    function getMarketEntries(){
+      return [
+        ["Soja", state.market.soja, "soja"],
+        ["Milho", state.market.milho, "milho"],
+        ["Arroz", state.market.arroz, "arroz"],
+        ["Arroba", state.market.arroba, "arroba"],
+        ["Dólar", state.market.dolar, "dolar"],
+        ["Diesel", state.market.diesel, "diesel"]
+      ];
+    }
+
+    function getVisibleMarketEntries(){
+      const visible = Array.isArray(state.marketVisible) && state.marketVisible.length
+        ? state.marketVisible
+        : ["soja","milho","arroz","arroba","dolar","diesel"];
+      return getMarketEntries().filter(([, , key]) => visible.includes(key));
+    }
+
+    function renderMarketVisibilityOptions(){
+      if(!el.marketVisibilityGrid) return;
+      const labels = { soja:"Soja", milho:"Milho", arroz:"Arroz", arroba:"Arroba", dolar:"Dólar", diesel:"Diesel" };
+      const visible = Array.isArray(state.marketVisible) && state.marketVisible.length
+        ? state.marketVisible
+        : ["soja","milho","arroz","arroba","dolar","diesel"];
+      el.marketVisibilityGrid.innerHTML = Object.entries(labels).map(([key,label]) => `
+        <label class="market-toggle">
+          <input type="checkbox" value="${key}" ${visible.includes(key) ? "checked" : ""}>
+          <span>${label}</span>
+        </label>
+      `).join("");
     }
 
     function buildAvatarPresets(){
@@ -1128,7 +1649,10 @@
 
     async function checkExistingSession(){
       const { data, error } = await supabaseClient.auth.getSession();
-      state.hasSupabaseSession = !error && !!data?.session;
+      const session = !error ? data?.session : null;
+      state.hasSupabaseSession = !!session;
+      state.session = session || null;
+      state.user = session?.user || null;
 
       if(state.rememberedEmail){
         el.loginEmail.value = state.rememberedEmail;
@@ -1228,30 +1752,28 @@
     }
 
     function renderProfile(){
-      const profile = state.profile || {};
-      const farm = profile.farm_name || "Minha Fazenda";
-      const name = profile.full_name || state.user?.user_metadata?.full_name || "Usuário";
-      const email = profile.email || state.user?.email || "";
-      const roleLabel = currentRoleLabel();
+      const fullName = state.profile?.full_name || state.user?.email?.split("@")[0] || "Usuário";
+      const farm = state.profile?.farm_name || "Minha Fazenda";
+      const role = currentRoleLabel();
       const avatar = safeAvatar();
 
-      el.topbarAvatar.src = avatar;
-      el.topbarUserName.textContent = name;
-      el.topbarFarmName.textContent = farm;
-
       el.brandFarmName.textContent = farm;
+      el.topbarUserName.textContent = fullName;
+      el.topbarFarmName.textContent = farm;
+      el.topbarAvatar.src = avatar;
+
       el.heroFarmTitle.textContent = farm;
-      el.heroUserRole.textContent = roleLabel;
+      el.heroUserRole.textContent = role;
 
       el.profileAvatarPreview.src = avatar;
-      el.profileDrawerName.textContent = name;
-      el.profileDrawerEmail.textContent = email;
-      el.profileDrawerRole.textContent = roleLabel;
+      el.profileDrawerName.textContent = fullName;
+      el.profileDrawerEmail.textContent = state.user?.email || "";
+      el.profileDrawerRole.textContent = role;
 
-      el.profileFullName.value = profile.full_name || "";
+      el.profileFullName.value = state.profile?.full_name || "";
       el.profileFarmName.value = farm;
-      el.profileAvatarUrl.value = profile.avatar_url || "";
-      el.profileRoleLabel.value = roleLabel;
+      el.profileRoleLabel.value = role;
+      el.profileAvatarUrl.value = state.profile?.avatar_url || "";
 
       el.configFarmName.value = farm;
       el.configFarmCity.value = localStorage.getItem("agrocontrol_farm_city") || "";
@@ -1438,18 +1960,13 @@
     }
 
     function renderMarketOverview(){
-      const list = [
-        ["Soja", state.market.soja],
-        ["Milho", state.market.milho],
-        ["Arroz", state.market.arroz],
-        ["Arroba", state.market.arroba]
-      ];
+      const list = getVisibleMarketEntries().slice(0,4);
       el.marketOverviewList.innerHTML = list.map(([nome, valor]) => `
         <div class="list-item">
           <div><strong>${escapeHtml(nome)}</strong></div>
           <strong>${escapeHtml(valor)}</strong>
         </div>
-      `).join("");
+      `).join("") || `<div class="empty">Selecione itens do mercado nas configurações</div>`;
     }
 
     function renderClimateOverview(){
@@ -1472,18 +1989,11 @@
     }
 
     function renderMarket(){
-      const map = [
-        ["Soja", state.market.soja],
-        ["Milho", state.market.milho],
-        ["Arroz", state.market.arroz],
-        ["Arroba", state.market.arroba],
-        ["Dólar", state.market.dolar],
-        ["Diesel", state.market.diesel]
-      ];
+      const map = getVisibleMarketEntries();
 
       el.marketGrid.innerHTML = map.map(([title, value]) =>
         `<div class="market-card"><h4>${escapeHtml(title)}</h4><div class="market-value">${escapeHtml(value)}</div></div>`
-      ).join("");
+      ).join("") || `<div class="empty">Selecione itens do mercado nas configurações</div>`;
 
       el.marketSoja.value = state.market.soja;
       el.marketMilho.value = state.market.milho;
@@ -1491,6 +2001,7 @@
       el.marketArroba.value = state.market.arroba;
       el.marketDolar.value = state.market.dolar;
       el.marketDiesel.value = state.market.diesel;
+      renderMarketVisibilityOptions();
     }
 
     function renderEmployeesTable(){
@@ -1533,12 +2044,12 @@
       }
 
       el.operationsTableBody.innerHTML = rows.map(item => {
-        const title = item.title || item.name || item.nome || "Sem título";
+        const title = item.title || item.nome || item.name || "Operação";
         const type = item.type || item.tipo || "Geral";
         const status = item.status || "Pendente";
-        const date = item.date || item.created_at || "";
-        const responsible = item.responsible || item.responsavel || item.owner || "—";
-        const tagClass = /concl/i.test(status) ? "tag-green" : /andamento|progress/i.test(status) ? "tag-blue" : /pend/i.test(status) ? "tag-yellow" : "tag-red";
+        const date = item.date || item.created_at;
+        const responsible = item.responsible || item.responsavel || item.responsável || "—";
+        const tagClass = /andamento|exec|ativo/i.test(status) ? "tag-blue" : /concl|final/i.test(status) ? "tag-green" : /pend/i.test(status) ? "tag-yellow" : "tag-red";
 
         return `
           <tr>
@@ -1610,16 +2121,71 @@
       const map = {
         overview: ["Central de Comando", "Gestão da fazenda"],
         mercado: ["Mercado", "Valores e acompanhamento"],
-        clima: ["Clima", "Condição operacional da fazenda"],
-        employees: ["Funcionários", "Equipe e acessos"],
-        operations: ["Operações", "Frentes operacionais"],
+        clima: ["Clima", "Condições para operação"],
+        employees: ["Funcionários", "Equipe da fazenda"],
+        operations: ["Operações", "Acompanhamento operacional"],
         financial: ["Financeiro", "Entradas, saídas e saldo"],
-        stock: ["Estoque", "Controle de materiais"],
-        config: ["Configurações", "Fazenda, mercado e perfil"]
+        stock: ["Estoque", "Controle de produtos"],
+        config: ["Configurações", "Personalização do sistema"]
       };
 
       el.topbarTitle.textContent = map[section]?.[0] || "AgroControl";
-      el.topbarSubtitle.textContent = map[section]?.[1] || "Painel";
+      el.topbarSubtitle.textContent = map[section]?.[1] || "";
+    }
+
+    async function refreshWeather(showMessage = false){
+      const lat = Number(state.weather.lat);
+      const lon = Number(state.weather.lon);
+
+      if(!Number.isFinite(lat) || !Number.isFinite(lon)){
+        renderClimateSection();
+        renderClimateOverview();
+        if(showMessage) showToast("Defina latitude e longitude nas configurações.", "info");
+        return;
+      }
+
+      try{
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m&timezone=auto`;
+        const res = await fetch(url);
+        const json = await res.json();
+        const current = json.current || {};
+
+        state.weather.temp = Math.round(current.temperature_2m ?? state.weather.temp);
+        state.weather.humidity = Math.round(current.relative_humidity_2m ?? state.weather.humidity);
+        state.weather.wind = Math.round(current.wind_speed_10m ?? state.weather.wind);
+        state.weather.updatedAt = new Date().toLocaleString("pt-BR");
+
+        if(state.weather.wind <= 12 && state.weather.humidity >= 50) state.weather.status = "Pode aplicar";
+        else if(state.weather.wind <= 18) state.weather.status = "Aplicar com atenção";
+        else state.weather.status = "Não aplicar";
+
+        renderClimateSection();
+        renderClimateOverview();
+        if(showMessage) showToast("Clima atualizado.", "success");
+      }catch(err){
+        console.error(err);
+        if(showMessage) showToast("Erro ao atualizar clima.", "error");
+      }
+    }
+
+    function csvFromRows(rows){
+      if(!rows.length) return "";
+      const headers = [...new Set(rows.flatMap(row => Object.keys(row)))];
+      const escape = value => `"${String(value ?? "").replaceAll('"','""')}"`;
+      return [
+        headers.map(escape).join(";"),
+        ...rows.map(row => headers.map(h => escape(row[h])).join(";"))
+      ].join("\n");
+    }
+
+    function exportCsv(filename, rows){
+      const csv = csvFromRows(rows);
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(a.href);
     }
 
     function saveBanner(dataUrl){
@@ -1629,115 +2195,83 @@
       showToast("Banner atualizado.", "success");
     }
 
-    async function refreshWeather(showMsg = false){
-      const lat = state.weather.lat;
-      const lon = state.weather.lon;
-
-      if(!lat || !lon){
-        renderClimateOverview();
-        renderClimateSection();
-        if(showMsg) showToast("Defina latitude e longitude nas configurações.", "error");
-        return;
-      }
-
-      try{
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${encodeURIComponent(lat)}&longitude=${encodeURIComponent(lon)}&current=temperature_2m,relative_humidity_2m,wind_speed_10m&timezone=auto`;
-        const res = await fetch(url);
-        const data = await res.json();
-
-        if(!data?.current) throw new Error("Sem dados");
-
-        state.weather.temp = Math.round(Number(data.current.temperature_2m));
-        state.weather.humidity = Math.round(Number(data.current.relative_humidity_2m));
-        state.weather.wind = Math.round(Number(data.current.wind_speed_10m));
-        state.weather.updatedAt = new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
-        state.weather.status = state.weather.wind <= 18 && state.weather.humidity >= 55 ? "Pode aplicar" : "Aplicar com atenção";
-
-        renderClimateOverview();
-        renderClimateSection();
-        if(showMsg) showToast("Clima atualizado.", "success");
-      }catch(err){
-        console.error(err);
-        if(showMsg) showToast("Não foi possível atualizar o clima.", "error");
-      }
-    }
-
     function openCrudModal(type, record = null){
       state.currentModal = type;
       state.editingRecord = record;
-      const isEdit = !!record;
 
-      el.modalBody.innerHTML = "";
-      el.modalSubtitle.textContent = isEdit ? "Editar registro" : "Novo registro";
+      el.modalBackdrop.classList.add("show");
+      el.crudModal.classList.add("show");
+      el.modalSaveBtn.classList.remove("hidden");
 
       if(type === "employee"){
-        el.modalTitle.textContent = "Funcionário";
+        el.modalTitle.textContent = record ? "Editar funcionário" : "Novo funcionário";
+        el.modalSubtitle.textContent = "Cadastro da equipe";
         el.modalBody.innerHTML = `
           <div class="form-grid cols-2">
-            <div class="form-group"><label>Nome</label><input id="crudName" value="${escapeHtml(record?.name || record?.full_name || "")}"></div>
-            <div class="form-group"><label>Usuário</label><input id="crudUsername" value="${escapeHtml(record?.username || "")}"></div>
-            <div class="form-group"><label>Telefone</label><input id="crudPhone" value="${escapeHtml(record?.phone || "")}"></div>
+            <div class="form-group"><label>Nome</label><input id="modalEmployeeName" value="${escapeHtml(record?.name || record?.full_name || record?.nome || "")}" /></div>
+            <div class="form-group"><label>Usuário</label><input id="modalEmployeeUsername" value="${escapeHtml(record?.username || "")}" /></div>
+            <div class="form-group"><label>Telefone</label><input id="modalEmployeePhone" value="${escapeHtml(record?.phone || record?.telefone || "")}" /></div>
             <div class="form-group"><label>Função</label>
-              <select id="crudRole">
-                <option ${uiRole(record?.role)==="Dono"?"selected":""}>Dono</option>
-                <option ${uiRole(record?.role)==="Gerente"?"selected":""}>Gerente</option>
-                <option ${uiRole(record?.role)==="Funcionário"?"selected":""}>Funcionário</option>
+              <select id="modalEmployeeRole">
+                <option ${uiRole(record?.role) === "Funcionário" ? "selected" : ""}>Funcionário</option>
+                <option ${uiRole(record?.role) === "Gerente" ? "selected" : ""}>Gerente</option>
+                <option ${uiRole(record?.role) === "Dono" ? "selected" : ""}>Dono</option>
               </select>
             </div>
-            <div class="form-group"><label>Status</label><input id="crudStatus" value="${escapeHtml(record?.status || "Ativo")}"></div>
-            <div class="form-group"><label>E-mail interno</label><input id="crudInternalEmail" value="${escapeHtml(record?.internal_email || "")}"></div>
+            <div class="form-group"><label>Status</label><input id="modalEmployeeStatus" value="${escapeHtml(record?.status || "Ativo")}" /></div>
           </div>
         `;
       }
 
       if(type === "operation"){
-        el.modalTitle.textContent = "Operação";
+        el.modalTitle.textContent = record ? "Editar operação" : "Nova operação";
+        el.modalSubtitle.textContent = "Planejamento e execução";
         el.modalBody.innerHTML = `
           <div class="form-grid cols-2">
-            <div class="form-group"><label>Título</label><input id="crudTitle" value="${escapeHtml(record?.title || "")}"></div>
-            <div class="form-group"><label>Tipo</label><input id="crudType" value="${escapeHtml(record?.type || "")}"></div>
-            <div class="form-group"><label>Status</label><input id="crudStatus" value="${escapeHtml(record?.status || "Pendente")}"></div>
-            <div class="form-group"><label>Data</label><input id="crudDate" type="date" value="${record?.date || ""}"></div>
-            <div class="form-group"><label>Responsável</label><input id="crudResponsible" value="${escapeHtml(record?.responsible || record?.owner || "")}"></div>
-            <div class="form-group"><label>Observações</label><textarea id="crudNotes">${escapeHtml(record?.notes || "")}</textarea></div>
+            <div class="form-group"><label>Título</label><input id="modalOperationTitle" value="${escapeHtml(record?.title || record?.nome || "")}" /></div>
+            <div class="form-group"><label>Tipo</label><input id="modalOperationType" value="${escapeHtml(record?.type || record?.tipo || "")}" /></div>
+            <div class="form-group"><label>Status</label><input id="modalOperationStatus" value="${escapeHtml(record?.status || "Pendente")}" /></div>
+            <div class="form-group"><label>Responsável</label><input id="modalOperationResponsible" value="${escapeHtml(record?.responsible || record?.responsavel || "")}" /></div>
+            <div class="form-group"><label>Data</label><input id="modalOperationDate" type="date" value="${escapeHtml((record?.date || "").slice(0,10))}" /></div>
+            <div class="form-group"><label>Área</label><input id="modalOperationArea" value="${escapeHtml(record?.area || "")}" /></div>
           </div>
+          <div class="form-group"><label>Observações</label><textarea id="modalOperationNotes">${escapeHtml(record?.notes || record?.observacoes || "")}</textarea></div>
         `;
       }
 
       if(type === "financial"){
-        el.modalTitle.textContent = "Lançamento";
+        el.modalTitle.textContent = record ? "Editar lançamento" : "Novo lançamento";
+        el.modalSubtitle.textContent = "Entradas e saídas";
         el.modalBody.innerHTML = `
           <div class="form-grid cols-2">
-            <div class="form-group"><label>Descrição</label><input id="crudDescription" value="${escapeHtml(record?.description || "")}"></div>
-            <div class="form-group"><label>Categoria</label><input id="crudCategory" value="${escapeHtml(record?.category || "")}"></div>
+            <div class="form-group"><label>Descrição</label><input id="modalFinancialDescription" value="${escapeHtml(record?.description || record?.descricao || "")}" /></div>
+            <div class="form-group"><label>Categoria</label><input id="modalFinancialCategory" value="${escapeHtml(record?.category || record?.categoria || "")}" /></div>
             <div class="form-group"><label>Tipo</label>
-              <select id="crudFinanceType">
-                <option value="income" ${(record?.type==="income")?"selected":""}>Entrada</option>
-                <option value="expense" ${(record?.type!=="income")?"selected":""}>Saída</option>
+              <select id="modalFinancialType">
+                <option ${/receita|entrada/i.test(record?.type || record?.tipo || "") ? "selected" : ""}>Receita</option>
+                <option ${!/receita|entrada/i.test(record?.type || record?.tipo || "") ? "selected" : ""}>Saída</option>
               </select>
             </div>
-            <div class="form-group"><label>Valor</label><input id="crudAmount" type="number" step="0.01" value="${escapeHtml(record?.amount || "")}"></div>
-            <div class="form-group"><label>Data</label><input id="crudDate" type="date" value="${record?.date || ""}"></div>
+            <div class="form-group"><label>Valor</label><input id="modalFinancialAmount" type="number" step="0.01" value="${escapeHtml(record?.amount ?? record?.value ?? "")}" /></div>
+            <div class="form-group"><label>Data</label><input id="modalFinancialDate" type="date" value="${escapeHtml((record?.date || "").slice(0,10))}" /></div>
           </div>
         `;
       }
 
       if(type === "stock"){
-        el.modalTitle.textContent = "Estoque";
+        el.modalTitle.textContent = record ? "Editar item" : "Novo item";
+        el.modalSubtitle.textContent = "Controle de estoque";
         el.modalBody.innerHTML = `
           <div class="form-grid cols-2">
-            <div class="form-group"><label>Produto</label><input id="crudProduto" value="${escapeHtml(record?.produto || "")}"></div>
-            <div class="form-group"><label>Quantidade</label><input id="crudQuantidade" value="${escapeHtml(record?.quantidade || "")}"></div>
-            <div class="form-group"><label>Entrada</label><input id="crudEntrada" value="${escapeHtml(record?.entrada || "")}"></div>
-            <div class="form-group"><label>Saída</label><input id="crudSaida" value="${escapeHtml(record?.saida || "")}"></div>
-            <div class="form-group"><label>Local</label><input id="crudLocal" value="${escapeHtml(record?.local || "")}"></div>
-            <div class="form-group"><label>Categoria</label><input id="crudCategoria" value="${escapeHtml(record?.categoria || "")}"></div>
+            <div class="form-group"><label>Produto</label><input id="modalStockProduto" value="${escapeHtml(record?.produto || "")}" /></div>
+            <div class="form-group"><label>Quantidade</label><input id="modalStockQuantidade" value="${escapeHtml(record?.quantidade || "")}" /></div>
+            <div class="form-group"><label>Entrada</label><input id="modalStockEntrada" value="${escapeHtml(record?.entrada || "")}" /></div>
+            <div class="form-group"><label>Saída</label><input id="modalStockSaida" value="${escapeHtml(record?.saida || "")}" /></div>
+            <div class="form-group"><label>Local</label><input id="modalStockLocal" value="${escapeHtml(record?.local || "")}" /></div>
+            <div class="form-group"><label>Categoria</label><input id="modalStockCategoria" value="${escapeHtml(record?.categoria || "")}" /></div>
           </div>
         `;
       }
-
-      el.modalBackdrop.classList.add("show");
-      el.crudModal.classList.add("show");
     }
 
     function closeCrudModal(){
@@ -1745,195 +2279,205 @@
       el.crudModal.classList.remove("show");
       state.currentModal = null;
       state.editingRecord = null;
+      el.modalBody.innerHTML = "";
     }
 
     async function saveCurrentModal(){
-      const type = state.currentModal;
-      const isEdit = !!state.editingRecord;
-
-      if(type === "employee"){
+      if(state.currentModal === "employee"){
         const payload = {
-          name: document.getElementById("crudName").value.trim(),
-          username: document.getElementById("crudUsername").value.trim().toLowerCase(),
-          phone: document.getElementById("crudPhone").value.trim(),
-          role: dbRoleFromUi(document.getElementById("crudRole").value),
-          status: document.getElementById("crudStatus").value.trim(),
-          internal_email: document.getElementById("crudInternalEmail").value.trim()
+          name: document.getElementById("modalEmployeeName").value.trim(),
+          username: document.getElementById("modalEmployeeUsername").value.trim(),
+          phone: document.getElementById("modalEmployeePhone").value.trim(),
+          role: dbRoleFromUi(document.getElementById("modalEmployeeRole").value),
+          status: document.getElementById("modalEmployeeStatus").value.trim() || "Ativo"
         };
 
-        const response = isEdit
-          ? await supabaseClient.from("employees").update(payload).eq("id", state.editingRecord.id)
-          : await supabaseClient.from("employees").insert(payload);
+        let query = supabaseClient.from("employees");
+        if(state.editingRecord?.id) query = query.update(payload).eq("id", state.editingRecord.id);
+        else query = query.insert(payload);
 
-        if(response.error){
-          showToast(response.error.message || "Erro ao salvar funcionário.", "error");
+        const { error } = await query;
+        if(error){
+          console.error(error);
+          showToast("Erro ao salvar funcionário.", "error");
           return;
         }
-
+        closeCrudModal();
         await loadEmployees();
         renderEmployeesTable();
         renderOverview();
-        closeCrudModal();
         showToast("Funcionário salvo.", "success");
       }
 
-      if(type === "operation"){
+      if(state.currentModal === "operation"){
         const payload = {
-          title: document.getElementById("crudTitle").value.trim(),
-          type: document.getElementById("crudType").value.trim(),
-          status: document.getElementById("crudStatus").value.trim(),
-          date: document.getElementById("crudDate").value,
-          responsible: document.getElementById("crudResponsible").value.trim(),
-          owner: document.getElementById("crudResponsible").value.trim(),
-          notes: document.getElementById("crudNotes").value.trim()
+          title: document.getElementById("modalOperationTitle").value.trim(),
+          type: document.getElementById("modalOperationType").value.trim(),
+          status: document.getElementById("modalOperationStatus").value.trim() || "Pendente",
+          responsible: document.getElementById("modalOperationResponsible").value.trim(),
+          date: document.getElementById("modalOperationDate").value,
+          area: document.getElementById("modalOperationArea").value.trim(),
+          notes: document.getElementById("modalOperationNotes").value.trim()
         };
 
-        const response = isEdit
-          ? await supabaseClient.from("operations").update(payload).eq("id", state.editingRecord.id)
-          : await supabaseClient.from("operations").insert(payload);
+        let query = supabaseClient.from("operations");
+        if(state.editingRecord?.id) query = query.update(payload).eq("id", state.editingRecord.id);
+        else query = query.insert(payload);
 
-        if(response.error){
-          showToast(response.error.message || "Erro ao salvar operação.", "error");
+        const { error } = await query;
+        if(error){
+          console.error(error);
+          showToast("Erro ao salvar operação.", "error");
           return;
         }
-
+        closeCrudModal();
         await loadOperations();
         renderOperationsTable();
         renderOverview();
-        closeCrudModal();
         showToast("Operação salva.", "success");
       }
 
-      if(type === "financial"){
+      if(state.currentModal === "financial"){
         const payload = {
-          description: document.getElementById("crudDescription").value.trim(),
-          category: document.getElementById("crudCategory").value.trim(),
-          type: document.getElementById("crudFinanceType").value,
-          amount: Number(document.getElementById("crudAmount").value || 0),
-          date: document.getElementById("crudDate").value
+          description: document.getElementById("modalFinancialDescription").value.trim(),
+          category: document.getElementById("modalFinancialCategory").value.trim(),
+          type: document.getElementById("modalFinancialType").value.trim(),
+          amount: Number(document.getElementById("modalFinancialAmount").value || 0),
+          date: document.getElementById("modalFinancialDate").value
         };
 
-        const response = isEdit
-          ? await supabaseClient.from("financial_transactions").update(payload).eq("id", state.editingRecord.id)
-          : await supabaseClient.from("financial_transactions").insert(payload);
+        let query = supabaseClient.from("financial_transactions");
+        if(state.editingRecord?.id) query = query.update(payload).eq("id", state.editingRecord.id);
+        else query = query.insert(payload);
 
-        if(response.error){
-          showToast(response.error.message || "Erro ao salvar lançamento.", "error");
+        const { error } = await query;
+        if(error){
+          console.error(error);
+          showToast("Erro ao salvar lançamento.", "error");
           return;
         }
-
+        closeCrudModal();
         await loadFinancial();
         renderFinancialTable();
         renderOverview();
-        closeCrudModal();
         showToast("Lançamento salvo.", "success");
       }
 
-      if(type === "stock"){
+      if(state.currentModal === "stock"){
         const payload = {
-          id: isEdit ? state.editingRecord.id : `stock-${Date.now()}`,
-          produto: document.getElementById("crudProduto").value.trim(),
-          quantidade: document.getElementById("crudQuantidade").value.trim(),
-          entrada: document.getElementById("crudEntrada").value.trim(),
-          saida: document.getElementById("crudSaida").value.trim(),
-          local: document.getElementById("crudLocal").value.trim(),
-          categoria: document.getElementById("crudCategoria").value.trim()
+          id: state.editingRecord?.id || `stock-${Date.now()}`,
+          produto: document.getElementById("modalStockProduto").value.trim(),
+          quantidade: document.getElementById("modalStockQuantidade").value.trim(),
+          entrada: document.getElementById("modalStockEntrada").value.trim(),
+          saida: document.getElementById("modalStockSaida").value.trim(),
+          local: document.getElementById("modalStockLocal").value.trim(),
+          categoria: document.getElementById("modalStockCategoria").value.trim()
         };
 
-        if(isEdit){
-          const idx = state.stock.findIndex(x => x.id === state.editingRecord.id);
-          if(idx >= 0) state.stock[idx] = payload;
+        if(state.editingRecord?.id){
+          state.stock = state.stock.map(item => item.id === state.editingRecord.id ? payload : item);
         }else{
           state.stock.unshift(payload);
         }
-
         localStorage.setItem("agrocontrol_stock_v22", JSON.stringify(state.stock));
-        renderStockTable();
         closeCrudModal();
+        renderStockTable();
         showToast("Item salvo.", "success");
       }
     }
 
     function openAnalysis(type){
       state.currentAnalysis = type;
-      el.analysisTitle.textContent = type === "financial" ? "Análise Financeira" : "Análise de Estoque";
+      el.modalBackdrop.classList.add("show");
+      el.analysisModal.classList.add("show");
 
       if(type === "financial"){
-        const entradas = state.financial
-          .filter(i => String(i.type || "").toLowerCase() === "income")
-          .reduce((a,b) => a + Number(b.amount || 0), 0);
-        const saidas = state.financial
-          .filter(i => String(i.type || "").toLowerCase() !== "income")
-          .reduce((a,b) => a + Number(b.amount || 0), 0);
+        el.analysisTitle.textContent = "Análise financeira";
+        let receitas = 0;
+        let saidas = 0;
+        const categoryMap = {};
+
+        state.financial.forEach(item => {
+          const type = String(item.type || item.tipo || "").toLowerCase();
+          const value = Number(item.amount ?? item.value ?? 0);
+          const category = item.category || item.categoria || "Geral";
+          categoryMap[category] = (categoryMap[category] || 0) + value;
+          if(/receita|entrada|income/.test(type)) receitas += value;
+          else saidas += value;
+        });
+
+        const saldo = receitas - saidas;
+        const categories = Object.entries(categoryMap).slice(0,6);
+        const max = Math.max(...categories.map(([,v]) => Number(v || 0)), 1);
 
         el.analysisBody.innerHTML = `
           <div class="analysis-grid">
             <div class="analysis-card">
               <h4>Resumo</h4>
-              <p>Entradas: <strong>${formatCurrency(entradas)}</strong></p>
-              <p style="margin-top:10px;">Saídas: <strong>${formatCurrency(saidas)}</strong></p>
-              <p style="margin-top:10px;">Saldo: <strong>${formatCurrency(entradas - saidas)}</strong></p>
-            </div>
-            <div class="analysis-card">
-              <h4>Fluxo</h4>
-              <div class="bar-chart">
-                <div class="bar-col"><div class="bar" style="height:45%"></div><span>Jan</span></div>
-                <div class="bar-col"><div class="bar" style="height:72%"></div><span>Fev</span></div>
-                <div class="bar-col"><div class="bar" style="height:58%"></div><span>Mar</span></div>
-                <div class="bar-col"><div class="bar" style="height:82%"></div><span>Abr</span></div>
+              <div class="list">
+                <div class="list-item"><span>Receitas</span><strong>${formatCurrency(receitas)}</strong></div>
+                <div class="list-item"><span>Saídas</span><strong>${formatCurrency(saidas)}</strong></div>
+                <div class="list-item"><span>Saldo</span><strong>${formatCurrency(saldo)}</strong></div>
               </div>
             </div>
-          </div>
-        `;
-      } else {
-        el.analysisBody.innerHTML = `
-          <div class="analysis-grid">
             <div class="analysis-card">
-              <h4>Resumo</h4>
-              <p>Total de itens: <strong>${state.stock.length}</strong></p>
-              <p style="margin-top:10px;">Categorias distintas: <strong>${new Set(state.stock.map(i => i.categoria)).size}</strong></p>
-            </div>
-            <div class="analysis-card">
-              <h4>Nível visual</h4>
+              <h4>Por categoria</h4>
               <div class="bar-chart">
-                <div class="bar-col"><div class="bar" style="height:82%"></div><span>Diesel</span></div>
-                <div class="bar-col"><div class="bar" style="height:48%"></div><span>Semente</span></div>
-                <div class="bar-col"><div class="bar" style="height:36%"></div><span>Defensivo</span></div>
+                ${categories.map(([label,value]) => `
+                  <div class="bar-col">
+                    <div class="bar" style="height:${Math.max(10, (Number(value || 0) / max) * 180)}px"></div>
+                    <strong>${formatCurrency(value)}</strong>
+                    <span>${escapeHtml(label)}</span>
+                  </div>
+                `).join("")}
               </div>
             </div>
           </div>
         `;
       }
 
-      el.modalBackdrop.classList.add("show");
-      el.analysisModal.classList.add("show");
+      if(type === "stock"){
+        el.analysisTitle.textContent = "Análise de estoque";
+        const categoryMap = {};
+        state.stock.forEach(item => {
+          const category = item.categoria || "Geral";
+          categoryMap[category] = (categoryMap[category] || 0) + 1;
+        });
+
+        const categories = Object.entries(categoryMap);
+        const max = Math.max(...categories.map(([,v]) => Number(v || 0)), 1);
+
+        el.analysisBody.innerHTML = `
+          <div class="analysis-grid">
+            <div class="analysis-card">
+              <h4>Resumo</h4>
+              <div class="list">
+                <div class="list-item"><span>Total de itens</span><strong>${state.stock.length}</strong></div>
+                <div class="list-item"><span>Categorias</span><strong>${categories.length}</strong></div>
+              </div>
+            </div>
+            <div class="analysis-card">
+              <h4>Por categoria</h4>
+              <div class="bar-chart">
+                ${categories.map(([label,value]) => `
+                  <div class="bar-col">
+                    <div class="bar" style="height:${Math.max(10, (Number(value || 0) / max) * 180)}px"></div>
+                    <strong>${value}</strong>
+                    <span>${escapeHtml(label)}</span>
+                  </div>
+                `).join("")}
+              </div>
+            </div>
+          </div>
+        `;
+      }
     }
 
     function closeAnalysis(){
       el.modalBackdrop.classList.remove("show");
       el.analysisModal.classList.remove("show");
       state.currentAnalysis = null;
-    }
-
-    function exportCsv(filename, rows){
-      if(!rows.length){
-        showToast("Nada para exportar.", "error");
-        return;
-      }
-
-      const headers = Object.keys(rows[0]);
-      const csv = [
-        headers.join(";"),
-        ...rows.map(row => headers.map(h => `"${String(row[h] ?? "").replaceAll('"','""')}"`).join(";"))
-      ].join("\n");
-
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = filename;
-      a.click();
-      URL.revokeObjectURL(url);
+      el.analysisBody.innerHTML = "";
     }
 
     async function afterAuthenticated(){
@@ -1966,6 +2510,31 @@
 
       el.forgotPasswordBtn.addEventListener("click", forgotPassword);
       el.logoutBtn.addEventListener("click", logout);
+      el.continueSessionBtn.addEventListener("click", async () => {
+        if(state.hasSupabaseSession && state.session?.user){
+          await afterAuthenticated();
+          return;
+        }
+        if(state.rememberedEmail){
+          el.loginEmail.value = state.rememberedEmail;
+          el.loginPassword.focus();
+          showToast("Digite a senha para continuar.", "info");
+        }
+      });
+      el.clearSavedSessionBtn.addEventListener("click", async () => {
+        localStorage.removeItem("agrocontrol_remembered_email");
+        state.rememberedEmail = "";
+        el.loginEmail.value = "";
+        el.rememberLogin.checked = false;
+        if(state.hasSupabaseSession){
+          await supabaseClient.auth.signOut();
+          state.hasSupabaseSession = false;
+          state.session = null;
+          state.user = null;
+        }
+        updateSavedSessionVisibility();
+        showToast("Sessão salva removida.", "info");
+      });
 
       el.refreshAllBtn.addEventListener("click", async () => {
         await refreshAllData(true);
@@ -2046,7 +2615,13 @@
           dolar: el.marketDolar.value.trim() || DEFAULT_MARKET.dolar,
           diesel: el.marketDiesel.value.trim() || DEFAULT_MARKET.diesel
         };
+        state.marketVisible = [...el.marketVisibilityGrid.querySelectorAll('input:checked')].map(input => input.value);
+        if(!state.marketVisible.length){
+          showToast("Selecione pelo menos um item do mercado.", "error");
+          return;
+        }
         localStorage.setItem("agrocontrol_market_v22", JSON.stringify(state.market));
+        localStorage.setItem("agrocontrol_market_visible_v5", JSON.stringify(state.marketVisible));
         renderMarket();
         renderMarketOverview();
         showToast("Mercado salvo.", "success");
@@ -2076,6 +2651,11 @@
       el.exportFinancialBtn.addEventListener("click", () => exportCsv("financeiro.csv", state.financial));
       el.exportStockBtn.addEventListener("click", () => exportCsv("estoque.csv", state.stock));
       el.exportAllBtn.addEventListener("click", () => exportCsv("geral-financeiro.csv", state.financial));
+
+      el.exportAnalysisBtn.addEventListener("click", () => {
+        if(state.currentAnalysis === "financial") exportCsv("analise-financeira.csv", state.financial);
+        if(state.currentAnalysis === "stock") exportCsv("analise-estoque.csv", state.stock);
+      });
 
       el.employeesSearch.addEventListener("input", renderEmployeesTable);
       el.operationsSearch.addEventListener("input", renderOperationsTable);
@@ -2120,8 +2700,14 @@
 
       supabaseClient.auth.onAuthStateChange(async (event, session) => {
         state.hasSupabaseSession = !!session;
+        state.session = session || null;
+        state.user = session?.user || null;
         updateSavedSessionVisibility();
-        if(event === "SIGNED_OUT") showLogin();
+        if(session && ["SIGNED_IN","INITIAL_SESSION","TOKEN_REFRESHED","USER_UPDATED"].includes(event)){
+          await afterAuthenticated();
+          return;
+        }
+        if(event === "SIGNED_OUT" || !session) showLogin();
       });
     }
 
